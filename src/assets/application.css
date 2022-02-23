@@ -5,7 +5,7 @@
 *:before,
 *:after {
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body,
@@ -52,4 +52,26 @@ button {
 
 * {
   font-family: 'Noto Sans TC', sans-serif;
+  color: #1c1c1c;
+}
+
+.text-active {
+  font-size: #ff6600;
+}
+
+.btn-active {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 100px;
+  border-color: #ff6600;
+  background-color: #ff6600;
+  color: #ffffff;
+}
+
+.btn-border {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-color: #ff6600;
+  border-radius: 100px;
+  color: #ff6600;
 }

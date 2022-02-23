@@ -1,11 +1,18 @@
 <template>
   <div id="app">
-    <div id="nav">
-    </div>
-    <router-view/>
+    <Main />
+    <!-- <router-view/> -->
   </div>
 </template>
 
-<style>
-
-</style>
+<script>
+import 'bootstrap'
+// import 'bootstrap/dist/css/bootstrap.min.css'
+import Main from './views/Main.vue'
+export default {
+  name: 'App',
+  components: {
+    Main
+  }
+}
+</script>

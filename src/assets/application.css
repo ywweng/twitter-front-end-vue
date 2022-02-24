@@ -8,6 +8,7 @@
   box-sizing: border-box;
 }
 
+html,
 body,
 h1,
 h2,
@@ -30,6 +31,20 @@ li {
 
 a {
   cursor: pointer;
+  color: inherit;
+  text-decoration: inherit;
+}
+
+a,
+a:hover,
+a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:active {
+  text-decoration: none;
+  color: #ff6600;
 }
 
 table {
@@ -55,17 +70,24 @@ button {
   color: #1c1c1c;
 }
 
+#app {
+  width: 80%;
+  margin: 0 auto;
+}
+
 .text-active {
-  font-size: #ff6600;
+  color: #ff6600;
 }
 
 .btn-active {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   border-radius: 100px;
   border-color: #ff6600;
   background-color: #ff6600;
   color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .btn-border {
@@ -74,4 +96,9 @@ button {
   border-color: #ff6600;
   border-radius: 100px;
   color: #ff6600;
+}
+
+.menu-text {
+  font-size: 1rem;
+  font-weight: 700;
 }

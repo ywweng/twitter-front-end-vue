@@ -1,22 +1,22 @@
 <template>
   <div class="admin-tweets d-flex">
-    <div class="col-3">
+    <div class="w-25">
       <AdminMenu />
     </div>
     
-    <div class="tweet-list col-9">
+    <div class="tweet-list w-75">
       <div class="page-title">推文清單</div>
       <ul>
-        <li class="d-flex position-relative" v-for="tweet in tweets" :key="tweet.tweet_id">
-          <img class="avatar" :src="tweet.avatar" alt="" />
+        <li class="d-flex position-relative" v-for="tweet in tweets" :key="tweet.id">
+          <img class="avatar" :src="tweet.user.avatar" alt="" />
           <div class="content">
-            <span class="name">{{tweet.user_name}}</span>
-            <span class="account-time">@{{tweet.account}}．{{tweet.createdAt}}</span>
+            <span class="name">{{tweet.user.name}}</span>
+            <span class="account-time">@{{tweet.user.account}}．{{tweet.createdAt}}</span>
             <div class="description ellipsis">
               {{tweet.description}}
             </div>
           </div>
-          <div class="delete-btn position-absolute">&#10005;</div>
+          <div class="delete-btn position-absolute" @click.stop.prevent="deleteTweet(tweet.id)">&#10005;</div>
         </li>
         
       </ul>
@@ -76,33 +76,59 @@ li {
 <script>
 import AdminMenu from "../components/AdminMenu.vue";
 
+const dummyData = {
+  tweets: [
+    {
+      id: 1,
+      UserId: 1,
+      description:
+        "Ipsa quaerat modi alias vel eos odit qui ut et. Vel dolor doloribus iure deleniti veritatis ut. Aut quam odio reprehenderit. Et reprehenderit temporibus",
+      createdAt: "2022-02-24T16:45:10.000Z",
+      updatedAt: "2022-02-24T16:45:10.000Z",
+      user: {
+        avatar: "https://i.imgur.com/q6bwDGO.png",
+        name: "root",
+        account: "root",
+      },
+    },
+    {
+      id: 2,
+      UserId: 1,
+      description: "officiis et cum",
+      createdAt: "2021-02-24T16:45:10.000Z",
+      updatedAt: "2021-02-24T16:45:10.000Z",
+      user: {
+        avatar: "https://i.imgur.com/q6bwDGO.png",
+        name: "root",
+        account: "root",
+      },
+    },
+  ],
+};
 export default {
   components: {
     AdminMenu,
   },
-  data () {
+  data() {
     return {
-      tweets: [    //dummy data
-        {
-          user_avatar: "",
-          user_name: "Apple",
-          user_account: "apple",
-          tweet_id: "1",
-          createdAt: "3小時",
-          description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia dolorem illum exercitationem iusto maiores.",
-
-        },
-        {
-          user_avatar: "",
-          user_name: "Banana",
-          user_account: "banana",
-          tweet_id: "2",
-          createdAt: "5小時",
-          description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia dolorem illum exercitationem iusto maiores.",
-
-        },
-      ]
+      tweets:[]
     }
-  }
+  },
+  created() {
+    this.fetchTweets()
+  },
+  methods: {
+    fetchTweets () {
+      this.tweets = dummyData.tweets
+    },
+    deleteTweet (tweetId) {
+      this.tweets = this.tweets.filter(tweet => {
+        if(tweet.id !== tweetId) {
+          return tweet
+        }
+      })
+    }
+  },
+
 };
 </script>

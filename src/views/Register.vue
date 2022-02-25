@@ -55,6 +55,7 @@
         <input
           type="email"
           name="email"
+          autocomplete="email"
           id="email"
           v-model="user.email"
           @blur="checkEmail"
@@ -99,7 +100,9 @@
           <span class="text-danger" v-if="user.pwdChecked.length === 0"
             >不可空白
           </span>
-          <span class="text-danger" v-else-if="user.password !== user.pwdChecked"
+          <span
+            class="text-danger"
+            v-else-if="user.password !== user.pwdChecked"
             >密碼錯誤
           </span>
           <span v-else></span>
@@ -112,10 +115,9 @@
         type="submit"
         class="btn-active w-100 mb-3"
         @click.stop.prevent="submitForm"
-      >
-        <a>註冊</a>
+      >註冊
       </button>
-      <a href="#" class="mx-auto cancel">取消</a>
+      <router-link to="/login" class="mx-auto text-blue">取消</router-link>
     </section>
     <!-- account alert -->
     <div
@@ -243,8 +245,7 @@
           return false
         }
         // TODO: 新增使用者資料API
-        console.log('sumbit')
-
+        this.$router.push('/login')
       },
     },
   }
@@ -296,12 +297,5 @@
 
   .length-input {
     color: #657786;
-  }
-
-  .cancel {
-    font-size: 18px;
-    font-weight: 700;
-    color: #0099FF;
-    text-decoration: underline;
   }
 </style>

@@ -103,3 +103,47 @@ button {
   font-size: 1rem;
   font-weight: 700;
 }
+
+.text-blue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0099ff;
+  text-decoration: underline;
+}
+
+/* form */
+.form-input {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 54px;
+    background: #f5f8fa;
+  }
+  .form-input input {
+    padding-left: 10px;
+    border-top: inherit;
+    border-left: inherit;
+    border-right: inherit;
+    border-bottom-color: #657786;
+    background: inherit;
+  }
+
+  .form-input input:hover {
+    border-bottom: 2px solid #50b5ff;
+  }
+
+  .form-input input:focus {
+    outline: none;
+    border-bottom: 2px solid #50b5ff;
+  }
+
+  .form-input-error input {
+    outline: none;
+    border-bottom: 2px solid #fc5a5a;
+  }
+
+  .form-input-text {
+    margin-top: 5px;
+    margin-left: 10px;
+    color: #657786;
+  }

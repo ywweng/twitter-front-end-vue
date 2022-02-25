@@ -1,6 +1,6 @@
 <template>
   <div id="menu" class="d-flex flex-column h-100 py-3">
-    <div class="ms-3 mb-5">
+    <div class="logo ms-3 mb-5">
       <img src="./../assets/Logo.png" width="30px" />
     </div>
     <div class="mb-auto">
@@ -62,7 +62,4 @@
 </template>
 
 <style scoped>
-  #menu {
-    max-width: 285px;
-  }
 </style>

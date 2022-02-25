@@ -68,6 +68,7 @@ button {
 * {
   font-family: 'Noto Sans TC', sans-serif;
   color: #1c1c1c;
+  font-weight: normal;
 }
 
 #app {

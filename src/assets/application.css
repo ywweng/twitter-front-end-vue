@@ -72,11 +72,12 @@ button {
 }
 
 #app {
-  width: 80%;
   margin: 0 auto;
 }
 
-.text-active {
+.text-active,
+.text-active:active,
+.text-active:hover {
   color: #ff6600;
 }
 
@@ -91,12 +92,25 @@ button {
   font-weight: 500;
 }
 
-.btn-border {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-color: #ff6600;
+.btn-following {
   border-radius: 100px;
+  border-color: #ff6600;
+  background-color: #ff6600;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  height: 35px;
+  padding: 0 15px;
+}
+
+.btn-follow {
+  border: 1px solid #ff6600;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 700;
   color: #ff6600;
+  padding: 0 15px;
+  height: 35px;
 }
 
 .menu-text {
@@ -111,39 +125,50 @@ button {
   text-decoration: underline;
 }
 
+.text-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.text-account {
+  font-size: 15px;
+  font-weight: 700;
+  color: #657786;
+}
+
 /* form */
 .form-input {
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    height: 54px;
-    background: #f5f8fa;
-  }
-  .form-input input {
-    padding-left: 10px;
-    border-top: inherit;
-    border-left: inherit;
-    border-right: inherit;
-    border-bottom-color: #657786;
-    background: inherit;
-  }
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 54px;
+  background: #f5f8fa;
+}
+.form-input input {
+  padding-left: 10px;
+  border-top: inherit;
+  border-left: inherit;
+  border-right: inherit;
+  border-bottom-color: #657786;
+  background: inherit;
+}
 
-  .form-input input:hover {
-    border-bottom: 2px solid #50b5ff;
-  }
+.form-input input:hover {
+  border-bottom: 2px solid #50b5ff;
+}
 
-  .form-input input:focus {
-    outline: none;
-    border-bottom: 2px solid #50b5ff;
-  }
+.form-input input:focus {
+  outline: none;
+  border-bottom: 2px solid #50b5ff;
+}
 
-  .form-input-error input {
-    outline: none;
-    border-bottom: 2px solid #fc5a5a;
-  }
+.form-input-error input {
+  outline: none;
+  border-bottom: 2px solid #fc5a5a;
+}
 
-  .form-input-text {
-    margin-top: 5px;
-    margin-left: 10px;
-    color: #657786;
-  }
+.form-input-text {
+  margin-top: 5px;
+  margin-left: 10px;
+  color: #657786;
+}

@@ -1,7 +1,7 @@
 <template>
   <div id="login" class="d-flex flex-column mx-auto">
     <div class="logo mx-auto mb-4">
-      <img src="./../assets/Logo.png" width="50px" />
+      <img :src="require('./../assets/Logo.png')" width="50px" />
     </div>
     <p class="menu-text mx-auto mb-4">登入 Alphitter</p>
     <form class="mx-auto w-100" action="" @submit.prevent="login">
@@ -50,7 +50,7 @@
         <a>登入</a>
       </button>
       <div class="text-end">
-        <a href="#" class="mx-auto text-blue">註冊 Alphitter</a>
+        <router-link to="register" class="mx-auto text-blue">註冊 Alphitter</router-link>
         <span class="space">．</span>
         <a href="#" class="mx-auto text-blue">後台登入</a>
       </div>
@@ -60,7 +60,7 @@
       class="alert alert-danger d-flex fixed-top"
       id="alert"
       role="alert"
-      v-if="login"
+      v-if="checkAccount"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -82,22 +82,33 @@
 </template>
 
 <script>
+  const dummyUser = {
+    account: 'user1',
+    password: '12345678',
+  }
   export default {
     name: 'Login',
     data() {
       return {
         account: '',
         password: '',
+        checkAccount: false,
       }
     },
     methods: {
+      alertTrigger() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        return bootstrap.Alert.getInstance(alertNode)
+      },
       login() {
-        // TODO:登入API
-        if (this.account.length === 0) {
-          console.log('login')
-          return true
+        // TODO:登入API，需驗證
+        const { account, password } = dummyUser
+        if (account === this.account && password === this.password) {
+          this.$router.push('/main')
         } else {
-          return false
+          this.checkAccount = true
+          this.alertTrigger()
         }
       },
     },

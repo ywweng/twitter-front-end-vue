@@ -1,65 +1,97 @@
 <template>
   <div id="menu" class="d-flex flex-column h-100 py-3">
-    <div class="logo ms-3 mb-5">
-      <img src="./../assets/Logo.png" width="30px" />
+    <div class="logo ms-3">
+      <img :src="require('./../assets/Logo.png')" width="30px" />
     </div>
     <div class="mb-auto">
       <div class="ms-3 mb-4 lh-1">
         <ul>
-          <li class="menu-icon mb-4 d-flex">
-            <div class="me-3">
-              <img
-                class="d-block"
-                height="20px"
-                src="./../assets/VectorMain.png"
-              />
-            </div>
+          <li class="menu-icon mb-4">
             <!-- TODO:router-link -->
-            <a class="menu-text">首頁</a>
+            <router-link to="/main" class="menu-text">
+              <img class="me-3" :src="mainUrl" />
+              首頁
+            </router-link>
           </li>
-          <li class="menu-icon mb-4 d-flex">
-            <div class="me-3">
-              <img
-                class="d-block"
-                height="20px"
-                width="21px"
-                src="./../assets/VectorUserProfile.png"
-              />
-            </div>
+          <li class="menu-icon mb-4">
             <!-- TODO:router-link -->
-            <a class="menu-text">個人資料</a>
+            <router-link to="#" class="menu-text">
+              <img class="profile-icon" :src="userProfileUrl" />
+              個人資料
+            </router-link>
           </li>
-          <li class="menu-icon mb-4 d-flex">
-            <div class="me-3">
-              <img
-                class="d-block"
-                height="20px"
-                src="./../assets/VectorSetting.png"
-              />
-            </div>
+          <li class="menu-icon mb-4">
             <!-- TODO:router-link -->
-            <a class="menu-text">設定</a>
+            <router-link to="/setting" class="menu-text">
+              <img class="me-3" :src="settingUrl" />
+              設定
+            </router-link>
           </li>
         </ul>
       </div>
       <!-- TODO:router-link -->
-      <button class="btn-active w-75">推文</button>
+      <button class="btn-active tweet w-100">推文</button>
     </div>
     <div>
-      <div class="ms-3 d-flex">
+      <div class="ms-3 d-flex align-items-center">
         <div class="me-2">
           <img
             class="d-block"
-            height="20px"
+            width="20px"
             src="./../assets/VectorLogout.png"
           />
         </div>
         <!-- TODO:router-link -->
-        <a class="menu-text">登出</a>
+        <router-link to="/login" class="menu-text ms-2">登出</router-link>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<script>
+  export default {
+    name: 'Menu',
+    data() {
+      return {
+        mainUrl: require('./../assets/Menu.svg'),
+        mainActiveUrl: require('./../assets/MenuActive.svg'),
+        userProfileUrl: require('./../assets/UserProfile.svg'),
+        userProfileActiveUrl: require('./../assets/UserProfileActive.svg'),
+        settingUrl: require('./../assets/Setting.svg'),
+        settingActiveUrl: require('./../assets/SettingActive.svg'),
+      }
+    },
+    methods: {},
+    created() {
+      if (this.$route.path === '/main') {
+        this.mainUrl = this.mainActiveUrl
+      }
+      // if (this.$route.path === '/user-profile') {
+      //   this.userProfileUrl = this.userProfileActiveUrl
+      // }
+      if (this.$route.path === '/setting') {
+        this.settingUrl = this.settingActiveUrl
+      }
+    },
+  }
+</script>
+
+<style>
+  #menu {
+    max-width: 245px;
+    margin-left: 103px;
+  }
+  .tweet {
+    max-width: 210px;
+  }
+  .logo {
+    margin-bottom: 47px;
+  }
+  .profile-icon {
+    margin-left: 3px;
+    margin-right: 20px;
+  }
+  .router-link-active {
+    color: #ff6600;
+  }
 </style>

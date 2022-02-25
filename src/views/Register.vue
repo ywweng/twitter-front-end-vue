@@ -1,7 +1,7 @@
 <template>
   <div id="register" class="d-flex flex-column mx-auto">
     <div class="logo mx-auto mb-4">
-      <img src="./../assets/Logo.png" width="50px" />
+      <img :src="require('./../assets/Logo.png')" width="50px" />
     </div>
     <p class="menu-text mx-auto mb-4">建立你的帳號</p>
     <form class="mx-auto w-100" action="" @submit.prevent="submitForm">
@@ -115,7 +115,8 @@
         type="submit"
         class="btn-active w-100 mb-3"
         @click.stop.prevent="submitForm"
-      >註冊
+      >
+        註冊
       </button>
       <router-link to="/login" class="mx-auto text-blue">取消</router-link>
     </section>

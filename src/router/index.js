@@ -13,12 +13,12 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login,
   },
   {
     path: '/register',
-    name: 'Register',
+    name: 'register',
     component: () => import('../views/Register.vue'),
   },
   {
@@ -27,7 +27,12 @@ const routes = [
     component: () => import('../views/Main.vue'),
     children: [
       {
-        path: '/tweets',
+        path: '/:userId',
+        name: 'tweet-list',
+        component: () => import('./../components/TweetList.vue'),
+      },
+      {
+        path: '/main/tweets/:tweetId',
         name: 'single-tweet',
         component: () => import('./../components/SingleTweet.vue'),
       },

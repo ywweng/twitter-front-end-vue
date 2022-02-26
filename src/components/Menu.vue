@@ -30,7 +30,7 @@
         </ul>
       </div>
       <!-- TODO:router-link -->
-      <button class="btn-active tweet w-100">推文</button>
+      <button class="btn-active btn-tweet w-100">推文</button>
     </div>
     <div>
       <div class="ms-3 d-flex align-items-center">
@@ -81,7 +81,7 @@
     width: 230px;
     /* margin-left: 103px; */
   }
-  .tweet {
+  .btn-tweet {
     max-width: 210px;
   }
   .logo {

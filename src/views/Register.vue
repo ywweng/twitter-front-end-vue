@@ -4,7 +4,7 @@
       <img :src="require('./../assets/Logo.png')" width="50px" />
     </div>
     <p class="menu-text mx-auto mb-4">建立你的帳號</p>
-    <form class="mx-auto w-100" action="">
+    <form class="mx-auto w-100">
       <div
         class="form-input d-flex flex-column"
         :class="{
@@ -55,7 +55,6 @@
         <input
           type="email"
           name="email"
-          autocomplete="email"
           id="email"
           v-model="user.email"
           @blur="checkEmail"
@@ -111,7 +110,7 @@
       <button
         type="submit"
         class="btn-active w-100 mt-2 mb-3"
-        @click="submitForm"
+        @submit="submitForm"
       >
         註冊
       </button>

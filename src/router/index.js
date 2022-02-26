@@ -25,7 +25,15 @@ const routes = [
     path: '/main',
     name: 'main',
     component: () => import('../views/Main.vue'),
+    children: [
+      {
+        path: '/tweets',
+        name: 'single-tweet',
+        component: () => import('./../components/SingleTweet.vue'),
+      },
+    ],
   },
+
   {
     path: '/setting',
     name: 'setting',

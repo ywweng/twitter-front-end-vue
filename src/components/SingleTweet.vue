@@ -1,5 +1,11 @@
 <template>
   <div>
-   23 
+    ２３
   </div>
 </template>
+
+<script>
+export default {
+  name: 'SingleTweet',
+}
+</script>

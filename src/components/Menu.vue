@@ -1,5 +1,5 @@
 <template>
-  <div id="menu" class="d-flex flex-column h-100 py-3 ms-auto ">
+  <div id="menu" class="d-flex flex-column h-100 py-3 ms-auto">
     <div class="logo ms-3">
       <img :src="require('./../assets/Logo.png')" width="30px" />
     </div>

@@ -15,9 +15,15 @@
         <div class="action my-1">
           <button class="reply">
             <img :src="require('./../assets/Reply.svg')" width="12px" />
-            <span class="text-like-reply">13</span>
+            <router-link :to="{ name: 'single-tweet' }" class="text-like-reply"
+              >13</router-link
+            >
           </button>
-          <button class="like">
+          <button class="like" @click.stop.prevent="deleteLike" v-if="isLike">
+            <img :src="require('./../assets/LikeActive.svg')" width="12px" />
+            <span class="text-like-reply">76</span>
+          </button>
+          <button class="like" @click.stop.prevent="addLike" v-else>
             <img :src="require('./../assets/Like.svg')" width="12px" />
             <span class="text-like-reply">76</span>
           </button>
@@ -28,7 +34,22 @@
 </template>
 
 <script>
-  export default {}
+  export default {
+    name: 'TweetList',
+    data() {
+      return {
+        isLike: false,
+      }
+    },
+    methods: {
+      addLike() {
+        this.isLike = true
+      },
+      deleteLike() {
+        this.isLike = false
+      },
+    },
+  }
 </script>
 
 <style scoped>
@@ -37,7 +58,7 @@
     max-height: 1020px;
   }
   #tweet-list::-webkit-scrollbar {
-    display:none;
+    display: none;
   }
   .tweet-card {
     padding: 10px 15px;

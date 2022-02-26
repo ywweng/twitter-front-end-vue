@@ -8,9 +8,10 @@
         <div class="title menu-text">首頁</div>
         <NewTweet />
         <div class="border"></div>
-        <TweetList class="flex-grow-1"/>
+        <TweetList class="flex-grow-1" />
+        <router-view></router-view>
       </div>
-      <div class="col popular-user mh-100">
+      <div class="col-3 popular-user mh-100">
         <PopularUser />
       </div>
     </div>
@@ -41,8 +42,7 @@
     border-right: 1px solid #e6ecf0;
     max-width: 600px;
   }
-
-  .title {
+    .title {
     padding-left: 20px;
     height: 55px;
     line-height: 55px;

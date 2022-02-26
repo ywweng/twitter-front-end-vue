@@ -1,5 +1,5 @@
 <template>
-  <div id="menu" class="d-flex flex-column h-100 py-3">
+  <div id="menu" class="d-flex flex-column h-100 py-3 ms-auto ">
     <div class="logo ms-3">
       <img :src="require('./../assets/Logo.png')" width="30px" />
     </div>
@@ -78,8 +78,8 @@
 
 <style>
   #menu {
-    max-width: 245px;
-    margin-left: 103px;
+    width: 230px;
+    /* margin-left: 103px; */
   }
   .tweet {
     max-width: 210px;

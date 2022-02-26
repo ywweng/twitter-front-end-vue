@@ -1,16 +1,16 @@
 <template>
   <div class="container-fluid vh-100">
     <div class="row h-100">
-      <div class="col-3 menu">
+      <div class="col-3 menu mh-100">
         <Menu />
       </div>
-      <div class="col me-2" id="main">
+      <div class="col me-3 d-flex flex-column mh-100" id="main">
         <div class="title menu-text">首頁</div>
         <NewTweet />
         <div class="border"></div>
-        <TweetList />
+        <TweetList class="flex-grow-1"/>
       </div>
-      <div class="col popular-user">
+      <div class="col popular-user mh-100">
         <PopularUser />
       </div>
     </div>

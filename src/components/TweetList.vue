@@ -33,17 +33,20 @@
 
 <style scoped>
   #tweet-list {
-    padding: 10px 15px;
-    border-bottom: 1px solid #e6ecf0;
-    overflow: auto;
+    overflow-y: auto;
     max-height: 1020px;
   }
+  #tweet-list::-webkit-scrollbar {
+    display:none;
+  }
   .tweet-card {
+    padding: 10px 15px;
     height: 145px;
+    border-bottom: 1px solid #e6ecf0;
   }
   .tweet-content {
     margin-top: 6px;
-    width: 510px;
+    max-width: 510px;
     font-size: 15px;
     text-overflow: ellipsis;
   }

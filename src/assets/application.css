@@ -187,7 +187,7 @@ button {
 .avatar {
   margin-right: 10px;
   height: 50px;
-  width: 50px;
+  min-width: 50px;
   border-radius: 100%;
   background: #c4c4c4;
 }

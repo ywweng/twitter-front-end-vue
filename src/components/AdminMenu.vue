@@ -37,12 +37,12 @@ li {
 }
 a {
   text-decoration: none;
-  color: #1C1C1C;
+  color: var(--main-text);
   font-size: 18px;
   font-weight: 700;
 }
 .active {
-  color: #FF6600;
+  color: var(--orange);
 }
 
 </style>

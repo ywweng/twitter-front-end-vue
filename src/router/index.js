@@ -24,6 +24,35 @@ const routes = [
     path: '/admin/users',
     name: 'admin-users',
     component: () => import("../views/AdminUserList.vue")
+  },
+  {
+    path: '/user-profile',
+    name: 'user-page',
+    redirect: '/user-profile/:userId', //TODO:到時候要換回來
+  },
+  {
+    path: '/user-profile/:userId',
+    name: 'user-profile',
+    component: () => import("../views/UserProfile.vue"),
+    children:[
+      {
+        path: 'tweets',
+        name: 'user-tweets',
+        // component: () => import("../views/UserProfile.vue"),
+      },
+      {
+        path: 'replies',
+        name: 'user-replies',
+        // component: () => import("../views/UserProfile.vue"),
+      },
+      {
+        path: 'likes',
+        name: 'user-likes',
+        // component: () => import("../views/UserProfile.vue"),
+      },
+    ]
+    
+
   }
 ]
 

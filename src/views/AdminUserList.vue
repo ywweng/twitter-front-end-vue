@@ -49,13 +49,13 @@
 .user-list {
   width: 100%;
   height: 100vh;
-  border-left: 1px solid #e6ecf0;
+  border-left: 1px solid var(--border-line-color);
 }
 .page-title {
   padding: 15px 0 15px 26px;
   font-size: 18px;
   font-weight: 700;
-  border-bottom: 1px solid #e6ecf0;
+  border-bottom: 1px solid var(--border-line-color);
 }
 .card-wrap {
   width: 100%;
@@ -94,7 +94,7 @@
   height: 24px;
 }
 .color-light {
-  color: #657786;
+  color: var(--light-gray-text);
 }
 </style>
 

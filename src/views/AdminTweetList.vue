@@ -28,18 +28,18 @@
 .tweet-list {
   width: 100%;
   height: 100vh;
-  border-left: 1px solid #E6ECF0;
+  border-left: 1px solid var(--border-line-color);
 }
 .page-title {
   padding: 15px 0 15px 26px;
   font-size: 18px;
   font-weight: 700;
-  border-bottom: 1px solid #E6ECF0;
+  border-bottom: 1px solid var(--border-line-color);
 }
 li {
   height: 65px;
   margin: 10px 0;
-  border-bottom: 1px solid #E6ECF0;
+  border-bottom: 1px solid var(--border-line-color);
 }
 .avatar {
   width: 50px;
@@ -60,7 +60,7 @@ li {
   margin: 0 5px;
 }
 .account-time {
-  color:#657786;
+  color:var(--light-gray-text);
 }
 .delete-btn {
   font-size: 15px;
@@ -68,7 +68,7 @@ li {
 }
 .delete-btn:hover {
   cursor: pointer;
-  color: black;
+  color: var(-main-text);
   font-weight: bold;
 }
 </style>

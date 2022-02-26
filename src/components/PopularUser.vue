@@ -36,11 +36,10 @@
     border-top: 1px solid #e6ecf0;
     padding: 10px 15px;
   }
-  .avatar {
-    margin-right: 10px;
-    height: 50px;
-    width: 50px;
-    border-radius: 100%;
-    background: #c4c4c4;
+
+  .text-account {
+    font-size: 15px;
+    font-weight: 700;
+    color: #657786;
   }
 </style>

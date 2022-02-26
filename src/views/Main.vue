@@ -6,8 +6,11 @@
       </div>
       <div class="col me-2" id="main">
         <div class="title menu-text">首頁</div>
+        <NewTweet />
+        <div class="border"></div>
+        <TweetList />
       </div>
-      <div class="col">
+      <div class="col popular-user">
         <PopularUser />
       </div>
     </div>
@@ -17,11 +20,15 @@
 <script>
   import Menu from './../components/Menu.vue'
   import PopularUser from './../components/PopularUser.vue'
+  import NewTweet from './../components/NewTweet.vue'
+  import TweetList from './../components/TweetList.vue'
   export default {
     name: 'Main',
     components: {
       Menu,
       PopularUser,
+      NewTweet,
+      TweetList,
     },
   }
 </script>
@@ -40,5 +47,10 @@
     height: 55px;
     line-height: 55px;
     border-bottom: 1px solid #e6ecf0;
+  }
+
+  .border {
+    height: 10px;
+    background: #e6ecf0;
   }
 </style>

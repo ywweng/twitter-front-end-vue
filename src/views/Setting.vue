@@ -6,7 +6,7 @@
       </div>
       <div class="col" id="setting">
         <div class="title menu-text">帳戶設定</div>
-        <form class="setting-form">
+        <form class="setting-form d-flex flex-column">
           <div
             class="form-input d-flex flex-column"
             :class="{
@@ -105,6 +105,7 @@
               <span v-else></span>
             </div>
           </div>
+          <button type="submit" class="btn-active save ms-auto">儲存</button>
         </form>
       </div>
     </div>
@@ -207,5 +208,9 @@
   }
   .length-input {
     color: #657786;
+  }
+  .save {
+    margin-top: 1rem;
+    width: 116px;
   }
 </style>

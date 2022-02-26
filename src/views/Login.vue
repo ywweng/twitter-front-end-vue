@@ -39,22 +39,17 @@
           </span>
         </div>
       </div>
-    </form>
-    <section class="mx-auto w-100 mt-2 d-flex flex-column">
-      <!-- TODO:router-link -->
-      <button
-        type="submit"
-        class="btn-active w-100 mb-3"
-        @click.stop.prevent="login"
-      >
-        <a>登入</a>
+      <button type="submit" class="btn-active w-100 mb-3" @click="login">
+        登入
       </button>
       <div class="text-end">
-        <router-link to="register" class="mx-auto text-blue">註冊 Alphitter</router-link>
+        <router-link to="register" class="mx-auto text-blue"
+          >註冊 Alphitter</router-link
+        >
         <span class="space">．</span>
         <a href="#" class="mx-auto text-blue">後台登入</a>
       </div>
-    </section>
+    </form>
     <!-- alert -->
     <div
       class="alert alert-danger d-flex fixed-top"

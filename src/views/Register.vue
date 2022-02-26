@@ -4,7 +4,7 @@
       <img :src="require('./../assets/Logo.png')" width="50px" />
     </div>
     <p class="menu-text mx-auto mb-4">建立你的帳號</p>
-    <form class="mx-auto w-100" action="" @submit.prevent="submitForm">
+    <form class="mx-auto w-100" action="">
       <div
         class="form-input d-flex flex-column"
         :class="{
@@ -92,9 +92,9 @@
           type="password"
           name="text"
           id="pwdChecked"
-          required
           v-model="user.pwdChecked"
           @blur="checkPassword"
+          required
         />
         <div class="d-flex justify-content-between">
           <span class="text-danger" v-if="user.pwdChecked.length === 0"
@@ -108,18 +108,17 @@
           <span v-else></span>
         </div>
       </div>
-    </form>
-    <section class="mx-auto w-100 mt-3 d-flex flex-column">
-      <!-- TODO:router-link -->
       <button
         type="submit"
-        class="btn-active w-100 mb-3"
-        @click.stop.prevent="submitForm"
+        class="btn-active w-100 mt-2 mb-3"
+        @click="submitForm"
       >
         註冊
       </button>
-      <router-link to="/login" class="mx-auto text-blue">取消</router-link>
-    </section>
+      <router-link to="/login" class="text-blue d-flex justify-content-center"
+        >取消</router-link
+      >
+    </form>
     <!-- account alert -->
     <div
       class="alert alert-danger d-flex fixed-top"

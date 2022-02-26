@@ -75,12 +75,7 @@ button {
   margin: 0 auto;
 }
 
-.text-active,
-.text-active:active,
-.text-active:hover {
-  color: #ff6600;
-}
-
+/* button */
 .btn-active {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -113,6 +108,9 @@ button {
   height: 35px;
 }
 
+/* button end */
+
+/* text */
 .menu-text {
   font-size: 1rem;
   font-weight: 700;
@@ -131,17 +129,29 @@ button {
 }
 
 .text-account {
-  font-size: 15px;
-  font-weight: 700;
+  color: #657786;
+  margin-left: 5px;
+}
+
+.text-like-reply {
+  margin-left: 11px;
+  font-size: 13px;
   color: #657786;
 }
+
+.text-active,
+.text-active:active,
+.text-active:hover {
+  color: #ff6600;
+}
+/* text end */
 
 /* form */
 .form-input {
   margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  height: 54px;
+  height: 52px;
   background: #f5f8fa;
 }
 .form-input input {
@@ -171,4 +181,13 @@ button {
   margin-top: 5px;
   margin-left: 10px;
   color: #657786;
+}
+/* form end */
+
+.avatar {
+  margin-right: 10px;
+  height: 50px;
+  width: 50px;
+  border-radius: 100%;
+  background: #c4c4c4;
 }

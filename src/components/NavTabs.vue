@@ -1,11 +1,16 @@
 <template>
+<div>
   <ul class="nav nav-tab my-4">
-    <li v-for="tab in tabs" :key="tab.id" class="nav-item">
+    <li v-for="tab in tabs" :key="tab.id" class="nav-item" >
       <router-link :to="tab.path" class="nav-link">
         {{ tab.title }}
       </router-link>
     </li>
   </ul>
+
+
+</div>
+  
 </template>
 <style scoped>
 .nav-tab {
@@ -16,9 +21,14 @@
   height: 48px;
   text-align: center;
   color: var(--light-gray-text);
+  font-size: 15px;
+  font-weight: 700;
 }
-.nav-link:hover,
-.nav-link:active {
+.nav-link:hover {
+  color: var(--orange);
+  border-bottom: 2px solid var(--orange);
+}
+.active {
   color: var(--orange);
   border-bottom: 2px solid var(--orange);
 }
@@ -40,16 +50,19 @@ export default {
         {
           id: uuidv4(),
           title: "推文",
+          name: "user-tweets",
           path: "",
         },
         {
           id: uuidv4(),
           title: "推文與回覆",
+          name: 'user-replies',
           path: "",
         },
         {
           id: uuidv4(),
           title: "喜歡的內容",
+          name: 'user-likes',
           path: "",
         },
       ],
@@ -57,6 +70,7 @@ export default {
   },
   created() {
     this.fetchTabs();
+    // console.log(this.route.name)
   },
   methods: {
     fetchTabs() {

@@ -17,11 +17,3 @@ export default {
 }
 </script>
 
-<style>
-:root {
-  --main-text: #1C1C1C;
-  --light-gray-text: #657786;
-  --border-line-color: #E6ECF0;
-  --orange: #FF6600;
-}
-</style>

@@ -10,8 +10,7 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <form action="">
-            <!-- 這邊還要加@submit.stop.prevent="handleSubmit" -->
+          <form action="" @submit="handleSubmit">
             <!-- modal-header -->
             <div class="modal-header">
               <div class="d-flex">
@@ -69,34 +68,57 @@
                   />
                 </label>
                 <input
-                    id="avatar"
-                    type="file"
-                    name="cover"
-                    accept="image/*"
-                    class="form-control d-none"
-                    @change="handleAvatarChange"
-                  />
+                  id="avatar"
+                  type="file"
+                  name="avatar"
+                  accept="image/*"
+                  class="form-control d-none"
+                  @change="handleAvatarChange"
+                />
                 <div class="input-group mx-3 d-flex flex-column">
                   <div class="form-floating">
                     <input
                       type="text"
+                      name="name"
                       class="form-control form-input name"
+                      :class="{ 'form-input-warn': nameLength > 50 }"
                       id="name"
                       v-model="user.name"
                     />
                     <label for="name">名稱</label>
                   </div>
-                  <div class="word-count text-end">{{nameLength}}/50</div>
+                  <div class="word-wrap d-flex justify-content-between">
+                    <span class="warning">{{
+                      nameLength > 50 ? "字數超出上限！" : ""
+                    }}</span>
+                    <span
+                      class="word-count text-end"
+                      :class="{ 'word-count-warn': nameLength > 50 }"
+                    >
+                      {{ nameLength }}/50</span
+                    >
+                  </div>
                   <div class="form-floating mt-3">
                     <textarea
                       class="form-control form-input text-wrap introduction"
                       id="introduction"
+                      name="introduction"
                       v-model="user.introduction"
                     >
                     </textarea>
                     <label for="introduction">自我介紹</label>
                   </div>
-                  <div class="word-count text-end">{{introductionLength}}/160</div>
+                  <div class="word-wrap d-flex justify-content-between">
+                    <span class="warning">{{
+                      introLength > 160 ? "字數超出上限！" : ""
+                    }}</span>
+                    <span
+                      class="word-count text-end"
+                      :class="{ 'word-count-warn': introLength > 160 }"
+                    >
+                      {{ introLength }}/160</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -104,6 +126,7 @@
         </div>
       </div>
     </div>
+   
   </div>
 </template>
 <style scoped>
@@ -122,14 +145,12 @@
 .btn-save {
   width: 66px;
   padding: 2px 10px;
-  color: var(--orange);
-  background-color: white;
-  border: 1px solid var(--orange);
+  color: white;
+  background-color: var(--orange);
   border-radius: 100px;
 }
 .btn-save:hover {
-  color: white;
-  background-color: var(--orange);
+  box-shadow: 2px 2px 5px gray;
 }
 .cover-img {
   height: 200px;
@@ -156,6 +177,9 @@
   border-bottom: 2px solid #657786;
   border-radius: 4px;
 }
+.form-input-warn {
+  border-bottom: 2px solid #fc5a5a;
+}
 .introduction {
   height: 150px;
 }
@@ -171,14 +195,18 @@
   color: var(--light-gray-text);
   font-weight: 500;
 }
+.word-count-warn,
+.warning {
+  color: #fc5a5a;
+}
 .upload-cover,
 .upload-avatar,
 .delete-cover {
   width: 24px;
-  height: 24px; 
+  height: 24px;
   z-index: 10;
 }
-.upload-cover{
+.upload-cover {
   top: 88px;
   left: 200px;
 }
@@ -186,7 +214,7 @@
   top: 88px;
   right: 200px;
 }
-.upload-avatar{
+.upload-avatar {
   top: 182px;
   left: 72px;
 }
@@ -198,6 +226,7 @@
   border-radius: 50%;
   opacity: 0.5;
 }
+
 </style>
 
 <script>
@@ -219,8 +248,6 @@ export default {
         cover: "",
         introduction: "",
       },
-      nameLength: 0,
-      introductionLength: 0,
     };
   },
   created() {
@@ -228,18 +255,18 @@ export default {
   },
   methods: {
     setUser() {
+      const { id, name, account, email, avatar, cover, introduction } =
+        this.currentUser;
       this.user = {
         ...this.user,
-        id: this.currentUser.id,
-        name: this.currentUser.name,
-        account: this.currentUser.account,
-        email: this.currentUser.email,
-        avatar: this.currentUser.avatar,
-        cover: this.currentUser.cover,
-        introduction: this.currentUser.introduction,
+        id,
+        name,
+        account,
+        email,
+        avatar,
+        cover,
+        introduction,
       };
-      this.nameLength = this.currentUser.name.length
-      this.introductionLength = this.currentUser.introduction.length
     },
     handleCoverChange(e) {
       const { files } = e.target;
@@ -262,9 +289,34 @@ export default {
         this.user.avatar = imageURL;
       }
     },
+    handleSubmit(e) {  
+      if (this.namelength > 50 || this.introduction > 160) {
+        return 
+      }
+      const formData = new FormData(e.target);
+      console.log(formData.get('name'));
+      // 把formData傳給user-profile.vue，回到user-profile
+    },
   },
   computed: {
-    
-  }
+    nameLength: {
+      get: function () {
+        const length = this.user.name.length;
+        return length;
+      },
+      set: function (newValue) {
+        this.nameLength = newValue;
+      },
+    },
+    introLength: {
+      get: function () {
+        const length = this.user.introduction.length;
+        return length;
+      },
+      set: function (newValue) {
+        this.introLength = newValue;
+      },
+    },
+  },
 };
 </script>

@@ -28,32 +28,41 @@ const routes = [
   {
     path: '/user-profile',
     name: 'user-page',
-    redirect: '/user-profile/:userId', //TODO:到時候要換回來
+    redirect: '/user-profile/:userId/tweets', 
   },
   {
     path: '/user-profile/:userId',
     name: 'user-profile',
+    redirect: '/user-profile/:userId/tweets',
     component: () => import("../views/UserProfile.vue"),
     children:[
       {
         path: 'tweets',
         name: 'user-tweets',
-        // component: () => import("../views/UserProfile.vue"),
+        component: () => import("../components/UserTweetList.vue"),
       },
       {
         path: 'replies',
         name: 'user-replies',
-        // component: () => import("../views/UserProfile.vue"),
+        component: () => import("../components/UserReplyList.vue"),
       },
       {
         path: 'likes',
         name: 'user-likes',
-        // component: () => import("../views/UserProfile.vue"),
+        component: () => import("../components/UserLikeList.vue"),
       },
     ]
-    
-
-  }
+  },
+  {
+    path: '/user-profile/:userId/followings',
+    name: 'following-list',
+    component: () => import("../views/UserFollowingList.vue")
+  },
+  {
+    path: '/user-profile/:userId/followers',
+    name: 'follower-list',
+    component: () => import("../views/UserFollowerList.vue")
+  },
 ]
 
 const router = new VueRouter({

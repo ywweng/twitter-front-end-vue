@@ -1,70 +1,97 @@
 <template>
-  <div class="user-profile">
-    <div class="page-title position-relative">
-      <img
-        src="../assets/arrow.png"
-        alt=""
-        class="back-arrow position-absolute"
-      />
-      <div class="title-item main-text">{{currentUser.name}}</div>
-      <div class="title-item sub-text">{{currentUser.total_tweets}}推文</div>
-    </div>
-    <div class="profile-wrap position-relative">
-      <div class="profile-cover">
-        <img :src="currentUser.cover" class="w-100" alt="" />
-      </div>
-      <img
-        :src="currentUser.avatar"
-        class="profile-avatar rounded-circle position-absolute"
-        alt=""
-      />
-      <button
-        type="button"
-        class="btn btn-edit position-absolute"
-        data-bs-toggle="modal"
-        data-bs-target="#profileEditModal"
-      >
-        編輯個人資料
-      </button>
-      <div class="profile-data">
-        <div class="name main-text">{{currentUser.name}}</div>
-        <div class="account sub-text">@{{currentUser.account}}</div>
-        <div class="description my-2">
-          {{currentUser.introduction}}
-        </div>
-        <div class="followship">
-          <span class="following">{{currentUser.total_followings}}個</span
-          ><span class="sub-text">跟隨中</span>
-          <span class="follower ms-4">{{currentUser.total_followers}}位</span
-          ><span class="sub-text">跟隨者</span>
+  <div class="row">
+    <!-- Menu col-3-->
+
+    <!-- user-profile -->
+    <div class="user-profile">
+      <div class="page-title position-relative">
+        <img
+          src="../assets/arrow.png"
+          alt=""
+          class="back-arrow position-absolute"
+          @click="$router.back()"
+        />
+        <div class="title-item main-text">{{ currentUser.name }}</div>
+        <div class="title-item sub-text">
+          {{ currentUser.total_tweets }}推文
         </div>
       </div>
+      <div class="profile-wrap position-relative">
+        <div class="profile-cover">
+          <img :src="currentUser.cover" class="w-100" alt="" />
+        </div>
+        <img
+          :src="currentUser.avatar"
+          class="profile-avatar rounded-circle position-absolute"
+          alt=""
+        />
+        <button
+          type="button"
+          class="btn btn-edit position-absolute"
+          data-bs-toggle="modal"
+          data-bs-target="#profileEditModal"
+        >
+          編輯個人資料
+        </button>
+        <div class="profile-data">
+          <div class="name main-text">{{ currentUser.name }}</div>
+          <div class="account sub-text">@{{ currentUser.account }}</div>
+          <div class="description my-2">
+            {{ currentUser.introduction }}
+          </div>
+          <div class="followship">
+            <router-link :to="`/user-profile/${currentUser.id}/followings`">
+            <span class="following fw-bold">{{ currentUser.total_followings }}個</span
+            ><span class="sub-text">跟隨中</span></router-link>
+            <router-link :to="`/user-profile/${currentUser.id}/followers`">
+              <span class="follower ms-4 fw-bold"
+              >{{ currentUser.total_followers }}位</span
+            ><span class="sub-text">跟隨者</span>
+            </router-link>
+          </div>
+        </div>
+      </div>
+      <ProfileEditModal :current-user="currentUser" />
+      <NavTabs :user-id="currentUser.id" />
+      <!-- 這邊放router-view -->
+        <router-view></router-view>
     </div>
-    <ProfileEditModal :current-user="currentUser" />
-    <NavTabs :user-id="currentUser.id"/>
-    <!-- 這邊放router-view -->
+    
+    <!-- Popular USer col-3-->
   </div>
 </template>
 
 
 <style scoped>
+a {
+  text-decoration: none;
+  color: black;
+}
 .user-profile {
   width: 100%;
   border-left: 1px solid var(--border-line-color);
   border-right: 1px solid var(--border-line-color);
 }
 .page-title {
-  padding: 15px 0 15px 26px;
+  padding: 5px 0 5px 26px;
   border-bottom: 1px solid var(--border-line-color);
 }
 .back-arrow {
-  top: 20px;
+  top: 22px;
   left: 19px;
   width: 17px;
   height: 14px;
 }
+.back-arrow:hover {
+  cursor: pointer;
+}
 .title-item {
   margin-left: 64px;
+}
+.profile-data {
+  margin-top: 60px;
+  padding: 10px 15px;
+  font-size: 14px;
 }
 .main-text {
   font-size: 19px;
@@ -102,16 +129,12 @@
   background-color: var(--orange);
   color: white;
 }
-.profile-data {
-  margin-top: 60px;
-  padding: 10px 15px;
-  font-size: 14px;
-}
 .account,
 .following,
 .follower {
   font-weight: 500;
 }
+
 </style>
 
 <script>
@@ -144,17 +167,17 @@ export default {
     return {
       currentUser: {},
       // user: {}
-    }
+    };
   },
   created() {
-    this.fetchUser()
+    this.fetchUser();
   },
   methods: {
     //TODO:這邊是否應該分為setUser(currentUser)和fetchUser?
     fetchUser() {
       //TODO:這邊要api向後端請求使用者資料
-      this.currentUser = dummyUser
-    }
-  }
+      this.currentUser = dummyUser;
+    },
+  },
 };
 </script>

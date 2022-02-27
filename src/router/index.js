@@ -54,14 +54,22 @@ const routes = [
     ]
   },
   {
-    path: '/user-profile/:userId/followings',
-    name: 'following-list',
-    component: () => import("../views/UserFollowingList.vue")
-  },
-  {
-    path: '/user-profile/:userId/followers',
-    name: 'follower-list',
-    component: () => import("../views/UserFollowerList.vue")
+    path: '/user-profile/:userId/follow',
+    name: 'followship',
+    component: () => import("../views/UserFollowShip.vue"),
+    edirect: '/user-profile/:userId/followers',
+    children: [
+      {
+        path: '/user-profile/:userId/followings',
+        name: 'following-list',
+        component: () => import("../components/UserFollowingList.vue"),
+      },
+      {
+        path: '/user-profile/:userId/followers',
+        name: 'follower-list',
+        component: () => import("../components/UserFollowerList.vue"),
+      },
+    ]
   },
 ]
 

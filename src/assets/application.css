@@ -121,6 +121,17 @@ button {
 .text-active:hover {
   color: #ff6600;
 }
+
+.main-text {
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--main-text);
+}
+.sub-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light-gray-text);
+}
 /* text end */
 
 /* form */
@@ -175,6 +186,16 @@ button {
   border-color: #ff6600;
   border-radius: 100px;
   color: #ff6600;
+}
+
+.back-arrow {
+  top: 22px;
+  left: 19px;
+  width: 17px;
+  height: 14px;
+}
+.back-arrow:hover {
+  cursor: pointer;
 }
 
 /* color */

@@ -4,7 +4,8 @@
       <img :src="require('./../assets/Logo.png')" width="50px" />
     </div>
     <p class="menu-text mx-auto mb-4">建立你的帳號</p>
-    <form class="mx-auto w-100" @submit.prevent="handleSubmit">
+    <form class="mx-auto w-100" @submit.prevent.stop="handleSubmit">
+      <!-- 優化：字數空白提示 -->
       <div
         class="form-input d-flex flex-column account"
         :class="{ 'form-input-error': account.length === 0 }"
@@ -120,6 +121,8 @@
 </template>
 
 <script>
+  // import authorizationAPI from './../apis/authorization'
+
   const dummyUser = [
     {
       account: 'user1',
@@ -142,7 +145,6 @@
         email: '',
         password: '',
         pwdChecked: '',
-        isRegistered: { account: false, email: false },
         alertMsg: '',
         alertStatus: false,
       }
@@ -157,6 +159,7 @@
         }, 2000)
       },
       handleSubmit() {
+        // TODO:改成async/await
         console.log(dummyUser)
         if (
           !this.name ||
@@ -167,6 +170,7 @@
         ) {
           return
         }
+
         if (this.password !== this.pwdChecked) {
           this.alertMsg = '密碼錯誤，請重新輸入'
           this.alertStatus = 'error'
@@ -174,13 +178,30 @@
           this.pwdChecked = ''
           return
         }
-        // TODO: 新增使用者資料API
-        this.alertMsg = '註冊成功！'
+        // TODO:串接API
+        // const { data } = await authorizationAPI.register({
+        //   account: this.account,
+        //   name: this.name,
+        //   email: this.email,
+        //   password: this.password,
+        //   passwordCheck: this.pwdChecked,
+        // })
+
+        if (data.status === 'error') {
+          throw new Error(data.message)
+          this.alertMsg = data.message
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
+
+        // this.alertMsg = data.message
         this.alertStatus = 'success'
         this.alertShow()
         setTimeout(() => {
           this.$router.push('/login')
-        }, 3000);
+        }, 3000)
+
+        // catch
       },
     },
   }

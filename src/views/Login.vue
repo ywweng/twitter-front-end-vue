@@ -4,7 +4,7 @@
       <img :src="require('./../assets/Logo.png')" width="50px" />
     </div>
     <p class="menu-text mx-auto mb-4">登入 Alphitter</p>
-    <form class="mx-auto w-100" action="" @submit.prevent="login">
+    <form class="mx-auto w-100" action="" @submit.prevent.stop="handleSubmit">
       <div
         class="form-input d-flex flex-column"
         :class="{
@@ -19,7 +19,6 @@
           v-model.trim="account"
           required
         />
-        <span class="text-danger" v-if="account.length === 0">不可空白</span>
       </div>
       <div
         class="form-input d-flex flex-column"
@@ -34,77 +33,115 @@
           required
         />
         <div class="d-flex justify-content-between">
-          <span class="text-danger" v-if="password.length === 0"
+          <!-- <span class="text-danger" v-if="password.length === 0"
             >不可空白
-          </span>
+          </span> -->
         </div>
       </div>
-      <button type="submit" class="btn-active w-100 mb-3" @click="login">
+      <button
+        type="submit"
+        class="btn-active w-100 mb-3"
+        :disabled="isProcessing"
+      >
         登入
       </button>
       <div class="text-end">
-        <router-link to="register" class="mx-auto text-blue"
+        <router-link to="/register" class="mx-auto text-blue"
           >註冊 Alphitter</router-link
         >
         <span class="space">．</span>
+        <!-- TODO:router-link -->
         <a href="#" class="mx-auto text-blue">後台登入</a>
       </div>
     </form>
     <!-- alert -->
     <div
-      class="alert alert-danger d-flex fixed-top"
+      class="alert d-flex fixed-top"
       id="alert"
       role="alert"
-      v-if="checkAccount"
+      v-if="alertStatus !== false"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        fill="currentColor"
-        class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
-        viewBox="0 0 16 16"
-        role="img"
-        aria-label="Warning:"
-      >
-        <path
-          d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+      <div class="ms-2 mx-auto my-auto text-alert">{{ alertMsg }}</div>
+      <div class="ms-auto">
+        <img
+          :src="require('./../assets/error-alert.svg')"
+          v-if="alertStatus === 'error'"
         />
-      </svg>
-      <div class="ms-2 mx-auto text-danger">帳號不存在</div>
+        <img
+          :src="require('./../assets/success-alert.svg')"
+          v-else-if="alertStatus === 'success'"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  // import authorizationAPI from './../apis/authorization'
+
   const dummyUser = {
     account: 'user1',
     password: '12345678',
   }
+
   export default {
     name: 'Login',
     data() {
       return {
         account: '',
         password: '',
+        isProcessing: false,
         checkAccount: false,
+        alertMsg: '',
+        alertStatus: false,
       }
     },
     methods: {
-      alertTrigger() {
+      alertShow() {
         const bootstrap = require('bootstrap')
         let alertNode = document.querySelector('#alert')
-        return bootstrap.Alert.getInstance(alertNode)
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
       },
-      login() {
-        // TODO:登入API，需驗證
-        const { account, password } = dummyUser
-        if (account === this.account && password === this.password) {
-          this.$router.push('/main')
-        } else {
-          this.checkAccount = true
-          this.alertTrigger()
+      handleSubmit() {
+        // TODO:改成async/await
+        if (!this.account || !this.password) {
+          this.alertMsg = '請填入帳號和密碼'
+          this.alertStatus = 'error'
+          this.alertShow()
+          return
         }
+
+        this.isProcessing = true
+
+        // const response = await authorizationAPI.login({
+        //   account: this.account,
+        //   password: this.password,
+        // })
+
+        // const { data } = response
+
+        // if (data.status !== 'success') {
+        //   throw new Error(data.message)
+        //   this.alertMsg = '登入失敗'
+        //   this.alertStatus = 'error'
+        //   this.alertShow()
+        // }
+
+        localStorage.setItem('token', data.token)
+
+        this.$store.commit('setCurrentUser', data.user)
+
+        this.$router.push('/main')
+
+        // catch
+        this.isProcessing = false
+        this.password = ''
+        this.alertMsg = '輸入的帳號密碼有誤'
+        this.alertStatus = 'error'
+        this.alertShow()
       },
     },
   }

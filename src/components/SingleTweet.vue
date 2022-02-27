@@ -1,14 +1,14 @@
 <template>
   <div id="single-tweet">
     <div class="title menu-text">
-      <button type="button" class="d-flex">
+      <button type="button" class="d-flex" @click="$router.go(-1)">
         <img
           :src="require('./../assets/back.svg')"
           width="17px"
           height="14px"
           class="my-auto"
         />
-        <router-link to="#" class="ms-4 my-auto menu-text">推文</router-link>
+        <span class="ms-4 my-auto menu-text">推文</span>
       </button>
     </div>
     <div class="tweet-section d-flex flex-column">
@@ -39,7 +39,7 @@
             @click.stop.prevent="deleteLike"
             v-if="isLike"
           >
-            <img :src="require('./../assets/LikeActive.svg')" />
+            <img :src="require('./../assets/LikeActive.svg')" width="24px" />
           </button>
           <button class="btn-like" @click.stop.prevent="addLike" v-else>
             <img :src="require('./../assets/Like.svg')" />
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="replies" id="reply-list" >
+    <div class="replies" id="reply-list">
       <div class="reply-card d-flex" v-for="index in 10" :key="index">
         <div class="avatar"><img src="" alt="" /></div>
         <div class="tweet-info d-flex flex-column justify-content-evenly w-100">

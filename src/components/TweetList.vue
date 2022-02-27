@@ -17,16 +17,16 @@
             reprehenderit elit laborum.
           </div>
           <div class="action my-1">
-            <button class="btn-reply">
+            <button class="btn-reply" data-bs-toggle="modal" data-bs-target="#new-reply-modal">
               <img :src="require('./../assets/Reply.svg')" width="12px" />
               <!-- TODO:修改id -->
-              <router-link
-                :to="{ name: 'single-tweet', params: { tweetId: 1 } }"
-                class="text-like-reply"
-                >13
-              </router-link>
+              <span class="text-like-reply"> 13 </span>
             </button>
-            <button class="btn-like" @click.stop.prevent="deleteLike" v-if="isLike">
+            <button
+              class="btn-like"
+              @click.stop.prevent="deleteLike"
+              v-if="isLike"
+            >
               <img :src="require('./../assets/LikeActive.svg')" width="12px" />
               <span class="text-like-reply">76</span>
             </button>
@@ -38,15 +38,18 @@
         </div>
       </div>
     </div>
+    <NewReplyModal />
   </div>
 </template>
 
 <script>
   import NewTweet from './../components/NewTweet.vue'
+  import NewReplyModal from './../components/NewReplyModal.vue'
   export default {
     name: 'TweetList',
     components: {
       NewTweet,
+      NewReplyModal,
     },
     data() {
       return {

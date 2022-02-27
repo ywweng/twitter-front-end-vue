@@ -22,7 +22,7 @@
           </li>
           <li class="menu-icon mb-4">
             <!-- TODO:router-link -->
-            <router-link to="/setting" class="menu-text">
+            <router-link :to="{ name: 'setting' }" class="menu-text">
               <img class="me-3" :src="settingUrl" />
               設定
             </router-link>
@@ -30,7 +30,13 @@
         </ul>
       </div>
       <!-- TODO:router-link -->
-      <button class="btn-active btn-tweet w-100">推文</button>
+      <button
+        class="btn-active btn-tweet w-100"
+        data-bs-toggle="modal"
+        data-bs-target="#new-tweet-modal"
+      >
+        推文
+      </button>
     </div>
     <div>
       <div class="ms-3 d-flex align-items-center">
@@ -45,12 +51,17 @@
         <router-link to="/login" class="menu-text ms-2">登出</router-link>
       </div>
     </div>
+    <NewTweetModal />
   </div>
 </template>
 
 <script>
+  import NewTweetModal from './../components/NewTweetModal.vue'
   export default {
     name: 'Menu',
+    components: {
+      NewTweetModal,
+    },
     data() {
       return {
         mainUrl: require('./../assets/Menu.svg'),

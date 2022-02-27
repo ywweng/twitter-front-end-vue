@@ -10,7 +10,7 @@
         v-model="content"
       ></textarea>
       <div class="mt-auto ms-auto">
-        <span class="text-danger" v-if="content > 140"
+        <span class="text-danger" v-if="content.length > 140"
           >字數不可超過 140 字</span
         >
         <button type="submit" class="btn-active post">推文</button>

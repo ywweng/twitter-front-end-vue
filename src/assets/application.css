@@ -63,6 +63,11 @@ button {
   border: 0;
   cursor: pointer;
 }
+
+::placeholder { 
+  color: #9197A3;
+}
+
 /* reset end */
 
 * {
@@ -190,4 +195,20 @@ button {
   min-width: 50px;
   border-radius: 100%;
   background: #c4c4c4;
+}
+
+
+.alert {
+  position: fixed;
+  top: 30px;
+  left: 70%;
+  width: 394px;
+  height: 96px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 16px 0 rgba(51,51,51,8%);
+}
+
+.text-alert {
+  font-size: 20px;
+  font-weight: 700;
 }

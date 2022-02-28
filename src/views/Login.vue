@@ -5,12 +5,7 @@
     </div>
     <p class="menu-text mx-auto mb-4">登入 Alphitter</p>
     <form class="mx-auto w-100" action="" @submit.prevent.stop="handleSubmit">
-      <div
-        class="form-input d-flex flex-column"
-        :class="{
-          'form-input-error': account.length === 0,
-        }"
-      >
+      <div class="form-input d-flex flex-column">
         <label for="account" class="form-input-text">帳號</label>
         <input
           type="text"
@@ -20,10 +15,7 @@
           required
         />
       </div>
-      <div
-        class="form-input d-flex flex-column"
-        :class="{ 'form-input-error': password.length === 0 }"
-      >
+      <div class="form-input d-flex flex-column">
         <label for="password" class="form-input-text">密碼</label>
         <input
           type="password"
@@ -79,9 +71,25 @@
 <script>
   // import authorizationAPI from './../apis/authorization'
 
-  const dummyUser = {
-    account: 'user1',
-    password: '12345678',
+  // const dummyUser = {
+  //   account: 'user1',
+  //   password: '12345678',
+  // }
+
+  const response = {
+    status: 'success',
+    data: {
+      token: 'token',
+      user: {
+        id: 1,
+        account: 'user1',
+        name: '使用者1',
+        email: 'user1@example.com',
+        role: 'user', //admin:管理員; user:使用者 只有使用者可以登入
+        created_at: '2022-01-18T07:23:18.000Z',
+        updated_at: '2022-01-18T07:23:18.000Z',
+      },
+    },
   }
 
   export default {
@@ -121,20 +129,23 @@
         //   password: this.password,
         // })
 
-        // const { data } = response
+        const { data } = response
 
-        // if (data.status !== 'success') {
-        //   throw new Error(data.message)
-        //   this.alertMsg = '登入失敗'
-        //   this.alertStatus = 'error'
-        //   this.alertShow()
-        // }
+        if (data.status !== 'success') {
+          // throw new Error(data.message)
+          this.alertMsg = '登入失敗'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
 
-        localStorage.setItem('token', data.token)
-
+        // localStorage.setItem('token', data.token)
         this.$store.commit('setCurrentUser', data.user)
-
-        this.$router.push('/main')
+        // if (
+        //   this.account === dummyUser.account &&
+        //   this.password === dummyUser.password
+        // ) {
+        //   this.$router.push('/main')
+        // }
 
         // catch
         this.isProcessing = false

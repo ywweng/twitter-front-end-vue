@@ -8,7 +8,7 @@
       <!-- 優化：字數空白提示 -->
       <div
         class="form-input d-flex flex-column account"
-        :class="{ 'form-input-error': account.length === 0 }"
+        :class="{ 'form-input-error': isNull && !account }"
       >
         <label for="account" class="form-input-text">帳號</label>
         <input
@@ -18,20 +18,20 @@
           v-model.trim="account"
           required
         />
-        <span class="text-danger" v-if="account.length === 0">不可空白</span>
+        <span class="text-danger" v-if="isNull && !account">不可空白</span>
         <span class="text-danger" v-if="account.length > 20"
           >字數超出上限！
         </span>
       </div>
       <div
         class="form-input d-flex flex-column"
-        :class="{ 'form-input-error': name.length === 0 }"
+        :class="{ 'form-input-error': isNull && !name }"
       >
         <label for="name" class="form-input-text">名稱</label>
         <input type="text" name="text" id="name" v-model.trim="name" required />
         <div class="d-flex justify-content-between">
           <div class="me-auto">
-            <span class="text-danger" v-if="name.length === 0">不可空白 </span>
+            <span class="text-danger" v-if="isNull && !name">不可空白 </span>
             <span class="text-danger" v-if="name.length > 50"
               >字數超出上限！
             </span>
@@ -42,7 +42,7 @@
       <div
         class="form-input d-flex flex-column"
         :class="{
-          'form-input-error': email.length === 0,
+          'form-input-error': isNull && !email,
         }"
       >
         <label for="email" class="form-input-text">Email</label>
@@ -53,11 +53,11 @@
           v-model.trim="email"
           required
         />
-        <span class="text-danger" v-show="email.length === 0">不可空白</span>
+        <span class="text-danger" v-if="isNull && !email">不可空白</span>
       </div>
       <div
         class="form-input d-flex flex-column"
-        :class="{ 'form-input-error': password.length === 0 }"
+        :class="{ 'form-input-error': isNull && !password }"
       >
         <label for="password" class="form-input-text">密碼</label>
         <input
@@ -68,12 +68,12 @@
           required
         />
         <div class="d-flex justify-content-between">
-          <span class="text-danger" v-if="password.length === 0">不可空白</span>
+          <span class="text-danger" v-if="isNull && !password">不可空白</span>
         </div>
       </div>
       <div
         class="form-input d-flex flex-column"
-        :class="{ 'form-input-error': pwdChecked.length === 0 }"
+        :class="{ 'form-input-error': isNull && !pwdChecked }"
       >
         <label for="password" class="form-input-text">密碼確認</label>
         <input
@@ -84,7 +84,7 @@
           required
         />
         <div class="d-flex justify-content-between">
-          <span class="text-danger" v-if="pwdChecked.length === 0"
+          <span class="text-danger" v-if="isNull && !pwdChecked"
             >不可空白
           </span>
           <span class="text-danger" v-else-if="password !== pwdChecked"
@@ -123,18 +123,10 @@
 <script>
   // import authorizationAPI from './../apis/authorization'
 
-  const dummyUser = [
-    {
-      account: 'user1',
-      name: '使用者1',
-      email: 'user1@example.com',
-    },
-    {
-      account: 'user2',
-      name: '使用者2',
-      email: 'user2@example.com',
-    },
-  ]
+  const data = {
+    status: 'error',
+    message: 'account 已重複註冊！',
+  }
 
   export default {
     name: 'Register',
@@ -145,6 +137,7 @@
         email: '',
         password: '',
         pwdChecked: '',
+        isNull: false,
         alertMsg: '',
         alertStatus: false,
       }
@@ -160,7 +153,6 @@
       },
       handleSubmit() {
         // TODO:改成async/await
-        console.log(dummyUser)
         if (
           !this.name ||
           !this.account ||
@@ -168,6 +160,7 @@
           !this.password ||
           !this.pwdChecked
         ) {
+          this.isNull = true
           return
         }
 
@@ -187,21 +180,26 @@
         //   passwordCheck: this.pwdChecked,
         // })
 
+
         if (data.status === 'error') {
-          throw new Error(data.message)
+          // throw new Error(data.message)
           this.alertMsg = data.message
           this.alertStatus = 'error'
           this.alertShow()
+          return
         }
 
         // this.alertMsg = data.message
-        this.alertStatus = 'success'
-        this.alertShow()
+        // this.alertStatus = 'success'
+        // this.alertShow()
         setTimeout(() => {
           this.$router.push('/login')
         }, 3000)
 
         // catch
+        // this.alertStatus = 'error'
+        // this.alertMsg = error.message
+        // this.alertShow()
       },
     },
   }

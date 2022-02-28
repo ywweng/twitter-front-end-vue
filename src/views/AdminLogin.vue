@@ -8,22 +8,26 @@
       <div class="form-floating">
         <input
           type="text"
-          class="form-control form-input"
           id="account"
+          class="form-control form-input"
+          :class="{ 'form-input-warn': callAlert === 0 || callAlert === 1 }"
           required
           v-model="user.account"
         />
         <label for="account">帳號</label>
+        <div class="alert-text" v-if="callAlert === 0 || callAlert === 1">{{alertMessage}}</div>
       </div>
       <div class="form-floating">
         <input
           type="text"
-          class="form-control form-input"
           id="password"
+          class="form-control form-input"
+          :class="{ 'form-input-warn': callAlert === 2 }"
           required
           v-model="user.password"
         />
         <label for="password">密碼</label>
+        <div class="alert-text" v-if="callAlert === 2">{{alertMessage}}</div>
       </div>
       <button
         type="submit"
@@ -33,7 +37,7 @@
         登入
       </button>
     </form>
-    <div class="front-link"><router-link to="/">前台登入</router-link></div>
+    <div class="front-link text-blue"><router-link to="/login">前台登入</router-link></div>
 
     <!-- alert -->
     <div class="alert-setting">
@@ -57,7 +61,7 @@
           alert-dismissible
           fade
         "
-        :class="{ show: callAlert }"
+        :class="{ show: callAlert >= 0 }"
         role="alert"
       >
         <svg
@@ -70,12 +74,12 @@
           <use xlink:href="#exclamation-triangle-fill" />
         </svg>
         <div class="alert-text">{{alertMessage}}</div>
-        <button
+        <!-- <button
           type="button"
           class="btn-close"
           data-bs-dismiss="alert"
           aria-label="Close"
-        ></button>
+        ></button> -->
       </div>
     </div>
   </div>
@@ -101,6 +105,7 @@
 .form-input {
   width: 540px;
   height: 52px;
+  margin-bottom: 0;
   background-color: #f5f8fa;
   border: none;
   border-bottom: 2px solid #657786;
@@ -118,7 +123,7 @@
   height: 50px;
   margin-top: 40px;
   border-radius: 50px;
-  background: #ff6600;
+  background: var(--orange);
   color: white;
   font-size: 18px;
   font-weight: 700;
@@ -129,6 +134,9 @@
 }
 .alert-text {
   color: #fc5a5a;
+}
+.form-input-warn {
+  border-bottom: 2px solid #fc5a5a;
 }
 </style>
 
@@ -149,36 +157,36 @@ export default {
         role: "",
       },
       // isAdmin: false,
-      callAlert: false,
+      callAlert: -1,
       alertMessage: ""
     };
   },
   methods: {
     adminSignIn(account, password) {
       if(!account && !password) {
-        this.callAlert = true;
+        this.callAlert = 0;
         this.alertMessage = messages[0]
         setTimeout(() => {
-          this.callAlert = false;
-        }, 3000);
+          this.callAlert = -1;
+        }, 2000);
         return
       }
       if (account !== dummyAdmin.account) {
-        this.callAlert = true;
+        this.callAlert = 1;
         this.alertMessage = messages[1]
         this.user.account = "";
         this.user.password = "";
         setTimeout(() => {
-          this.callAlert = false;
-        }, 3000);
+          this.callAlert = -1;
+        }, 2000);
         return;
       } else if (password !== dummyAdmin.password) {
-        this.callAlert = true;
+        this.callAlert = 2;
         this.alertMessage = messages[2]
         this.user.password = "";
         setTimeout(() => {
-          this.callAlert = false;
-        }, 3000);
+          this.callAlert = -1;
+        }, 2000);
         return;
       } else {
         this.$router.push("/admin/tweets");

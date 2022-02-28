@@ -15,7 +15,7 @@
           </li>
           <li class="menu-icon mb-4">
             <!-- TODO:router-link -->
-            <router-link to="/user-profile/" class="menu-text">
+            <router-link to="/user-profile/1" class="menu-text">
               <img class="profile-icon" :src="userProfileUrl" />
               個人資料
             </router-link>

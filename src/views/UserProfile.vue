@@ -1,9 +1,11 @@
 <template>
   <div class="row">
-    <!-- Menu col-3-->
-
-    <!-- user-profile -->
-    <div class="user-profile">
+    <!-- Menu -->
+    <div class="menu col-3">
+      <Menu />
+    </div>
+    <!-- User-profile -->
+    <div class="user-profile col-6">
       <div class="page-title position-relative">
         <img
           src="../assets/arrow.png"
@@ -86,8 +88,10 @@
       <!-- router-view -->
       <router-view></router-view>
     </div>
-
-    <!-- Popular USer col-3-->
+    <!-- Popular User -->
+    <div class="col-3 popular-user mh-100">
+      <PopularUser />
+    </div>
   </div>
 </template>
 
@@ -98,7 +102,6 @@ a {
   color: black;
 }
 .user-profile {
-  width: 100%;
   border-left: 1px solid var(--border-line-color);
   border-right: 1px solid var(--border-line-color);
 }
@@ -168,9 +171,11 @@ a {
 <script>
 import ProfileEditModal from "../components/ProfileEditModal.vue";
 import NavTabs from "../components/NavTabs.vue";
+import Menu from "../components/Menu.vue"
+import PopularUser from "../components/PopularUser.vue"
 
 const dummyUser = {
-  id: 1,
+  id: 2,
   account: "user1",
   name: "使用者1",
   email: "user1@example.com",
@@ -191,6 +196,8 @@ export default {
   components: {
     ProfileEditModal,
     NavTabs,
+    Menu,
+    PopularUser,
   },
   data() {
     return {

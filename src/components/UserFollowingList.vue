@@ -1,17 +1,36 @@
 <template>
-  <div class="follow-list">
+  <div class="row">
 
-    <div class="user-card d-flex position-relative">
-      <img src="" class="avatar" alt="" />
-      <div class="user-info d-flex flex-column">
-        <div class="text-name">Apple</div>
-        <div class="text-account ms-0">@apple</div>
-        <div class="text-content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque nisi odio ipsa quaerat ipsam repellendus repellat</div>
+    <!-- Following list -->
+    <div class="follow-list ">
+      <div class="user-card d-flex position-relative">
+        <img src="" class="avatar" alt="" />
+        <div class="user-info d-flex flex-column">
+          <div class="text-name">Apple</div>
+          <div class="text-account ms-0">@apple</div>
+          <div class="text-content">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque nisi
+            odio ipsa quaerat ipsam repellendus repellat
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn btn-follow position-absolute"
+          v-if="!isFollowing"
+          @click.stop.prevent="addFollow"
+        >
+          跟隨
+        </button>
+        <button
+          type="button"
+          class="btn btn-following position-absolute"
+          v-else
+          @click.stop.prevent="deleteFollow"
+        >
+          正在跟隨
+        </button>
       </div>
-      <button type="button" class="btn btn-follow position-absolute" v-if="!isFollowing" @click.stop.prevent="addFollow">跟隨</button>
-      <button type="button" class="btn btn-following position-absolute" v-else @click.stop.prevent="deleteFollow">正在跟隨</button>
     </div>
-
   </div>
 </template>
 
@@ -45,18 +64,19 @@
 
 <script>
 export default {
+  name: "userFollowingList",
   data() {
     return {
-      isFollowing: true
-    }
+      isFollowing: true,
+    };
   },
   methods: {
     addFollow() {
-      this.isFollowing = true
+      this.isFollowing = true;
     },
     deleteFollow() {
-      this.isFollowing = false
-    }
-  }
-}
+      this.isFollowing = false;
+    },
+  },
+};
 </script>

@@ -103,7 +103,7 @@ const routes = [
       },
     ]
   },
-  
+
 ]
 
 const router = new VueRouter({
@@ -111,9 +111,9 @@ const router = new VueRouter({
   routes,
 })
 
-router.beforeEach((to,from,next) => {
-  console.log('to',to)
-  console.log('from',from)
+router.beforeEach((to, from, next) => {
+  console.log('to', to)
+  console.log('from', from)
   next()
 })
 

@@ -8,6 +8,7 @@
   box-sizing: border-box;
 }
 
+html,
 body,
 h1,
 h2,
@@ -30,6 +31,20 @@ li {
 
 a {
   cursor: pointer;
+  color: inherit;
+  text-decoration: inherit;
+}
+
+a,
+a:hover,
+a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:active {
+  text-decoration: none;
+  color: #ff6600;
 }
 
 table {
@@ -48,7 +63,22 @@ button {
   border: 0;
   cursor: pointer;
 }
+
+::placeholder { 
+  color: #9197A3;
+}
+
 /* reset end */
+
+* {
+  font-family: 'Noto Sans TC', sans-serif;
+  color: #1c1c1c;
+  font-weight: normal;
+}
+
+#app {
+  margin: 0 auto;
+}
 
 /* button */
 .btn-active {
@@ -60,6 +90,7 @@ button {
   color: #ffffff;
   font-size: 1rem;
   font-weight: 500;
+  min-width: 66px;
 }
 
 .btn-following {
@@ -104,10 +135,7 @@ button {
 }
 
 .text-account {
-  font-size: 15px;
-  font-weight: 500;
   color: #657786;
-  margin-left: 5px;
 }
 
 .text-like-reply {
@@ -120,17 +148,6 @@ button {
 .text-active:active,
 .text-active:hover {
   color: #ff6600;
-}
-
-.main-text {
-  font-size: 19px;
-  font-weight: 900;
-  color: var(--main-text);
-}
-.sub-text {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--light-gray-text);
 }
 /* text end */
 
@@ -180,12 +197,19 @@ button {
   background: #c4c4c4;
 }
 
-.btn-border {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-color: #ff6600;
-  border-radius: 100px;
-  color: #ff6600;
+.alert {
+  position: fixed;
+  top: 30px;
+  left: 70%;
+  width: 394px;
+  height: 96px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 16px 0 rgba(51,51,51,8%);
+}
+
+.text-alert {
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .back-arrow {

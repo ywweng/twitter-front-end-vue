@@ -49,6 +49,7 @@
 </template>
 
 <script>
+
 import NewReplyModal from './../components/NewReplyModal.vue'
 
 const dummyData = [

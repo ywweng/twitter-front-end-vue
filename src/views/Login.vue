@@ -5,12 +5,7 @@
     </div>
     <p class="menu-text mx-auto mb-4">登入 Alphitter</p>
     <form class="mx-auto w-100" action="" @submit.prevent.stop="handleSubmit">
-      <div
-        class="form-input d-flex flex-column"
-        :class="{
-          'form-input-error': account.length === 0,
-        }"
-      >
+      <div class="form-input d-flex flex-column">
         <label for="account" class="form-input-text">帳號</label>
         <input
           type="text"
@@ -20,10 +15,7 @@
           required
         />
       </div>
-      <div
-        class="form-input d-flex flex-column"
-        :class="{ 'form-input-error': password.length === 0 }"
-      >
+      <div class="form-input d-flex flex-column">
         <label for="password" class="form-input-text">密碼</label>
         <input
           type="password"
@@ -130,11 +122,14 @@
         //   this.alertShow()
         // }
 
-        localStorage.setItem('token', data.token)
-
-        this.$store.commit('setCurrentUser', data.user)
-
-        this.$router.push('/main')
+        // localStorage.setItem('token', data.token)
+        // this.$store.commit('setCurrentUser', data.user)
+        if (
+          this.account === dummyUser.account &&
+          this.password === dummyUser.password
+        ) {
+          this.$router.push('/main')
+        }
 
         // catch
         this.isProcessing = false

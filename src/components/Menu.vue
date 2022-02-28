@@ -39,7 +39,7 @@
       </button>
     </div>
     <div>
-      <div class="ms-3 d-flex align-items-center">
+      <button class="ms-3 d-flex align-items-center" @click="logout">
         <div class="me-2">
           <img
             class="d-block"
@@ -48,8 +48,8 @@
           />
         </div>
         <!-- TODO:router-link -->
-        <router-link to="/login" class="menu-text ms-2">登出</router-link>
-      </div>
+        <a class="menu-text ms-2 logout">登出</a>
+      </button>
     </div>
     <NewTweetModal />
   </div>
@@ -57,6 +57,8 @@
 
 <script>
   import NewTweetModal from './../components/NewTweetModal.vue'
+  // import { mapState } from 'vuex'
+
   export default {
     name: 'Menu',
     components: {
@@ -72,7 +74,15 @@
         settingActiveUrl: require('./../assets/SettingActive.svg'),
       }
     },
-    methods: {},
+    computed: {
+      // ...mapState(['currentUser','isAuthoenticated'])
+    },
+    methods: {
+      logout() {
+        // this.$store.commit('revokeAuthentication')
+        this.$router.push('/login')
+      },
+    },
     created() {
       if (this.$route.path === '/main') {
         this.mainUrl = this.mainActiveUrl
@@ -104,5 +114,8 @@
   }
   .router-link-active {
     color: #ff6600;
+  }
+  .logout {
+    cursor: pointer;
   }
 </style>

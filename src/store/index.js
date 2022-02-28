@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  /*
   state: {
     currentUser: {
       id: -1,
@@ -56,4 +57,5 @@ export default new Vuex.Store({
     },
   },
   modules: {},
+  */
 })

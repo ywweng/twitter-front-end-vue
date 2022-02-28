@@ -123,18 +123,10 @@
 <script>
   // import authorizationAPI from './../apis/authorization'
 
-  const dummyUser = [
-    {
-      account: 'user1',
-      name: '使用者1',
-      email: 'user1@example.com',
-    },
-    {
-      account: 'user2',
-      name: '使用者2',
-      email: 'user2@example.com',
-    },
-  ]
+  const data = {
+    status: 'error',
+    message: 'account 已重複註冊！',
+  }
 
   export default {
     name: 'Register',
@@ -160,7 +152,6 @@
       },
       handleSubmit() {
         // TODO:改成async/await
-        console.log(dummyUser)
         if (
           !this.name ||
           !this.account ||
@@ -188,13 +179,13 @@
         // })
 
         if (data.status === 'error') {
-          throw new Error(data.message)
+          // throw new Error(data.message)
           this.alertMsg = data.message
           this.alertStatus = 'error'
           this.alertShow()
         }
 
-        // this.alertMsg = data.message
+        this.alertMsg = data.message
         this.alertStatus = 'success'
         this.alertShow()
         setTimeout(() => {
@@ -202,6 +193,9 @@
         }, 3000)
 
         // catch
+        // this.alertStatus = 'error'
+        // this.alertMsg = error.message
+        // this.alertShow()
       },
     },
   }

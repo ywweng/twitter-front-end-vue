@@ -5,7 +5,6 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  /*
   state: {
     currentUser: {
       id: -1,
@@ -35,27 +34,6 @@ export default new Vuex.Store({
       localStorage.removeItem('token')
     },
   },
-  actions: {
-    async fetchCurrentUser({ commit }) {
-      try {
-        const { data } = await userAPI.getCurrentUser()
-        const { id, account, name, email, role, avatar } = data.user
-        commit('setCurrentUser', {
-          id,
-          account,
-          name,
-          email,
-          role,
-          avatar,
-        })
-        return true
-      } catch (error) {
-        console.error(error.message)
-        commit('revokeAuthentication')
-        return false
-      }
-    },
-  },
+  actions: {},
   modules: {},
-  */
 })

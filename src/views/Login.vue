@@ -76,6 +76,22 @@
     password: '12345678',
   }
 
+  const response = {
+    status: 'success',
+    data: {
+      token: 'token',
+      user: {
+        id: 1,
+        account: 'user1',
+        name: '使用者1',
+        email: 'user1@example.com',
+        role: 'user', //admin:管理員; user:使用者 只有使用者可以登入
+        created_at: '2022-01-18T07:23:18.000Z',
+        updated_at: '2022-01-18T07:23:18.000Z',
+      },
+    },
+  }
+
   export default {
     name: 'Login',
     data() {
@@ -113,17 +129,17 @@
         //   password: this.password,
         // })
 
-        // const { data } = response
+        const { data } = response
 
-        // if (data.status !== 'success') {
-        //   throw new Error(data.message)
-        //   this.alertMsg = '登入失敗'
-        //   this.alertStatus = 'error'
-        //   this.alertShow()
-        // }
+        if (data.status !== 'success') {
+          // throw new Error(data.message)
+          this.alertMsg = '登入失敗'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
 
         // localStorage.setItem('token', data.token)
-        // this.$store.commit('setCurrentUser', data.user)
+        this.$store.commit('setCurrentUser', data.user)
         if (
           this.account === dummyUser.account &&
           this.password === dummyUser.password

@@ -17,15 +17,13 @@
 <script>
   import Menu from './../components/Menu.vue'
   import PopularUser from './../components/PopularUser.vue'
-  // import NewTweet from './../components/NewTweet.vue'
-  // import TweetList from './../components/TweetList.vue'
+  
   export default {
     name: 'Main',
     components: {
       Menu,
       PopularUser,
-      // NewTweet,
-      // TweetList,
+
     },
   }
 </script>

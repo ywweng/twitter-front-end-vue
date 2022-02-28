@@ -12,9 +12,15 @@
         </div>
         <div class="action my-1">
           <span class="icon-wrap">
+            <button
+              class="btn-reply"
+              data-bs-toggle="modal"
+              data-bs-target="#new-reply-modal"
+            >
             <a href="#"
               ><img src="../assets/icon_reply.png" alt="" class="reply"
             /></a>
+            </button>
             <!-- 之後改router-link :to="{ name: 'single-tweet' }" -->
             <span class="text-like-reply">{{ tweet.replyCount }}</span>
           </span>
@@ -38,10 +44,13 @@
         </div>
       </div>
     </div>
+    <NewReplyModal />
   </div>
 </template>
 
 <script>
+import NewReplyModal from './../components/NewReplyModal.vue'
+
 const dummyData = [
   {
     id: 104,
@@ -77,6 +86,9 @@ const dummyData = [
 
 export default {
   name: "user-ReplyList",
+  components: {
+    NewReplyModal,
+  },
   data() {
     return {
       userLikes: [],

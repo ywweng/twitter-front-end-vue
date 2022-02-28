@@ -34,6 +34,8 @@ export default new Vuex.Store({
       localStorage.removeItem('token')
     },
   },
+
   actions: {},
+
   modules: {},
 })

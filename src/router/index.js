@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Main from '../views/Main.vue'
 import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
@@ -38,12 +37,6 @@ const routes = [
       },
     ],
   },
-
-  {
-    path: '/setting',
-    name: 'setting',
-    component: () => import('../views/Setting.vue'),
-  },
   {
     path: '/admin/login',
     name: 'admin-login',
@@ -60,16 +53,22 @@ const routes = [
     component: () => import("../views/AdminUserList.vue")
   },
   {
+    path: '/setting',
+    name: 'setting',
+    component: () => import('../views/Setting.vue'),
+  },
+  {
     path: '/user-profile',
     name: 'user-page',
-    redirect: '/user-profile/:userId/tweets', 
+    redirect: '/user-profile/:userId/tweets',
+
   },
   {
     path: '/user-profile/:userId',
     name: 'user-profile',
     redirect: '/user-profile/:userId/tweets',
     component: () => import("../views/UserProfile.vue"),
-    children:[
+    children: [
       {
         path: 'tweets',
         name: 'user-tweets',
@@ -112,9 +111,11 @@ const router = new VueRouter({
   routes,
 })
 
-router.beforeEach((to,from,next) => {
-  console.log('to',to)
-  console.log('from',from)
+
+router.beforeEach((to, from, next) => {
+  console.log('to', to)
+  console.log('from', from)
+
   next()
 })
 

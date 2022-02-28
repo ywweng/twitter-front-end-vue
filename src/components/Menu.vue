@@ -15,7 +15,7 @@
           </li>
           <li class="menu-icon mb-4">
             <!-- TODO:router-link -->
-            <router-link to="#" class="menu-text">
+            <router-link to="/user-profile/1" class="menu-text">
               <img class="profile-icon" :src="userProfileUrl" />
               個人資料
             </router-link>
@@ -87,9 +87,9 @@
       if (this.$route.path === '/main') {
         this.mainUrl = this.mainActiveUrl
       }
-      // if (this.$route.path === '/user-profile') {
-      //   this.userProfileUrl = this.userProfileActiveUrl
-      // }
+      if (this.$route.path === '/user-profile') {
+        this.userProfileUrl = this.userProfileActiveUrl
+      }
       if (this.$route.path === '/setting') {
         this.settingUrl = this.settingActiveUrl
       }

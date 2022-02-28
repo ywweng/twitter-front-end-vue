@@ -180,6 +180,7 @@
         //   passwordCheck: this.pwdChecked,
         // })
 
+
         if (data.status === 'error') {
           // throw new Error(data.message)
           this.alertMsg = data.message

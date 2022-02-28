@@ -1,7 +1,11 @@
 <template>
   <div class="row">
-    <!-- Menu col-3-->
-    <div class="follow-ship">
+    <!-- Menu -->
+    <div class="menu col-3">
+      <Menu />
+    </div>
+    <!-- Followship list -->
+    <div class="follow-ship col-6">
       <div class="page-title position-relative">
         <router-link :to="`/user-profile/${user.id}`">
         <img
@@ -29,13 +33,15 @@
       </div>
       <router-view> </router-view>
     </div>
-    <!-- Popular User col-3-->
+    <!-- Popular User -->
+    <div class="col-3 popular-user mh-100">
+      <PopularUser />
+    </div>
   </div>
 </template>
 
 <style scoped>
 .follow-ship {
-  width: 100%;
   border-left: 1px solid var(--border-line-color);
   border-right: 1px solid var(--border-line-color);
 }
@@ -67,7 +73,14 @@
 </style>
 
 <script>
+import Menu from "../components/Menu.vue";
+import PopularUser from "../components/PopularUser.vue";
+
 export default {
+  components: {
+    Menu,
+    PopularUser,
+  },
   data() {
     return {
       user: {

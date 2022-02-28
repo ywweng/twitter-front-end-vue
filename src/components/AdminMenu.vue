@@ -1,6 +1,6 @@
 <template>
   <div class="menu position-relative">
-    <img src="../assets/Logo.png" alt="" class="logo">
+    <img src="./../assets/Logo.png" alt="" class="logo">
     <ul class="menu-list">
       <li><router-link to="/admin/tweets" >
         <div class="d-flex align-items-center">
@@ -18,7 +18,7 @@
     <div class="logout position-absolute">
         <router-link to="/admin/login">
         <div class="d-flex align-items-center">
-          <img class="menu-icon me-2" src="../assets/icon_logout.png" />
+          <img class="menu-icon me-2" src="../assets/VectorLogout.png" />
           <span>登出</span>
         </div> 
         </router-link>
@@ -28,7 +28,7 @@
 
 <style scoped>
 .menu {
-  padding-left: 30%;
+  padding-left: 20%;
   height: 100vh;
 }
 .logo {
@@ -46,17 +46,17 @@ li {
   height: 24px;
   margin-left: 10px;
 }
-a {
+a span {
   text-decoration: none;
   color: var(--main-text);
   font-size: 18px;
   font-weight: 700;
 }
-.active {
+.active span {
   color: var(--orange);
 }
 .logout{
-  left: 30%;
+  left: 20%;
   bottom: 44px;
 }
 </style>

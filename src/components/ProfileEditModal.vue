@@ -26,7 +26,13 @@
                   編輯個人資料
                 </h5>
               </div>
-              <button type="submit" class="btn btn-save">儲存</button>
+              <button
+                type="submit"
+                class="btn btn-save"
+                :disabled="nameLength > 50 || introLength > 160"
+              >
+                儲存
+              </button>
             </div>
             <!-- modal-body -->
             <div class="modal-body p-0">
@@ -126,7 +132,6 @@
         </div>
       </div>
     </div>
-   
   </div>
 </template>
 <style scoped>
@@ -172,6 +177,7 @@
 }
 .form-input {
   height: 52px;
+  margin-bottom: 0;
   background-color: #f5f8fa;
   border: none;
   border-bottom: 2px solid #657786;
@@ -226,7 +232,6 @@
   border-radius: 50%;
   opacity: 0.5;
 }
-
 </style>
 
 <script>
@@ -289,12 +294,13 @@ export default {
         this.user.avatar = imageURL;
       }
     },
-    handleSubmit(e) {  
+    handleSubmit(e) {
       if (this.namelength > 50 || this.introduction > 160) {
-        return 
+        this.saveInvalid = true;
+        return;
       }
       const formData = new FormData(e.target);
-      console.log(formData.get('name'));
+      console.log(formData.get("name"));
       // 把formData傳給user-profile.vue，回到user-profile
     },
   },

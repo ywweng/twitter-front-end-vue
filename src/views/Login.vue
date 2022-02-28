@@ -71,9 +71,25 @@
 <script>
   // import authorizationAPI from './../apis/authorization'
 
-  const dummyUser = {
-    account: 'user1',
-    password: '12345678',
+  // const dummyUser = {
+  //   account: 'user1',
+  //   password: '12345678',
+  // }
+
+  const response = {
+    status: 'success',
+    data: {
+      token: 'token',
+      user: {
+        id: 1,
+        account: 'user1',
+        name: '使用者1',
+        email: 'user1@example.com',
+        role: 'user', //admin:管理員; user:使用者 只有使用者可以登入
+        created_at: '2022-01-18T07:23:18.000Z',
+        updated_at: '2022-01-18T07:23:18.000Z',
+      },
+    },
   }
 
   const response = {
@@ -140,12 +156,12 @@
 
         // localStorage.setItem('token', data.token)
         this.$store.commit('setCurrentUser', data.user)
-        if (
-          this.account === dummyUser.account &&
-          this.password === dummyUser.password
-        ) {
-          this.$router.push('/main')
-        }
+        // if (
+        //   this.account === dummyUser.account &&
+        //   this.password === dummyUser.password
+        // ) {
+        //   this.$router.push('/main')
+        // }
 
         // catch
         this.isProcessing = false

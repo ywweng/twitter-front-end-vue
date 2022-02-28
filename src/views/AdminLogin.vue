@@ -136,6 +136,9 @@
 .alert-text {
   color: #fc5a5a;
 }
+.form-input-warn {
+  border-bottom: 2px solid #fc5a5a;
+}
 </style>
 
 <script>

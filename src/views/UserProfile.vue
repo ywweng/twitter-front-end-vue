@@ -174,7 +174,7 @@ import Menu from "../components/Menu.vue"
 import PopularUser from "../components/PopularUser.vue"
 
 const dummyUser = {
-  id: 2,
+  id: 1,
   account: "user1",
   name: "使用者1",
   email: "user1@example.com",

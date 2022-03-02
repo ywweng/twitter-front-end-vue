@@ -38,7 +38,7 @@
             <button
               class="btn-like"
               @click.stop.prevent="deleteLike(tweet.id)"
-              v-if="tweet.isLike"
+              v-if="tweet.isLiked"
             >
               <img :src="require('./../assets/LikeActive.svg')" width="12px" />
               <span class="text-like-reply">{{ tweet.likeCount }}</span>
@@ -86,24 +86,6 @@
   import moment from 'moment'
   import tweetsAPI from './../apis/tweets'
 
-  // const dummyData = [
-  //   {
-  //     id: 1,
-  //     description: '推文',
-  //     UserId: 1,
-  //     createdAt: '2022-01-26T16:45:10.000Z',
-  //     updatedAt: '2022-01-26T16:45:10.000Z',
-  //     replyCount: 3,
-  //     likeCount: 1,
-  //     user: {
-  //       avatar:
-  //         'https://p3-tt-ipv6.byteimg.com/origin/pgc-image/2ab5266b1e27469d879288d6e1d225a7.png',
-  //       name: 'root',
-  //       account: 'root',
-  //     },
-  //   },
-  // ]
-
   export default {
     name: 'TweetList',
     components: {
@@ -148,7 +130,6 @@
         }, 2000)
       },
       async fetchTweets() {
-        // TODO:串接API
         try {
           this.isLoading = true
           const response = await tweetsAPI.getTweets()
@@ -159,7 +140,6 @@
             }
           })
         } catch (error) {
-          // catch error msg
           this.isLoading = false
           this.alertMsg = '取得推文失敗，請稍後再試'
           this.alertStatus = 'error'
@@ -169,47 +149,51 @@
       setNewTweets() {
         this.allTweets.unshift({ ...this.newTweets[0] })
       },
-      addLike(tweetId) {
-        // TODO:串接API
-        // const {data} = await tweetsAPI.addLike({tweetId})
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-        this.allTweets = this.allTweets.map((tweet) => {
-          if (tweet.id !== tweetId) {
-            return tweet
+      async addLike(tweetId) {
+        try {
+          const { data } = await tweetsAPI.addLike({
+            tweetId,
+          })
+          if (data.status === 'error') {
+            throw new Error(data.message)
           }
-          return {
-            ...tweet,
-            likeCount: tweet.likeCount + 1,
-            isLike: true,
-          }
-        })
-        // catch error msg
-        // this.alertMsg = '按讚失敗，請稍後再試'
-        // this.alertStatus = 'error'
-        // this.alertShow()
+          this.allTweets = this.allTweets.map((tweet) => {
+            if (tweet.id !== tweetId) {
+              return tweet
+            }
+            return {
+              ...tweet,
+              likeCount: tweet.likeCount + 1,
+              isLiked: true,
+            }
+          })
+        } catch (error) {
+          this.alertMsg = '按讚失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
-      deleteLike(tweetId) {
-        // TODO:串接API
-        // const {data} = await tweetsAPI.deleteLike({tweetId})
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-        this.allTweets = this.allTweets.map((tweet) => {
-          if (tweet.id !== tweetId) {
-            return tweet
+      async deleteLike(tweetId) {
+        try {
+          const { data } = await tweetsAPI.deleteLike({ tweetId })
+          if (data.status === 'error') {
+            throw new Error(data.message)
           }
-          return {
-            ...tweet,
-            likeCount: tweet.likeCount - 1,
-            isLike: false,
-          }
-        })
-        // catch error msg
-        // this.alertMsg = '按讚失敗，請稍後再試'
-        // this.alertStatus = 'error'
-        // this.alertShow()
+          this.allTweets = this.allTweets.map((tweet) => {
+            if (tweet.id !== tweetId) {
+              return tweet
+            }
+            return {
+              ...tweet,
+              likeCount: tweet.likeCount - 1,
+              isLiked: false,
+            }
+          })
+        } catch (error) {
+          this.alertMsg = '按讚失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
       afterReplySubmit(payload) {
         const { tweetId, replyCount } = payload

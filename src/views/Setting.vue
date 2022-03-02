@@ -138,7 +138,7 @@
 <script>
   import { mapState } from 'vuex'
   import Menu from './../components/Menu.vue'
-  // import userAPI from './../apis/user'
+  import userAPI from './../apis/user'
 
   export default {
     name: 'Setting',
@@ -166,7 +166,7 @@
       this.setUser()
     },
     methods: {
-       alertShow() {
+      alertShow() {
         const bootstrap = require('bootstrap')
         let alertNode = document.querySelector('#alert')
         bootstrap.Alert.getInstance(alertNode)
@@ -176,47 +176,51 @@
       },
       setUser() {
         const { id, account, name, email } = this.currentUser
-
-        // if (id.toString() !== userId.toString()) {
-        //   this.$router.push({ name: 'not-found' })
-        // }
-
         this.id = id
         this.account = account
         this.name = name
         this.email = email
       },
-      handleSubmit(e) {
+      async handleSubmit() {
         // TODO:串接API
-        if (
-          !this.id ||
-          !this.account ||
-          !this.name ||
-          !this.email ||
-          !this.password ||
-          !this.pwdChecked
-        ) {
-          this.isNull = true
-          return
-        }
+        try {
+          if (
+            !this.id ||
+            !this.account ||
+            !this.name ||
+            !this.email ||
+            !this.password ||
+            !this.pwdChecked
+          ) {
+            this.isNull = true
+            return
+          }
 
-        const form = e.target
-        const formData = new FormData(form)
-        console.log(formData)
-        this.isProcessing = true
-        // const { data } = await userAPI.update({
-        //   userId: this.id,
-        //   formData
-        // })
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-        this.alertMsg = '修改成功'
-        this.alertStatus = 'success'
-        this.alertShow()
-        // this.$router.push({ name: 'user', params: { id: this.id } })
-        // catch
-        // isProcessing = true
+          this.isProcessing = true
+          const { data } = await userAPI.update({
+            userId: this.currentUser.id,
+            account: this.account,
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            passwordCheck: this.pwdChecked,
+          })
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+          this.alertMsg = '修改成功，請重新登入'
+          this.alertStatus = 'success'
+          this.alertShow()
+          setTimeout(() => {
+            this.$store.commit('revokeAuthentication')
+            this.$router.push('/login')
+          }, 3000)
+        } catch (error) {
+          this.alertStatus = 'error'
+          this.alertMsg = error.response.data.message
+          this.alertShow()
+          this.isProcessing = false
+        }
       },
     },
   }

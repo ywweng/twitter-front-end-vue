@@ -21,7 +21,7 @@
             <div class="h-100 d-flex flex-column">
               <img
                 class="avatar"
-                :src="tweet.user.avatar"
+                :src="tweet.User.avatar"
                 alt=""
                 width="50px"
                 height="50px"
@@ -30,9 +30,9 @@
             </div>
             <div class="tweet-info d-flex flex-column">
               <div class="h-100">
-                <span class="text-name me-2">{{ tweet.user.name }}</span>
+                <span class="text-name me-2">{{ tweet.User.name }}</span>
                 <span class="text-account"
-                  >@{{ tweet.user.account }}．{{
+                  >@{{ tweet.User.account }}．{{
                     tweet.createdAt | fromNow
                   }}</span
                 >
@@ -42,7 +42,7 @@
               </div>
               <div>
                 <span class="text-account">回覆給</span>
-                <span class="text-tag ms-2">@{{ tweet.user.name }}</span>
+                <span class="text-tag ms-2">@{{ tweet.User.name }}</span>
               </div>
             </div>
           </div>

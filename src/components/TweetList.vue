@@ -5,23 +5,18 @@
     <div class="border"></div>
     <div id="tweet-list">
       <Spinner v-if="isLoading" />
-      <div
-        class="tweet-card d-flex"
-        v-for="(tweet, index) in allTweets"
-        :key="index"
-      >
+      <div class="tweet-card d-flex" v-for="tweet in allTweets" :key="tweet.id">
         <div>
-          <img class="avatar" width="50px" :src="tweet.user.avatar" alt="" />
+          <img class="avatar" width="50px" :src="tweet.User.avatar" alt="" />
         </div>
         <div class="tweet-info d-flex flex-column">
           <div class="">
-            <span class="text-name me-2">{{ tweet.user.name }}</span>
+            <span class="text-name me-2">{{ tweet.User.name }}</span>
             <span class="text-account"
-              >@{{ tweet.user.account }}．{{ tweet.createdAt | fromNow }}</span
+              >@{{ tweet.User.account }}．{{ tweet.createdAt | fromNow }}</span
             >
           </div>
           <div class="tweet-content">
-            <!-- TODO:修改tweetID -->
             <router-link
               :to="{
                 name: 'single-tweet',
@@ -89,25 +84,25 @@
   import NewReplyModal from './../components/NewReplyModal.vue'
   import { mapState } from 'vuex'
   import moment from 'moment'
-  // import tweetsAPI from './../apis/tweets'
+  import tweetsAPI from './../apis/tweets'
 
-  const dummyData = [
-    {
-      id: 1,
-      description: '推文',
-      UserId: 1,
-      createdAt: '2022-01-26T16:45:10.000Z',
-      updatedAt: '2022-01-26T16:45:10.000Z',
-      replyCount: 3,
-      likeCount: 1,
-      user: {
-        avatar:
-          'https://p3-tt-ipv6.byteimg.com/origin/pgc-image/2ab5266b1e27469d879288d6e1d225a7.png',
-        name: 'root',
-        account: 'root',
-      },
-    },
-  ]
+  // const dummyData = [
+  //   {
+  //     id: 1,
+  //     description: '推文',
+  //     UserId: 1,
+  //     createdAt: '2022-01-26T16:45:10.000Z',
+  //     updatedAt: '2022-01-26T16:45:10.000Z',
+  //     replyCount: 3,
+  //     likeCount: 1,
+  //     user: {
+  //       avatar:
+  //         'https://p3-tt-ipv6.byteimg.com/origin/pgc-image/2ab5266b1e27469d879288d6e1d225a7.png',
+  //       name: 'root',
+  //       account: 'root',
+  //     },
+  //   },
+  // ]
 
   export default {
     name: 'TweetList',
@@ -137,12 +132,8 @@
     },
     created() {
       // 模擬
-      setTimeout(() => {
-        this.isLoading = false
-      }, 3000)
-    },
-    mounted() {
       this.fetchTweets()
+      this.isLoading = false
     },
     updated() {
       this.$store.commit('resetNewTweet')
@@ -156,23 +147,24 @@
           this.alertStatus = false
         }, 2000)
       },
-      fetchTweets() {
+      async fetchTweets() {
         // TODO:串接API
-        this.isLoading = true
-        // const response = await tweetsAPI.getTweets(userId)
-        // const { data } = response
-        this.allTweets = dummyData.map((tweet) => {
-          return {
-            ...tweet,
-            isLike: false,
-          }
-        })
-
-        // catch error msg
-        this.isLoading = false
-        // this.alertMsg = '取得推文失敗，請稍後再試'
-        // this.alertStatus = 'error'
-        // this.alertShow()
+        try {
+          this.isLoading = true
+          const response = await tweetsAPI.getTweets()
+          const { data } = response
+          this.allTweets = data.map((tweet) => {
+            return {
+              ...tweet,
+            }
+          })
+        } catch (error) {
+          // catch error msg
+          this.isLoading = false
+          this.alertMsg = '取得推文失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
       setNewTweets() {
         this.allTweets.unshift({ ...this.newTweets[0] })
@@ -264,14 +256,14 @@
   }
   .tweet-card {
     padding: 10px 15px;
-    max-height: 145px;
+    /* max-height: 145px; */
     border-bottom: 1px solid #e6ecf0;
   }
   .tweet-card:hover {
     cursor: pointer;
     background: rgb(250, 250, 250);
     max-width: 598px;
-    max-height: 145px;
+    /* max-height: 145px; */
   }
   .tweet-content {
     margin-top: 6px;

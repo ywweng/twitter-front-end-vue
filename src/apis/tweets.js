@@ -1,14 +1,14 @@
-// import {apiHelper} from './../utils/helpers'
+import {apiHelper} from './../utils/helpers'
 
-// export default {
-//   getTweets() {
-//     return apiHelper.get(`/tweets`)
-//   },
+export default {
+  getTweets() {
+    return apiHelper.get(`/tweets`)
+  },
 //   postTweet({ description }) {
 //     return apiHelper.post(`/tweets`, description)
 //   },
 //   getTweetReplies({ tweetId }) {
-//     return apiHelper.get(`/tweets/${tweetId}/replies`)
+//     return apiHelper.get(`/tweets/${tweetId}`)
 //   },
 //   postTweetReply({ tweetId, comment }) {
 //     return apiHelper.post(`/tweets/${tweetId}/replies`, comment)
@@ -19,4 +19,4 @@
 // deleteLike({tweetId}) {
 //   return apiHelper.post(`/tweets/{tweetId}/unlike`)
 // }
-// }
+}

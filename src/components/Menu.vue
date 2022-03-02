@@ -15,16 +15,12 @@
           </li>
           <li class="menu-icon mb-4">
             <!-- TODO:router-link 設params-->
-            <router-link
-              :to="{ name: 'user-profile'}"
-              class="menu-text"
-            >
+            <router-link :to="{ name: 'user-profile' }" class="menu-text">
               <img class="profile-icon" :src="userProfileUrl" />
               個人資料
             </router-link>
           </li>
           <li class="menu-icon mb-4">
-            <!-- TODO:router-link -->
             <router-link :to="{ name: 'setting' }" class="menu-text">
               <img class="me-3" :src="settingUrl" />
               設定
@@ -32,7 +28,6 @@
           </li>
         </ul>
       </div>
-      <!-- TODO:router-link -->
       <button
         type="button"
         class="btn-active btn-tweet w-100"
@@ -56,12 +51,31 @@
       </button>
     </div>
     <NewTweetModal />
+    <!-- alert -->
+    <div
+      class="alert d-flex fixed-top"
+      id="alert"
+      role="alert"
+      v-if="alertStatus !== false"
+    >
+      <div class="ms-2 mx-auto my-auto text-alert">{{ alertMsg }}</div>
+      <div class="ms-auto">
+        <img
+          :src="require('./../assets/error-alert.svg')"
+          v-if="alertStatus === 'error'"
+        />
+        <img
+          :src="require('./../assets/success-alert.svg')"
+          v-else-if="alertStatus === 'success'"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import NewTweetModal from './../components/NewTweetModal.vue'
-  // import { mapState } from 'vuex'
+  import { mapState } from 'vuex'
 
   export default {
     name: 'Menu',
@@ -76,17 +90,36 @@
         userProfileActiveUrl: require('./../assets/UserProfileActive.svg'),
         settingUrl: require('./../assets/Setting.svg'),
         settingActiveUrl: require('./../assets/SettingActive.svg'),
+        alertMsg: '',
+        alertStatus: false,
       }
     },
     computed: {
-      // ...mapState(['currentUser','isAuthoenticated'])
+      ...mapState(['currentUser', 'isAuthoenticated']),
     },
     methods: {
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
+      },
       logout() {
-        // this.$store.commit('revokeAuthentication')
+        this.$store.commit('revokeAuthentication')
         this.$router.push('/login')
       },
-
+    },
+    mounted() {
+      if (!localStorage.getItem('token')) {
+        this.alertMsg = '您尚未登入'
+        this.alertStatus = 'error'
+        this.alertShow()
+        setTimeout(() => {
+          this.$router.push('/login')
+        }, 5000);
+      }
     },
     created() {
       if (this.$route.path === '/main') {

@@ -7,9 +7,13 @@ export default {
       password,
     })
   },
-  //   register(data) {
-  //     return apiHelper.post('/signup'. {
-  //       ...data
-  //     })
-  //   }
+  register({ account, name, email, password, checkPassword }) {
+    return apiHelper.post('/signup', {
+      account,
+      name,
+      email,
+      password,
+      checkPassword,
+    })
+  },
 }

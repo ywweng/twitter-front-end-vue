@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="reply-content d-flex">
-            <div class="avatar"><img src="" alt="" /></div>
+            <div><img class="avatar" :src="currentUser.avatar" alt="" /></div>
             <textarea
               class="input-new-tweet mt-2"
               rows="5"
@@ -93,6 +93,7 @@
 
 <script>
   import moment from 'moment'
+  import { mapState } from 'vuex'
   // import tweetsAPI from './../apis/tweets'
 
   export default {
@@ -111,6 +112,9 @@
         isError: false,
         errorMsg: '',
       }
+    },
+    computed: {
+      ...mapState(['currentUser']),
     },
     filters: {
       fromNow(datetime) {
@@ -153,10 +157,16 @@
         // if (data.status === 'error') {
         //   throw new Error(data.message)
         // }
-
+        // tweet list
         this.$emit('after-reply-submit', {
           tweetId: this.tweet.id,
           replyCount: this.tweet.replyCount + 1,
+        })
+        // single tweet
+        this.$emit('after-single-reply', {
+          user: this.currentUser,
+          comment: this.comment,
+          created_at: new Date().toISOString(),
         })
         this.alertMsg = '留言成功'
         this.alertStatus = 'success'

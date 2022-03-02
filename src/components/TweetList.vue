@@ -22,7 +22,12 @@
           </div>
           <div class="tweet-content">
             <!-- TODO:修改tweetID -->
-            <router-link to="/main/tweets/1">
+            <router-link
+              :to="{
+                name: 'single-tweet',
+                params: { tweetId: tweet.id, tweet },
+              }"
+            >
               {{ tweet.description }}
             </router-link>
           </div>
@@ -33,7 +38,6 @@
               data-bs-target="#new-reply-modal"
             >
               <img :src="require('./../assets/Reply.svg')" width="12px" />
-              <!-- TODO:修改id -->
               <span class="text-like-reply"> {{ tweet.replyCount }} </span>
             </button>
             <button
@@ -56,51 +60,7 @@
         </div>
         <NewReplyModal :tweet="tweet" @after-reply-submit="afterReplySubmit" />
       </div>
-      <!-- TODO:刪除假資料 -->
-      <div class="tweet-card d-flex">
-        <div>
-          <img class="avatar" width="50px" src="" alt="" />
-        </div>
-        <div class="tweet-info d-flex flex-column">
-          <div class="">
-            <span class="text-name me-2">Apple</span>
-            <span class="text-account">@apple．3小時</span>
-          </div>
-          <div class="tweet-content">
-            <!-- TODO:修改tweetID -->
-            <router-link to="/main/tweets/1">
-              Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-              ullamco cillum dolor. Voluptate exercitation incididunt aliquip
-              deserunt reprehenderit elit laborum.
-            </router-link>
-          </div>
-          <div class="action my-1">
-            <button
-              class="btn-reply"
-              data-bs-toggle="modal"
-              data-bs-target="#new-reply-modal"
-            >
-              <img :src="require('./../assets/Reply.svg')" width="12px" />
-              <!-- TODO:修改id -->
-              <span class="text-like-reply"> 13 </span>
-            </button>
-            <button
-              class="btn-like"
-              @click.stop.prevent="deleteLike"
-              v-if="isLike"
-            >
-              <img :src="require('./../assets/LikeActive.svg')" width="12px" />
-              <span class="text-like-reply">76</span>
-            </button>
-            <button class="btn-like" @click.stop.prevent="addLike" v-else>
-              <img :src="require('./../assets/Like.svg')" width="12px" />
-              <span class="text-like-reply">76</span>
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
-
     <!-- alert -->
     <div
       class="alert d-flex fixed-top"
@@ -136,8 +96,8 @@
       id: 1,
       description: '推文',
       UserId: 1,
-      createdAt: '2022-02-26T16:45:10.000Z',
-      updatedAt: '2022-02-26T16:45:10.000Z',
+      createdAt: '2022-01-26T16:45:10.000Z',
+      updatedAt: '2022-01-26T16:45:10.000Z',
       replyCount: 3,
       likeCount: 1,
       user: {
@@ -325,5 +285,8 @@
   }
   .text-like-reply {
     color: #657786;
+  }
+  .router-link-active {
+    color: inherit;
   }
 </style>

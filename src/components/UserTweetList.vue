@@ -1,5 +1,8 @@
 <template>
   <div class="tweet-list">
+    <!-- <router-link to="{ name: 'single-tweet' , params: {tweetId: tweet.id}}">
+
+    </router-link> -->
     <div class="tweet-card d-flex" v-for="tweet in userTweets" :key="tweet.id">
       <img src="https://i.pravatar.cc/150?img=10" class="avatar" alt="" />
       <div class="tweet-info d-flex flex-column">
@@ -17,9 +20,8 @@
               data-bs-toggle="modal"
               data-bs-target="#new-reply-modal"
             >
-            <a href="#"
-              ><img src="../assets/icon_reply.png" alt="" class="reply"
-            /></a>
+            <img src="../assets/icon_reply.png" alt="" class="reply"
+            />
             </button>
             <!-- 之後改router-link :to="{ name: 'single-tweet' }" -->
             <span class="text-like-reply">{{ tweet.totalReplies }}</span>
@@ -127,6 +129,10 @@ export default {
   /* height: 145px; */
   border-bottom: 1px solid #e6ecf0;
 }
+.tweet-card:hover {
+  cursor: pointer;
+  box-shadow: 0 0 1px 0 var(--orange);
+}
 .tweet-content {
   margin-top: 6px;
   max-width: 510px;
@@ -138,7 +144,7 @@ export default {
   width: 15px;
   height: 15px;
 }
-.like {
+.like:hover {
   cursor: pointer;
 }
 </style>

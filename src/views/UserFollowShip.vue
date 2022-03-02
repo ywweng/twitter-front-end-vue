@@ -85,8 +85,13 @@ export default {
     return {
       user: {
         id: 1,
-      }
+      },
     }
-  }
+  },
+  // methods: {
+  //   setUser(userId) {
+  //     串getUser API
+  //   }
+  // }
 }
 </script>

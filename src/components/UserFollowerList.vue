@@ -1,17 +1,36 @@
 <template>
-  <div class="follow-list">
-
-    <div class="user-card d-flex position-relative">
-      <img src="" class="avatar" alt="" />
-      <div class="user-info d-flex flex-column">
-        <div class="text-name">Apple</div>
-        <div class="text-account ms-0">@apple</div>
-        <div class="text-content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque nisi odio ipsa quaerat ipsam repellendus repellat</div>
+  <div class="row">
+    <Spinner v-if="isLoading" />
+    <!-- v-else -->
+    <div class="follow-list" >
+      <div class="user-card d-flex position-relative">
+        <img src="" class="avatar" alt="" />
+        <div class="user-info d-flex flex-column">
+          <div class="text-name">Apple</div>
+          <div class="text-account ms-0">@apple</div>
+          <div class="text-content">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque nisi
+            odio ipsa quaerat ipsam repellendus repellat
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn btn-follow position-absolute"
+          v-if="!isFollow"
+          @click.stop.prevent="addFollow"
+        >
+          跟隨
+        </button>
+        <button
+          type="button"
+          class="btn btn-following position-absolute"
+          v-else
+          @click.stop.prevent="deleteFollow"
+        >
+          正在跟隨
+        </button>
       </div>
-      <button type="button" class="btn btn-follow position-absolute" v-if="!isFollow" @click.stop.prevent="addFollow">跟隨</button>
-      <button type="button" class="btn btn-following position-absolute" v-else @click.stop.prevent="deleteFollow">正在跟隨</button>
     </div>
-
   </div>
 </template>
 
@@ -44,19 +63,29 @@
 </style>
 
 <script>
+import Spinner from "../components/Spinner.vue";
+
 export default {
+  name: "FollowerList",
+  components: {
+    Spinner,
+  },
   data() {
     return {
-      isFollow: false
-    }
+      followerList: [],
+      isFollow: false,
+      isLoading: true,
+    };
   },
-  methods: { // TODO:串API
+  methods: {
+    // TODO:串API
+    fetchFollower() {},
     addFollow() {
-      this.isFollow = true
+      this.isFollow = true;
     },
     deleteFollow() {
-      this.isFollow = false
-    }
-  }
-}
+      this.isFollow = false;
+    },
+  },
+};
 </script>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 // import userAPI from './../apis/user'
+// import tweetsAPI from './../apis/tweets'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,8 @@ export default new Vuex.Store({
       name: '',
       email: '',
       avatar: '',
+      cover: '',
+      introduction: '',
       role: '',
     },
     isAuthenticated: false,
@@ -34,8 +37,23 @@ export default new Vuex.Store({
       localStorage.removeItem('token')
     },
   },
-
-  actions: {},
+  actions: {
+    // async fetchCurrentUser({ commit }) {
+    //   try {
+    //     const { data } = await userAPI.getCurrentUSer()
+    //     const { id, name, email, image, isAdmin } = data
+    //     commit('setCurrentUser', {
+    //       id, name, email, image, isAdmin
+    //     })
+    //    return true
+    //   } catch(error) {
+    //     console.log('error', error)
+    //     console.error('can not fetch user information')
+    //     commit('revokeAuthentication')
+    //     return false
+    //   }
+    // }
+  },
 
   modules: {},
 })

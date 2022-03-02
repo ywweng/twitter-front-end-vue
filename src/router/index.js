@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
+// import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -14,6 +15,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    redirect: '/admin/login',
   },
   {
     path: '/register',
@@ -111,9 +117,18 @@ const router = new VueRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   console.log('to', to)
   console.log('from', from)
+  // const token = localStorage.getItem('token')
+  // let isAuthenticated = false
+  // if (token) {
+  //   isAuthenticated = await store.dispatch('fetchCurrentUser')
+  // }
+  // if (!isAuthenticated && to.name !== 'login') {
+  //   next('/signin')
+  //   return
+  // }
   next()
 })
 

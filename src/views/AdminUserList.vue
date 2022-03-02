@@ -7,6 +7,7 @@
       <div class="page-title">使用者列表</div>
       <!-- user card -->
       <div class="card-wrap">
+        <Spinner v-if="isLoading" />
         <div class="row">
           <div class="col-3" v-for="user in users" :key="user.id">
             <div class="card h-100">
@@ -25,16 +26,16 @@
                 <span class="user-account color-light">@{{user.account}}</span>
                 <div class="icon pt-2 pb-2">
                   <span class="total-tweet mx-2"
-                    ><img src="../assets/icon_reply.png" alt="" />{{user.total_tweet}}</span
+                    ><img src="../assets/icon_reply.png" alt="" />{{user.tweetCount}}</span
                   >
                   <span class="total-like mx-2"
-                    ><img src="../assets/icon_like.png" alt="" />{{user.total_like}}</span
+                    ><img src="../assets/icon_like.png" alt="" />{{user.likeCount}}</span
                   >
                 </div>
                 <div class="followship">
-                  <span class="following">{{user.total_following}}個</span>
+                  <span class="following">{{user.followingCount}}個</span>
                   <span class="color-light">跟隨中</span>
-                  <span class="follower ms-2">{{user.total_follower}}位</span>
+                  <span class="follower ms-2">{{user.followerCount}}位</span>
                   <span class="color-light">跟隨者</span>
                 </div>
               </div>
@@ -100,59 +101,41 @@
 
 <script>
 import AdminMenu from "../components/AdminMenu.vue";
+import adminAPI from "../apis/admin"
+import Spinner from "../components/Spinner.vue"
 
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      account: "apple",
-      name: "Apple",
-      email: "apple@example.com",
-      introduction: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce viverra iaculis ornare.", 
-      role: "string",
-      avatar: "https://i.pravatar.cc/150?img=10",
-      cover: "https://fakeimg.pl/250x100/",
-      total_tweet: 2,
-      total_follower: 10,
-      total_following: 3,
-      total_like: 5,
-      created_at: "2022-01-18T07:23:18.000Z",
-      updated_at: "2022-01-18T07:23:18.000Z",
-    },
-    {
-      id: 2,
-      account: "banana",
-      name: "Ba Nana",
-      email: "banana@example.com",
-      introduction: "Nam eget nibh justo. Morbi vel varius dui. Proin vehicula interdum mauris, vitae ullamcorper nisi luctus interdum. ",
-      role: "string",
-      avatar: "https://i.pravatar.cc/150?img=12",
-      cover: "https://fakeimg.pl/250x100/",
-      total_tweet: 1,
-      total_follower: 2,
-      total_following: 3,
-      total_like: 4,
-      created_at: "2022-01-18T07:23:18.000Z",
-      updated_at: "2022-01-18T07:23:18.000Z",
-    },
-  ],
-};
 export default {
+  name: 'AdminUserlist',
   components: {
     AdminMenu,
+    Spinner
   },
   data() {
     return {
-      users: []
+      users: [],
+      isLoading: true
     }
   },
   created() {
     this.fetchUsers()
   },
   methods: {
-    fetchUsers () {
-      this.users = dummyData.users
-      // 要按推文數排序
+    async fetchUsers () {
+      try {
+        const { data } = await adminAPI.users.get()
+        console.log(data)
+        //這邊success沒有帶status
+        if(!data) {
+          throw new Error()
+        }
+        this.users = data
+        // TODO:要按推文數排序check一下
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        console.log(error.response.data.message)
+
+      }   
     }
   }
 };

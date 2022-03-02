@@ -2,7 +2,9 @@
   <div class="row">
 
     <!-- Following list -->
-    <div class="follow-list ">
+    <Spinner v-if="isLoading" />
+    <!-- v-else -->
+    <div class="follow-list" >
       <div class="user-card d-flex position-relative">
         <img src="" class="avatar" alt="" />
         <div class="user-info d-flex flex-column">
@@ -63,11 +65,17 @@
 </style>
 
 <script>
+import Spinner from "../components/Spinner.vue"
+
 export default {
   name: "userFollowingList",
+  components: {
+    Spinner
+  },
   data() {
     return {
       isFollowing: true,
+      isLoading: true,
     };
   },
   methods: {

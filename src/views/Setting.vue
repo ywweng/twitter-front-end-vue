@@ -6,7 +6,10 @@
       </div>
       <div class="col" id="setting">
         <div class="title menu-text">帳戶設定</div>
-        <form class="setting-form d-flex flex-column">
+        <form
+          class="setting-form d-flex flex-column"
+          @submit.prevent="handleSubmit"
+        >
           <div
             class="form-input d-flex flex-column"
             :class="{
@@ -100,7 +103,13 @@
               </span>
             </div>
           </div>
-          <button type="submit" class="btn-active save ms-auto">儲存</button>
+          <button
+            type="submit"
+            class="btn-active save ms-auto"
+            :disabled="isProcessing"
+          >
+            儲存
+          </button>
         </form>
       </div>
     </div>
@@ -127,78 +136,81 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import Menu from './../components/Menu.vue'
+import { mapState } from "vuex";
+import Menu from "./../components/Menu.vue";
+// import userAPI from './../apis/user'
 
-  // import userAPI from './../apis/user'
+export default {
+  name: "Setting",
+  components: {
+    Menu,
+  },
+  data() {
+    return {
+      id: -1,
+      account: "",
+      name: "",
+      email: "",
+      password: "",
+      pwdChecked: "",
+      isNull: false,
+      alertMsg: "",
+      alertStatus: false,
+      isProcessing: false,
+    };
+  },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
+  created() {
+    this.setUser();
+  },
+  methods: {
+    alertShow() {
+      const bootstrap = require("bootstrap");
+      let alertNode = document.querySelector("#alert");
+      bootstrap.Alert.getInstance(alertNode);
+      setTimeout(() => {
+        this.alertStatus = false;
+      }, 2000);
+    },
+    setUser() {
+      const { id, account, name, email } = this.currentUser;
 
-  // const data = {
-  //   status: 'success',
-  //   message: '修改成功，請重新登入',
-  // }
+      // if (id.toString() !== userId.toString()) {
+      //   this.$router.push({ name: 'not-found' })
+      // }
 
-  export default {
-    name: 'Setting',
-    components: {
-      Menu,
+      this.id = id;
+      this.account = account;
+      this.name = name;
+      this.email = email;
     },
-    data() {
-      return {
-        id: -1,
-        account: '',
-        name: '',
-        email: '',
-        password: '',
-        pwdChecked: '',
-        isNull: false,
-        alertMsg: '',
-        alertStatus: false,
-      }
-    },
-    computed: {
-      ...mapState(['currentUser'])
-    },
-    created() {
-      this.setUser()
-    },
-    methods: {
-      setUser() {
-        const { id, account, name, email } = this.currentUser
-
-        // if (id.toString() !== userId.toString()) {
-        //   this.$router.push({ name: 'not-found' })
-        // }
-
-        this.id = id
-        this.account = account
-        this.name = name
-        this.email = email
-      },
-    },
-  }
+  },
+};
 </script>
 
 <style scoped>
-  #setting {
-    padding-left: 0;
-    border-left: 1px solid #e6ecf0;
-  }
-  .title {
-    padding-left: 20px;
-    height: 55px;
-    line-height: 55px;
-    border-bottom: 1px solid #e6ecf0;
-  }
-  .setting-form {
-    margin-left: 1rem;
-    margin-top: 30px;
-    max-width: 642px;
-  }
-  .length-input {
-    color: #657786;
-  }
-  .save {
-    margin-top: 1rem;
-    width: 116px;
-  }
+#setting {
+  padding-left: 0;
+  border-left: 1px solid #e6ecf0;
+}
+.title {
+  padding-left: 20px;
+  height: 55px;
+  line-height: 55px;
+  border-bottom: 1px solid #e6ecf0;
+}
+.setting-form {
+  margin-left: 1rem;
+  margin-top: 30px;
+  max-width: 642px;
+}
+.length-input {
+  color: #657786;
+}
+.save {
+  margin-top: 1rem;
+  width: 116px;
+}
 </style>

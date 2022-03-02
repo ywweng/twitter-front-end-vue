@@ -35,7 +35,6 @@
 </style>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
 
 export default {
   props: {
@@ -48,19 +47,16 @@ export default {
     return {
       tabs: [
         {
-          id: uuidv4(),
           title: "推文",
           name: "user-tweets",
           path: "",
         },
         {
-          id: uuidv4(),
           title: "推文與回覆",
           name: 'user-replies',
           path: "",
         },
         {
-          id: uuidv4(),
           title: "喜歡的內容",
           name: 'user-likes',
           path: "",

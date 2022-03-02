@@ -23,7 +23,6 @@
     components: {
       Menu,
       PopularUser,
-
     },
   }
 </script>

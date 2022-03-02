@@ -182,7 +182,6 @@
             console.log('1')
             return
           }
-
           this.alertMsg = data.message
           this.alertStatus = 'success'
           this.alertShow()

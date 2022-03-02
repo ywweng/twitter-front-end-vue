@@ -175,7 +175,7 @@
       fetchTopUsers() {
         // TODO:串接API
         this.isLoading = true
-        // const {data} = await usersAPI.getPopularUsers()
+        // const {data} = await usersAPI.getTopUsers()
         // if (data.status === 'error') {
         //   throw new Error(data.message)
         // }
@@ -189,7 +189,7 @@
       },
       addFollowing(userId) {
         // TODO:串接API
-        // const { data } = await usersAPI.addFollowing({ userId })
+        // const { data } = await userAPI.addFollowing({ userId })
         // if (data.status !== 'success') {
         //   throw new Error(data.message)
         // }
@@ -207,7 +207,7 @@
       },
       deleteFollowing(userId) {
         // TODO:串接API
-        // const { data } = await usersAPI.deleteFollowing({ userId })
+        // const { data } = await userAPI.deleteFollowing({ userId })
         // if (data.status !== 'success') {
         //   throw new Error(data.message)
         // }

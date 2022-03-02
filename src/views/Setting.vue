@@ -6,7 +6,10 @@
       </div>
       <div class="col" id="setting">
         <div class="title menu-text">帳戶設定</div>
-        <form class="setting-form d-flex flex-column">
+        <form
+          class="setting-form d-flex flex-column"
+          @submit.prevent="handleSubmit"
+        >
           <div
             class="form-input d-flex flex-column"
             :class="{
@@ -100,7 +103,13 @@
               </span>
             </div>
           </div>
-          <button type="submit" class="btn-active save ms-auto">儲存</button>
+          <button
+            type="submit"
+            class="btn-active save ms-auto"
+            :disabled="isProcessing"
+          >
+            儲存
+          </button>
         </form>
       </div>
     </div>
@@ -129,13 +138,7 @@
 <script>
   import { mapState } from 'vuex'
   import Menu from './../components/Menu.vue'
-
   // import userAPI from './../apis/user'
-
-  // const data = {
-  //   status: 'success',
-  //   message: '修改成功，請重新登入',
-  // }
 
   export default {
     name: 'Setting',
@@ -153,15 +156,24 @@
         isNull: false,
         alertMsg: '',
         alertStatus: false,
+        isProcessing: false,
       }
     },
     computed: {
-      ...mapState(['currentUser'])
+      ...mapState(['currentUser']),
     },
     created() {
       this.setUser()
     },
     methods: {
+       alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
+      },
       setUser() {
         const { id, account, name, email } = this.currentUser
 
@@ -173,6 +185,38 @@
         this.account = account
         this.name = name
         this.email = email
+      },
+      handleSubmit(e) {
+        // TODO:串接API
+        if (
+          !this.id ||
+          !this.account ||
+          !this.name ||
+          !this.email ||
+          !this.password ||
+          !this.pwdChecked
+        ) {
+          this.isNull = true
+          return
+        }
+
+        const form = e.target
+        const formData = new FormData(form)
+        console.log(formData)
+        this.isProcessing = true
+        // const { data } = await userAPI.update({
+        //   userId: this.id,
+        //   formData
+        // })
+        // if (data.status === 'error') {
+        //   throw new Error(data.message)
+        // }
+        this.alertMsg = '修改成功'
+        this.alertStatus = 'success'
+        this.alertShow()
+        // this.$router.push({ name: 'user', params: { id: this.id } })
+        // catch
+        // isProcessing = true
       },
     },
   }

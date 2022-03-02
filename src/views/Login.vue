@@ -43,7 +43,7 @@
         >
         <span class="space">．</span>
         <!-- TODO:router-link -->
-        <a href="#" class="mx-auto text-blue">後台登入</a>
+        <router-link to="/admin/login" class="mx-auto text-blue">後台登入</router-link>
       </div>
     </form>
     <!-- alert -->
@@ -99,6 +99,7 @@
       user: {
         id: 1,
         account: 'user1',
+        avatar: 'https://i1.twlife.cc/imgs/q/ed/1e06b00015681359431ed.jpg',
         name: '使用者1',
         email: 'user1@example.com',
         role: 'user', //admin:管理員; user:使用者 只有使用者可以登入

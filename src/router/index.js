@@ -113,9 +113,9 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-  console.log('to', to)
-  console.log('from', from)
-
+  // console.log('to',to)
+  // console.log('from',from)
+  // store.dispatch('fetchTweets')
   next()
 })
 

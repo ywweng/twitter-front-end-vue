@@ -14,8 +14,11 @@
             </router-link>
           </li>
           <li class="menu-icon mb-4">
-            <!-- TODO:router-link -->
-            <router-link to="/user-profile/1" class="menu-text">
+            <!-- TODO:router-link 設params-->
+            <router-link
+              :to="{ name: 'user-profile'}"
+              class="menu-text"
+            >
               <img class="profile-icon" :src="userProfileUrl" />
               個人資料
             </router-link>
@@ -31,6 +34,7 @@
       </div>
       <!-- TODO:router-link -->
       <button
+        type="button"
         class="btn-active btn-tweet w-100"
         data-bs-toggle="modal"
         data-bs-target="#new-tweet-modal"
@@ -82,6 +86,7 @@
         // this.$store.commit('revokeAuthentication')
         this.$router.push('/login')
       },
+
     },
     created() {
       if (this.$route.path === '/main') {

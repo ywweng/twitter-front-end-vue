@@ -19,54 +19,165 @@
         <div class="modal-body d-flex flex-column">
           <div class="tweet-card d-flex">
             <div class="h-100 d-flex flex-column">
-              <img class="avatar" src="" alt="" width="50px" height="50px" />
+              <img
+                class="avatar"
+                :src="tweet.user.avatar"
+                alt=""
+                width="50px"
+                height="50px"
+              />
               <div class="border ms-4"></div>
             </div>
             <div class="tweet-info d-flex flex-column">
               <div class="h-100">
-                <span class="text-name me-2">Apple</span>
-                <span class="text-account">@apple．3小時</span>
+                <span class="text-name me-2">{{ tweet.user.name }}</span>
+                <span class="text-account"
+                  >@{{ tweet.user.account }}．{{
+                    tweet.createdAt | fromNow
+                  }}</span
+                >
               </div>
               <div class="tweet-content">
-                Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-                ullamco cillum dolor. Voluptate exercitation incididunt aliquip
-                deserunt reprehenderit elit laborum.
+                {{ tweet.description }}
               </div>
               <div>
                 <span class="text-account">回覆給</span>
-                <span class="text-tag ms-2">@apple</span>
+                <span class="text-tag ms-2">@{{ tweet.user.name }}</span>
               </div>
             </div>
           </div>
           <div class="reply-content d-flex">
-            <div class="avatar"><img src="" alt="" /></div>
+            <div><img class="avatar" :src="currentUser.avatar" alt="" /></div>
             <textarea
               class="input-new-tweet mt-2"
               rows="5"
               cols="50"
               placeholder="推你的回覆"
-              v-model="content"
+              v-model="comment"
             ></textarea>
           </div>
         </div>
         <div class="modal-footer">
-          <span class="text-danger" v-if="content.length < 1"
-            >內容不可空白</span
+          <span class="text-danger" v-if="isError">{{ errorMsg }}</span>
+          <button
+            type="submit"
+            class="btn-active"
+            @click="handleSubmit(comment)"
           >
-          <button type="submit" class="btn-active">回覆</button>
+            回覆
+          </button>
         </div>
+      </div>
+    </div>
+    <!-- alert -->
+    <div
+      class="alert d-flex fixed-top"
+      id="alert"
+      role="alert"
+      v-if="alertStatus !== false"
+    >
+      <div class="ms-2 mx-auto my-auto text-alert">{{ alertMsg }}</div>
+      <div class="ms-auto">
+        <img
+          :src="require('./../assets/error-alert.svg')"
+          v-if="alertStatus === 'error'"
+        />
+        <img
+          :src="require('./../assets/success-alert.svg')"
+          v-else-if="alertStatus === 'success'"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import moment from 'moment'
+  import { mapState } from 'vuex'
+  // import tweetsAPI from './../apis/tweets'
+
   export default {
     name: 'NewReplyModal',
+    props: {
+      tweet: {
+        type: Object,
+        required: true,
+      },
+    },
     data() {
       return {
-        content: '',
+        comment: '',
+        alertMsg: '',
+        alertStatus: false,
+        isError: false,
+        errorMsg: '',
       }
+    },
+    computed: {
+      ...mapState(['currentUser']),
+    },
+    filters: {
+      fromNow(datetime) {
+        if (!datetime) {
+          return '-'
+        }
+        return moment(datetime).fromNow()
+      },
+    },
+    methods: {
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
+      },
+      hideModal() {
+        const bootstrap = require('bootstrap')
+        const tweetModal = document.querySelector('#new-reply-modal')
+        const modal = bootstrap.Modal.getInstance(tweetModal)
+        setTimeout(() => {
+          modal.hide()
+        }, 1000)
+      },
+      handleSubmit(comment) {
+        // TODO:串接API
+        if (!this.comment) {
+          this.isError = true
+          this.errorMsg = '內容不可空白'
+          return
+        }
+        console.log(comment)
+        // 修改
+        // const { data } = await tweetsAPI.postTweetReply({
+        //   tweetId: this.id,
+        //   comment: this.comment,
+        // })
+        // if (data.status === 'error') {
+        //   throw new Error(data.message)
+        // }
+        // tweet list
+        this.$emit('after-reply-submit', {
+          tweetId: this.tweet.id,
+          replyCount: this.tweet.replyCount + 1,
+        })
+        // single tweet
+        this.$emit('after-single-reply', {
+          user: this.currentUser,
+          comment: this.comment,
+          created_at: new Date().toISOString(),
+        })
+        this.alertMsg = '留言成功'
+        this.alertStatus = 'success'
+        this.alertShow()
+        this.comment = ''
+        this.hideModal()
+        // catch error msg
+        // this.alertMsg = '回覆失敗，請稍後再試'
+        // this.alertStatus = 'error'
+        // this.alertShow()
+      },
     },
   }
 </script>

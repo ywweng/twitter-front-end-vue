@@ -43,7 +43,9 @@
         >
         <span class="space">．</span>
         <!-- TODO:router-link -->
-        <router-link to="/admin/login" class="mx-auto text-blue">後台登入</router-link>
+        <router-link to="/admin/login" class="mx-auto text-blue"
+          >後台登入</router-link
+        >
       </div>
     </form>
     <!-- alert -->
@@ -69,45 +71,7 @@
 </template>
 
 <script>
-  // import authorizationAPI from './../apis/authorization'
-
-  // const dummyUser = {
-  //   account: 'user1',
-  //   password: '12345678',
-  // }
-
-  const response = {
-    status: 'success',
-    data: {
-      token: 'token',
-      user: {
-        id: 1,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        role: 'user', //admin:管理員; user:使用者 只有使用者可以登入
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-    },
-  }
-
-  const response = {
-    status: 'success',
-    data: {
-      token: 'token',
-      user: {
-        id: 1,
-        account: 'user1',
-        avatar: 'https://i1.twlife.cc/imgs/q/ed/1e06b00015681359431ed.jpg',
-        name: '使用者1',
-        email: 'user1@example.com',
-        role: 'user', //admin:管理員; user:使用者 只有使用者可以登入
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-    },
-  }
+  import authorizationAPI from './../apis/authorization'
 
   export default {
     name: 'Login',
@@ -130,46 +94,44 @@
           this.alertStatus = false
         }, 2000)
       },
-      handleSubmit() {
+      async handleSubmit() {
         // TODO:改成async/await
-        if (!this.account || !this.password) {
-          this.alertMsg = '請填入帳號和密碼'
+        try {
+          if (!this.account || !this.password) {
+            this.alertMsg = '請填入帳號和密碼'
+            this.alertStatus = 'error'
+            this.alertShow()
+            return
+          }
+
+          this.isProcessing = true
+
+          const response = await authorizationAPI.login({
+            account: this.account,
+            password: this.password,
+          })
+
+          const { data } = response
+
+          if (data.status !== 'success') {
+            // throw new Error(data.message)
+            this.alertMsg = '登入失敗'
+            this.alertStatus = 'error'
+            this.alertShow()
+          }
+
+          localStorage.setItem('token', data.token)
+          this.$store.commit('setCurrentUser', data.user)
+
+          this.$router.push('/main')
+        } catch (error) {
+          // catch
+          this.isProcessing = false
+          this.password = ''
+          this.alertMsg = error.response.data.message
           this.alertStatus = 'error'
           this.alertShow()
-          return
         }
-
-        this.isProcessing = true
-
-        // const response = await authorizationAPI.login({
-        //   account: this.account,
-        //   password: this.password,
-        // })
-
-        const { data } = response
-
-        if (data.status !== 'success') {
-          // throw new Error(data.message)
-          this.alertMsg = '登入失敗'
-          this.alertStatus = 'error'
-          this.alertShow()
-        }
-
-        // localStorage.setItem('token', data.token)
-        this.$store.commit('setCurrentUser', data.user)
-        // if (
-        //   this.account === dummyUser.account &&
-        //   this.password === dummyUser.password
-        // ) {
-        //   this.$router.push('/main')
-        // }
-
-        // catch
-        this.isProcessing = false
-        this.password = ''
-        this.alertMsg = '輸入的帳號密碼有誤'
-        this.alertStatus = 'error'
-        this.alertShow()
       },
     },
   }

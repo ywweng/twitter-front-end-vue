@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 // TODO: API URL
-const baseURL = 'http://localhost:3000/api'
+const baseURL = 'https://project-simple-twitter.herokuapp.com/api'
 
-export const apiHelper = axios.create({
+const axiosInstance = axios.create({
   baseURL,
 })
 

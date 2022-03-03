@@ -95,7 +95,7 @@ const routes = [
     path: '/user-profile/:userId/follow',
     name: 'followship',
     component: () => import("../views/UserFollowShip.vue"),
-    edirect: '/user-profile/:userId/followers',
+    redirect: '/user-profile/:userId/followers',
     children: [
       {
         path: '/user-profile/:userId/followings',
@@ -117,18 +117,10 @@ const router = new VueRouter({
   routes,
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach( (to, from, next) => {
   console.log('to', to)
   console.log('from', from)
-  // const token = localStorage.getItem('token')
-  // let isAuthenticated = false
-  // if (token) {
-  //   isAuthenticated = await store.dispatch('fetchCurrentUser')
-  // }
-  // if (!isAuthenticated && to.name !== 'login') {
-  //   next('/signin')
-  //   return
-  // }
+  // store.dispatch('fetchCurrentUser')
   next()
 })
 

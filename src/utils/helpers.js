@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 // TODO: API URL
 const baseURL = 'https://project-simple-twitter.herokuapp.com/api'
@@ -21,3 +22,10 @@ axiosInstance.interceptors.request.use(
 )
 
 export const apiHelper = axiosInstance
+
+export const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000
+})

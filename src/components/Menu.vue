@@ -15,7 +15,7 @@
           </li>
           <li class="menu-icon mb-4">
             <!-- TODO:router-link 設params-->
-            <router-link :to="{ name: 'user-profile' , params: {userId: currentUser.id}}" class="menu-text">
+            <router-link :to="{ name: 'user-profile' ,params:{userId: currentUser.id}}" class="menu-text">
               <img class="profile-icon" :src="userProfileUrl" />
               個人資料
             </router-link>
@@ -74,86 +74,85 @@
 </template>
 
 <script>
-import NewTweetModal from "./../components/NewTweetModal.vue";
-import { mapState } from "vuex";
-
-export default {
-  name: "Menu",
-  components: {
-    NewTweetModal,
-  },
-  data() {
-    return {
-      mainUrl: require("./../assets/Menu.svg"),
-      mainActiveUrl: require("./../assets/MenuActive.svg"),
-      userProfileUrl: require("./../assets/UserProfile.svg"),
-      userProfileActiveUrl: require("./../assets/UserProfileActive.svg"),
-      settingUrl: require("./../assets/Setting.svg"),
-      settingActiveUrl: require("./../assets/SettingActive.svg"),
-      alertMsg: "",
-      alertStatus: false,
-    };
-  },
-  computed: {
-    ...mapState(["currentUser", "isAuthoenticated"]),
-  },
-  methods: {
-    alertShow() {
-      const bootstrap = require("bootstrap");
-      let alertNode = document.querySelector("#alert");
-      bootstrap.Alert.getInstance(alertNode);
-      setTimeout(() => {
-        this.alertStatus = false;
-      }, 2000);
+  import NewTweetModal from './../components/NewTweetModal.vue'
+  import { mapState } from 'vuex'
+  export default {
+    name: 'Menu',
+    components: {
+      NewTweetModal,
     },
-    logout() {
-      this.$store.commit('revokeAuthentication')
-      this.$router.push("/login");
+    data() {
+      return {
+        mainUrl: require('./../assets/Menu.svg'),
+        mainActiveUrl: require('./../assets/MenuActive.svg'),
+        userProfileUrl: require('./../assets/UserProfile.svg'),
+        userProfileActiveUrl: require('./../assets/UserProfileActive.svg'),
+        settingUrl: require('./../assets/Setting.svg'),
+        settingActiveUrl: require('./../assets/SettingActive.svg'),
+        alertMsg: '',
+        alertStatus: false,
+      }
     },
-  },
-  mounted() {
-    if (!localStorage.getItem('token')) {
-      this.alertMsg = '您尚未登入'
-      this.alertStatus = 'error'
-      this.alertShow()
-      setTimeout(() => {
+    computed: {
+      ...mapState(['currentUser', 'isAuthoenticated']),
+    },
+    methods: {
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
+      },
+      logout() {
+        this.$store.commit('revokeAuthentication')
         this.$router.push('/login')
-      }, 5000);
-    }
-  },
-  created() {
-    if (this.$route.path === "/main") {
-      this.mainUrl = this.mainActiveUrl;
-    }
-    if (this.$route.path === "/user-profile") {
-      this.userProfileUrl = this.userProfileActiveUrl;
-    }
-    if (this.$route.path === "/setting") {
-      this.settingUrl = this.settingActiveUrl;
-    }
-  },
-};
+      },
+    },
+    mounted() {
+      if (!localStorage.getItem('token')) {
+        this.alertMsg = '您尚未登入'
+        this.alertStatus = 'error'
+        this.alertShow()
+        setTimeout(() => {
+          this.$router.push('/login')
+        }, 5000);
+      }
+    },
+    created() {
+      if (this.$route.path === '/main') {
+        this.mainUrl = this.mainActiveUrl
+      }
+      if (this.$route.path === '/user-profile') {
+        this.userProfileUrl = this.userProfileActiveUrl
+      }
+      if (this.$route.path === '/setting') {
+        this.settingUrl = this.settingActiveUrl
+      }
+    },
+  }
 </script>
 
 <style>
-#menu {
-  width: 230px;
-  /* margin-left: 103px; */
-}
-.btn-tweet {
-  max-width: 210px;
-}
-.logo {
-  margin-bottom: 47px;
-}
-.profile-icon {
-  margin-left: 3px;
-  margin-right: 20px;
-}
-.router-link-active {
-  color: #ff6600;
-}
-.logout {
-  cursor: pointer;
-}
+  #menu {
+    width: 230px;
+    /* margin-left: 103px; */
+  }
+  .btn-tweet {
+    max-width: 210px;
+  }
+  .logo {
+    margin-bottom: 47px;
+  }
+  .profile-icon {
+    margin-left: 3px;
+    margin-right: 20px;
+  }
+  .router-link-active {
+    color: #ff6600;
+  }
+  .logout {
+    cursor: pointer;
+  }
 </style>

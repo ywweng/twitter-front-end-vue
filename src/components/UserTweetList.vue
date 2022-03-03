@@ -3,12 +3,15 @@
     <!-- <router-link to="{ name: 'single-tweet' , params: {tweetId: tweet.id}}">
 
     </router-link> -->
+    <Spinner v-if="isLoading" />
     <div class="tweet-card d-flex" v-for="tweet in userTweets" :key="tweet.id">
-      <img src="https://i.pravatar.cc/150?img=10" class="avatar" alt="" />
+      <img :src="tweet.User.avatar" class="avatar" alt="" />
       <div class="tweet-info d-flex flex-column">
         <div class="first-line">
-          <span class="text-name">Apple</span>
-          <span class="text-account">@apple．3小時</span>
+          <span class="text-name">{{ tweet.User.name }}</span>
+          <span class="text-account"
+            >@{{ tweet.User.account }}．{{ tweet.createdAt | fromNow }}</span
+          >
         </div>
         <div class="tweet-content">
           {{ tweet.description }}
@@ -20,18 +23,16 @@
               data-bs-toggle="modal"
               data-bs-target="#new-reply-modal"
             >
-            <img src="../assets/icon_reply.png" alt="" class="reply"
-            />
+              <img src="./../assets/icon_reply.png" alt="" class="reply" />
             </button>
-            <!-- 之後改router-link :to="{ name: 'single-tweet' }" -->
-            <span class="text-like-reply">{{ tweet.totalReplies }}</span>
+            <span class="text-like-reply">{{ tweet.replyCount }}</span>
           </span>
           <span class="icon-wrap ms-4">
             <img
               src="../assets/icon_like.png"
               class="like"
               alt=""
-              v-if="!tweet.isLike"
+              v-if="!tweet.isLiked"
               @click.stop.prevent="addLike(tweet.id)"
             />
             <img
@@ -41,7 +42,7 @@
               v-else
               @click.stop.prevent="deleteLike(tweet.id)"
             />
-            <span class="text-like-reply">{{ tweet.totalLikes }}</span>
+            <span class="text-like-reply">{{ tweet.likeCount }}</span>
           </span>
         </div>
       </div>
@@ -51,75 +52,108 @@
 </template>
 
 <script>
-import NewReplyModal from './../components/NewReplyModal.vue'
-
-const dummyData = [
-  {
-    id: 3,
-    UserId: 1,
-    description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque nisi odio ipsa quaerat ipsam repellendus repellat consectetur culpa voluptatem nemo mollitia,",
-    created_at: "2022-01-18T07:23:18.000Z",
-    totalReplies: 13,
-    totalLikes: 76,
-    isLike: true, //確認API是否能提供
-  },
-  {
-    id: 10,
-    UserId: 1,
-    description:
-      " reprehenderit nobis minus quis atque adipisci et est maiores.",
-    created_at: "2022-01-18T07:23:18.000Z",
-    totalReplies: 0,
-    totalLikes: 0,
-    isLike: false, //確認API是否能提供
-  },
-];
+import NewReplyModal from "./../components/NewReplyModal.vue";
+import userAPI from "./../apis/user";
+import tweetsAPI from "../apis/tweets"
+import Spinner from "./../components/Spinner.vue";
+import { fromNowFilter } from "../utils/mixins";
+import { Toast } from "../utils/helpers";
 
 export default {
-  name: "user-TweetList",
+  name: "userTweetList",
   components: {
-    NewReplyModal
+    NewReplyModal,
+    Spinner,
+  },
+  mixins: [fromNowFilter],
+  props: {
+    userId: {
+      type: Number,
+      required: true
+    }
   },
   data() {
     return {
-      // currentUser,
       userTweets: [],
+      isLoading: true,
     };
   },
+  
   created() {
-    this.fetchTweets();
+    const userId = this.userId;
+    this.fetchTweets(userId);
+  },
+  watch: {
+    userId(newValue) {
+      this.fetchTweets(newValue)
+    }
   },
   methods: {
-    fetchTweets() {
-      this.userTweets = dummyData;
-    },
-    addLike(id) {
-      // TODO:串API
-      this.userTweets = this.userTweets.map((tweet) => {
-        if (tweet.id === id) {
-          return {
-            ...tweet,
-            isLike: true,
-          };
+    async fetchTweets(userId) {
+      try {
+        const { data } = await userAPI.getUserTweets({userId});
+        if(!data.length) {
+          throw new Error('尚無任何推文！')
         }
-        return tweet
-      });
+        this.userTweets = data
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+        Toast.fire({
+          icon: "error",
+          title: '無法取得推文，請稍再試',
+        });
+      }
     },
-    deleteLike(id) {
-      // TODO:串API
-      this.userTweets = this.userTweets.map((tweet) => {
-        if (tweet.id === id) {
-          return {
-            ...tweet,
-            isLike: false,
-          };
+    async addLike(tweetId) {
+      try {
+        const response = await tweetsAPI.addLike({ tweetId });
+        // const { data } = response
+        if (response.data.status === "error") {
+          throw new Error();
         }
-        return tweet
-      });
+        this.userTweets = this.userTweets.map((tweet) => {
+          if (+tweet.id === +tweetId) {
+            return {
+              ...tweet,
+              isLiked: true,
+              likeCount: tweet.likeCount + 1,
+            };
+          }
+          return tweet;
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: error.response.data.message,
+        });
+      }
+    },
+    async deleteLike(tweetId) {
+      try {
+        const response = await tweetsAPI.deleteLike({ tweetId });
+        if (response.data.status === "error") {
+          throw new Error();
+        }
+       
+        this.userTweets = this.userTweets.map((tweet) => {
+          if (+tweet.id === +tweetId) {
+            return {
+              ...tweet,
+              isLiked: false,
+              likeCount: tweet.likeCount - 1,
+            };
+          }
+          return tweet;
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: error.response.data.message,
+        });
+      }
     },
   },
-
 };
 </script>
 

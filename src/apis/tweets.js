@@ -13,10 +13,12 @@ export default {
   //   postTweetReply({ tweetId, comment }) {
   //     return apiHelper.post(`/tweets/${tweetId}/replies`, comment)
   //   },
-  // addLike({tweetId}) {
-  //   return apiHelper.post(`/tweets/{tweetId}/like`)
-  // },
-  // deleteLike({tweetId}) {
-  //   return apiHelper.post(`/tweets/{tweetId}/unlike`)
-  // }
+  addLike({tweetId}) {
+    return apiHelper.post(`/tweets/${tweetId}/like`)
+  },
+  deleteLike({tweetId}) {
+    return apiHelper.post(`/tweets/${tweetId}/unlike`)
+  },
+  
+  
 }

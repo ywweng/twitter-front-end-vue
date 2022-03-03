@@ -26,7 +26,7 @@
           alt=""
         />
         <!-- currentUser btn-edit-->
-        <div class="btn-area d-flex justify-content-end" v-if="isCurrentUser">
+        <div class="btn-area d-flex justify-content-end" v-if="user.id === currentUser.id">
           <button
             type="button"
             class="btn btn-edit"
@@ -57,7 +57,7 @@
             type="button"
             class="btn btn-follow ms-2"
             v-if="!user.isFollowing"
-            @click.stop.prevent="addFollow"
+            @click.stop.prevent="addFollow(user.id)"
           >
             跟隨
           </button>
@@ -65,7 +65,7 @@
             type="button"
             class="btn btn-following ms-2"
             v-else
-            @click.stop.prevent="deleteFollow"
+            @click.stop.prevent="deleteFollow(user.id)"
           >
             正在跟隨
           </button>
@@ -79,24 +79,25 @@
           </div>
           <div class="followship">
             <span class="following fw-bold">
-              <router-link :to="`/user-profile/${user.id}/followings`">
+              <router-link :to="`/user-profile/${user.id}/follow`">
                 {{ user.followingCount }}個<span class="sub-text"
                   >跟隨中</span
                 ></router-link
               >
             </span>
             <span class="follower ms-4 fw-bold">
-              <router-link :to="`/user-profile/${user.id}/followers`">
+              <router-link :to="`/user-profile/${user.id}/follow`">
                 {{ user.followerCount }}位<span class="sub-text">跟隨者</span>
               </router-link>
             </span>
           </div>
         </div>
       </div>
-      <ProfileEditModal :current-user="user" />
+      <ProfileEditModal :current-user="user" @after-profile-submit="afterProfileSubmit"/>
+      
       <NavTabs :user-id="user.id" />
       <!-- router-view -->
-      <router-view></router-view>
+      <router-view :user-id="user.id" :user-name="user.name" :user-account="user.account" :user-avatar="user.avatar"></router-view>
     </div>
     <!-- Popular User -->
     <div class="col-3 popular-user mh-100">
@@ -111,8 +112,9 @@ import NavTabs from "../components/NavTabs.vue";
 import Menu from "../components/Menu.vue";
 import PopularUser from "../components/PopularUser.vue";
 import userAPI from "../apis/user";
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
 import { emptyImageFilter } from "../utils/mixins"
+import { Toast } from "../utils/helpers";
 
 export default {
   components: {
@@ -124,6 +126,7 @@ export default {
   mixins: [emptyImageFilter],
   data() {
     return {
+      currentUser:{},
       user: {
         id: 0,
         account: "",
@@ -139,16 +142,16 @@ export default {
         likeCount: 0,
         isFollowing: false,
       },
-      isCurrentUser: false,
       isNotified: false, //這個沒有設定，重新整理就會還原
     };
   },
-  computed: {
-    ...mapState(["currentUser"]),
-  },
+  // computed: {
+  //   ...mapState(["currentUser"]),
+  // },
   created() {
     const { userId } = this.$route.params
-    this.fetchUser(userId);
+    this.fetchUser(userId); 
+    this.fetchCurrentUser();
   },
   methods: {
     async fetchUser(userId) {
@@ -185,19 +188,54 @@ export default {
           likeCount,
           isFollowing
         };
-        // TODO:之後currentUser要改
-        if (this.user.id === this.currentUser.id) {
-          this.isCurrentUser = true;
-        }
+        this.fetchCurrentUser()
+
       } catch (error) {
-        console.log(error.response);
+        // console.log(error.response);
+        Toast.fire({
+          icon: "error",
+          title: error.response.data.message,
+        });
       }
     },
-    addFollow() {
-      this.user.isFollowing = true;
+    async fetchCurrentUser() {
+      try {
+        const { data } = await userAPI.getCurrentUser()
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.currentUser = data.data
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
+      }
     },
-    deleteFollow() {
-      this.user.isFollowing = false;
+    async addFollow(id) {
+      try {
+        const {data} = await userAPI.addFollow({ id })
+        console.log(data.message)
+        this.user.isFollowing = true;
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: error.response.data.message
+        })
+      }
+ 
+    },
+    async deleteFollow(followingId) {
+      try {
+        const {data} = await userAPI.deleteFollow({followingId})
+        console.log(data.message)
+        this.user.isFollowing = false
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: error.response.message
+        })
+      }
     },
     addNotify() {
       this.isNotified = true;
@@ -205,15 +243,20 @@ export default {
     deleteNotify() {
       this.isNotified = false;
     },
+    afterProfileSubmit(data) {
+      const {user: editedUser} = data
+      this.user = {
+          ...this.user,
+          id: editedUser.id,
+          account: editedUser.account,
+          name: editedUser.name,
+          introduction: editedUser.introduction,
+          avatar: editedUser.avatar,
+          cover: editedUser.cover,
+        };
+    }
   },
-    // watch: {
-  //   user(newValue) {
-  //     this.user = {
-  //       ...this.user,
-  //       ...newValue
-  //     }
-  //   }
-  // },
+
   beforeRouteUpdate(to, from, next) {
     const { userId } = to.params;
     this.fetchUser(userId);

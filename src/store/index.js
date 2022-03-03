@@ -16,6 +16,9 @@ export default new Vuex.Store({
       cover: '',
       introduction: '',
       role: '',
+      followingCount: 0, 
+      followerCount: 0, 
+      tweetCount: 0
     },
     isAuthenticated: false,
     token: '',
@@ -41,9 +44,9 @@ export default new Vuex.Store({
     // async fetchCurrentUser({ commit }) {
     //   try {
     //     const { data } = await userAPI.getCurrentUSer()
-    //     const { id, name, email, image, isAdmin } = data
+    //     const { id, account, name, email, avatar, cover, role, followingCount, followerCount, tweetCount } = data
     //     commit('setCurrentUser', {
-    //       id, name, email, image, isAdmin
+    //       id, account, name, email, avatar, cover, role, followingCount, followerCount, tweetCount
     //     })
     //    return true
     //   } catch(error) {

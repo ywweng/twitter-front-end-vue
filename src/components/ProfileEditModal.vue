@@ -10,7 +10,7 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <form action="" @submit.stop.prevent="handleSubmit">
+          <form action="" @submit.stop.prevent="handleSubmit" >
             <!-- modal-header -->
             <div class="modal-header">
               <div class="d-flex">
@@ -236,6 +236,7 @@
 
 <script>
 import userAPI from "../apis/user"
+// import { Toast } from "../utils/helpers";
 
 export default {
   props: {
@@ -247,25 +248,14 @@ export default {
   data() {
     return {
       user: {
-        id: 0,
-        name: '',
-        account: '',
-        avatar: '',
-        cover: '',
-        introduction: ''
-      }
+        id: this.currentUser.id,
+        name: this.currentUser.name,
+        account: this.currentUser.account,
+        avatar: this.currentUser.avatar,
+        cover: this.currentUser.cover,
+        introduction: this.currentUser.introduction
+      },
     };
-  },
-  created() {
-    this.user = {
-      ...this.user,
-      id: this.currentUser.id,
-      name: this.currentUser.name,
-      account: this.currentUser.account,
-      avatar: this.currentUser.avatar,
-      cover: this.currentUser.cover,
-      introduction: this.currentUser.introduction
-    }
   },
   watch: {
     currentUser(newValue) {
@@ -315,11 +305,11 @@ export default {
         userId: this.user.id,
         formData
       })
-      if(!data) {
-        throw new Error()
-      }
+
+      this.$emit("after-profile-submit", data);
+
       } catch (error) {
-        console.log(error.response)
+        console.log(error.response.data.message)
       }
       
       

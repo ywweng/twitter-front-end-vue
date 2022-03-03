@@ -1,41 +1,88 @@
 <template>
   <div class="reply-list">
-    <div class="reply-card d-flex">
-      <img src="https://i.pravatar.cc/150?img=10" class="avatar" alt="" />
+    <Spinner v-if="isLoading" />
+    <div class="reply-card d-flex" v-for="reply in userReplies" :key="reply.id">
+      <img :src="userAvatar" class="avatar" alt="" />
       <div class="reply-info d-flex flex-column">
         <div class="first-line">
-          <span class="text-name">Apple</span>
-          <span class="text-account">@apple．3小時</span>
+          <span class="text-name">{{userName}}</span>
+          <span class="text-account">@{{userAccount}}．{{reply.createdAt}}</span>
         </div>
         <div class="second-line">
           <span class="text-account ms-0">回覆</span>
-          <span class="original-tweet ms-1">@Daniel</span>
+          <span class="original-tweet ms-1">@{{reply.Tweet.User.account}}</span>
           <!-- 這邊要不要加連結? -->
         </div>
         <div class="tweet-content">
-          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque nisi odio ipsa quaerat ipsam repellendus repellat consectetur culpa voluptatem nemo mollitia,"
-        </div>
-      </div>
-    </div>
-    <div class="reply-card d-flex">
-      <img src="https://i.pravatar.cc/150?img=10" class="avatar" alt="" />
-      <div class="reply-info d-flex flex-column">
-        <div class="first-line">
-          <span class="text-name">Apple</span>
-          <span class="text-account">@apple．3小時</span>
-        </div>
-        <div class="second-line">
-          <span class="text-account ms-0">回覆</span>
-          <span class="original-tweet ms-1">@Daniel</span>
-          <!-- 這邊要不要加連結? -->
-        </div>
-        <div class="tweet-content">
-          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque nisi odio ipsa quaerat ipsam repellendus repellat consectetur culpa voluptatem nemo mollitia,"
+         {{reply.comment}}
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import userAPI from "../apis/user"
+import Spinner from "./../components/Spinner.vue";
+import { Toast } from "../utils/helpers";
+export default {
+  name: 'userReplyList',
+  components: {
+    Spinner
+  },
+  props: {
+    userId: {
+      type: Number,
+      required: true
+    },
+    userName: {
+      type: String,
+      required: true
+    },
+    userAccount: {
+      type: String,
+      required: true
+    },
+    userAvatar: {
+      type: String,
+      required: true,
+    }
+  },
+  data() {
+    return {
+      userReplies: [],
+      isLoading: true,
+    }
+  },
+  created() {
+    const userId = this.userId;
+    this.fetchUserReplies(userId);
+  },
+  watch: {
+    userId(newValue) {
+      this.fetchUserReplies(newValue)
+    }
+  },
+  methods: {
+    async fetchUserReplies(userId) {
+      try {
+        const {data} = await userAPI.getUserReplies({userId})
+        if(!data.length) {
+          throw new Error('尚無任何回覆！')
+        }
+        this.userReplies = data
+        this.isLoading = false; 
+      } catch (error) {
+        this.isLoading = false;
+        Toast.fire({
+          icon: "error",
+          title: '無法取得推文與回覆，請稍再試',
+        });
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
 .reply-card {

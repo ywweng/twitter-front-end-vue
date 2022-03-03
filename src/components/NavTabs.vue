@@ -65,26 +65,32 @@ export default {
     };
   },
   created() {
-    this.fetchTabs();
+    const { userId } = this.$route.params
+    this.fetchTabs(userId);
     // console.log(this.route.name)
   },
+  watch: {
+    userId(newValue) {
+      this.fetchTabs(newValue)
+    }
+  },
   methods: {
-    fetchTabs() {
+    fetchTabs(userId) {
       this.tabs = this.tabs.map((tab) => {
         if (tab.title === "推文") {
           return {
             ...tab,
-            path: `/user-profile/${this.userId}/tweets`,
+            path: `/user-profile/${userId}/tweets`,
           };
         } else if (tab.title === "推文與回覆") {
           return {
             ...tab,
-            path: `/user-profile/${this.userId}/replies`,
+            path: `/user-profile/${userId}/replies`,
           };
         } else {
           return {
             ...tab,
-            path: `/user-profile/${this.userId}/likes`,
+            path: `/user-profile/${userId}/likes`,
           };
         }
       });

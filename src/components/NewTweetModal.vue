@@ -18,7 +18,7 @@
         </div>
         <div class="modal-body d-flex">
           <div class="">
-            <img class="avatar" :src="currentUser.avatar" alt="" />
+            <img class="avatar" width="50px" :src="currentUser.avatar" alt="" />
           </div>
           <textarea
             class="input-new-tweet mt-2"

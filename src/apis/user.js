@@ -4,7 +4,7 @@ const getToken = () => localStorage.getItem('token')
 export default {
   update({ userId, account, name, email, password, checkPassword }) {
     return apiHelper.put(
-      `/users/${userId}`,
+      `/users/${userId}/settings`,
       {
         account,
         name,

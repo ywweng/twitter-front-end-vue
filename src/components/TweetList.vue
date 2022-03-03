@@ -43,7 +43,7 @@
               :disabled="isProcessing"
             >
               <img :src="require('./../assets/LikeActive.svg')" width="12px" />
-              <span class="text-like-reply">{{ tweet.likesCount }}</span>
+              <span class="text-like-reply">{{ tweet.likeCount }}</span>
             </button>
             <button
               class="btn-like"
@@ -52,7 +52,7 @@
               :disabled="isProcessing"
             >
               <img :src="require('./../assets/Like.svg')" width="12px" />
-              <span class="text-like-reply">{{ tweet.likesCount }}</span>
+              <span class="text-like-reply">{{ tweet.likeCount }}</span>
             </button>
           </div>
         </div>
@@ -132,13 +132,6 @@
           this.alertStatus = false
         }, 2000)
       },
-      // openModal() {
-      //   const bootstrap = require('bootstrap')
-      //   const tweetModal = document.querySelector('#new-reply-modal')
-      //   const modal = bootstrap.Modal.getInstance(tweetModal)
-      //   // console.log(modal)
-      //   modal.show()
-      // },
       setNewTweets() {
         this.allTweets.unshift({ ...this.newTweets[0] })
       },
@@ -178,7 +171,7 @@
             } else {
               return {
                 ...tweet,
-                likesCount: tweet.likesCount + 1,
+                likeCount: tweet.likeCount + 1,
                 isLiked: true,
               }
             }
@@ -204,7 +197,7 @@
             } else {
               return {
                 ...tweet,
-                likesCount: tweet.likesCount - 1,
+                likeCount: tweet.likeCount - 1,
                 isLiked: false,
               }
             }
@@ -236,12 +229,10 @@
     watch: {
       newTweets() {
         if (this.newTweets.length > 0) {
-          console.log('1')
-          this.setNewTweets()
+          this.$store.commit('resetNewTweet')
         }
-      },
-      allTweets() {
-        this.fetchTweets()
+
+        this.setNewTweets()
       },
     },
   }

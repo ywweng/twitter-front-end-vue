@@ -124,7 +124,7 @@
             replyCount: 0,
             likeCount: 0,
             createdAt: new Date().toISOString(),
-            user: {
+            User: {
               avatar: this.currentUser.avatar,
               name: this.currentUser.name,
               account: this.currentUser.account,

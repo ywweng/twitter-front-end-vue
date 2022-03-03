@@ -27,10 +27,10 @@
         <div class="tweet-time w-100">{{ tweet.createdAt | format }}</div>
         <div class="like-reply">
           <span class="text-reply"
-            ><strong>{{ tweet.repliesCount }}</strong> 回覆</span
+            ><strong>{{ tweet.replyCount }}</strong> 回覆</span
           >
           <span class="text-like"
-            ><strong>{{ tweet.likesCount }}</strong> 喜歡次數</span
+            ><strong>{{ tweet.likeCount }}</strong> 喜歡次數</span
           >
         </div>
         <div class="action">
@@ -174,7 +174,7 @@
             throw new Error(data.message)
           }
 
-          this.tweet.likesCount = this.tweet.likesCount + 1
+          this.tweet.likeCount = this.tweet.likeCount + 1
           this.tweet.isLiked = true
 
           this.isProcessing = false
@@ -194,7 +194,7 @@
             throw new Error(data.message)
           }
 
-          this.tweet.likesCount = this.tweet.likesCount - 1
+          this.tweet.likeCount = this.tweet.likeCount - 1
           this.tweet.isLiked = false
 
           this.isProcessing = false
@@ -206,7 +206,7 @@
       },
       afterSingleReply(payload) {
         this.replies.unshift({ ...payload })
-        this.tweet.repliesCount = this.tweet.repliesCount + 1
+        this.tweet.replyCount = this.tweet.replyCount + 1
       },
     },
   }

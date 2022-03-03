@@ -3,8 +3,8 @@
     <div><img class="avatar" :src="currentUser.avatar" alt="" /></div>
     <div class="d-flex flex-column">
       <textarea
-        class="input-new-tweet"
-        rows="2"
+        class="input-new-tweet mt-2"
+        rows="1"
         cols="65"
         placeholder="有什麼新鮮事？"
         v-model="description"

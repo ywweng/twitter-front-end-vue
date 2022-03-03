@@ -95,7 +95,7 @@
       }
     },
     computed: {
-      ...mapState(['currentUser', 'isAuthoenticated']),
+      ...mapState(['currentUser', 'isAuthoenticated','newTweets']),
     },
     methods: {
       alertShow() {

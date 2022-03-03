@@ -39,7 +39,7 @@
               src="../assets/icon_like.png"
               class="like"
               alt=""
-              v-if="!tweet.isLiked"
+              v-if="!tweet.isLike"
               @click.stop.prevent="addLike(tweet.id)"
             />
             <img
@@ -127,7 +127,7 @@ export default {
           if (tweet.id === id) {
             return {
               ...tweet,
-              isLiked: true,
+              isLike: true,
               likeCount: tweet.likeCount + 1,
             };
           }
@@ -152,7 +152,7 @@ export default {
           if (+tweet.id === +id) {
             return {
               ...tweet,
-              isLiked: false,
+              isLike: false,
               likeCount: tweet.likeCount - 1,
             };
           }

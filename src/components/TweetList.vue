@@ -41,7 +41,7 @@
             <button
               class="btn-like"
               @click="deleteLike(tweet.id)"
-              v-if="tweet.isLiked"
+              v-if="tweet.isLike"
               :disabled="isProcessing"
             >
               <img :src="require('./../assets/LikeActive.svg')" width="12px" />
@@ -194,7 +194,7 @@ export default {
               return {
                 ...tweet,
                 likeCount: tweet.likeCount + 1,
-                isLiked: true,
+                isLike: true,
               }
             }
           })
@@ -220,7 +220,7 @@ export default {
               return {
                 ...tweet,
                 likeCount: tweet.likeCount - 1,
-                isLiked: false,
+                isLike: false,
               }
             }
           })

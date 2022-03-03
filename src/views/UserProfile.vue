@@ -1,10 +1,10 @@
 <template>
-  <div class="row">
-    <div class="menu col-3">
+  <div class="row h-100">
+    <div class="menu col-3 mh-100">
       <Menu />
     </div>
     <!-- User-profile -->
-    <div class="user-profile col-6">
+    <div class="user-profile col-6 me-3" id="user-profile">
       <div class="page-title position-relative">
         <img
           src="../assets/arrow.png"
@@ -17,15 +17,18 @@
       </div>
       <div class="profile-wrap position-relative">
         <div class="profile-cover">
-          <img :src="user.cover | emptyImage" class="w-100 " alt="" />
+          <img :src="user.cover | emptyImage" class="w-100" alt="" />
         </div>
         <img
           :src="user.avatar | emptyImage"
-          class="profile-avatar rounded-circle position-absolute "
+          class="profile-avatar rounded-circle position-absolute"
           alt=""
         />
         <!-- currentUser btn-edit-->
-        <div class="btn-area d-flex justify-content-end" v-if="user.id === currentUser.id">
+        <div
+          class="btn-area d-flex justify-content-end"
+          v-if="user.id === currentUser.id"
+        >
           <button
             type="button"
             class="btn btn-edit"
@@ -92,11 +95,19 @@
           </div>
         </div>
       </div>
-      <ProfileEditModal :current-user="user" @after-profile-submit="afterProfileSubmit"/>
-      
+      <ProfileEditModal
+        :current-user="user"
+        @after-profile-submit="afterProfileSubmit"
+      />
+
       <NavTabs :user-id="user.id" />
       <!-- router-view -->
-      <router-view :user-id="user.id" :user-name="user.name" :user-account="user.account" :user-avatar="user.avatar"></router-view>
+      <router-view
+        :user-id="user.id"
+        :user-name="user.name"
+        :user-account="user.account"
+        :user-avatar="user.avatar"
+      ></router-view>
     </div>
     <!-- Popular User -->
     <div class="col-3 popular-user mh-100">
@@ -106,145 +117,143 @@
 </template>
 
 <script>
-import ProfileEditModal from "../components/ProfileEditModal.vue";
-import NavTabs from "../components/NavTabs.vue";
-import Menu from "../components/Menu.vue";
-import PopularUser from "../components/PopularUser.vue";
-import userAPI from "../apis/user";
-// import { mapState } from "vuex";
-import { emptyImageFilter } from "../utils/mixins"
-import { Toast } from "../utils/helpers";
+  import ProfileEditModal from '../components/ProfileEditModal.vue'
+  import NavTabs from '../components/NavTabs.vue'
+  import Menu from '../components/Menu.vue'
+  import PopularUser from '../components/PopularUser.vue'
+  import userAPI from '../apis/user'
+  // import { mapState } from "vuex";
+  import { emptyImageFilter } from '../utils/mixins'
+  import { Toast } from '../utils/helpers'
 
-export default {
-  components: {
-    ProfileEditModal,
-    NavTabs,
-    Menu,
-    PopularUser,
-  },
-  mixins: [emptyImageFilter],
-  data() {
-    return {
-      currentUser:{},
-      user: {
-        id: 0,
-        account: "",
-        name: "",
-        email: "",
-        introduction: "",
-        avatar: "",
-        cover: "",
-        role: "",
-        tweetCount: 0,
-        followingCount: 0,
-        followerCount: 0,
-        likeCount: 0,
-        isFollowing: false,
-      },
-      isNotified: false, //這個沒有設定，重新整理就會還原
-    };
-  },
-  // computed: {
-  //   ...mapState(["currentUser"]),
-  // },
-  created() {
-    const { userId } = this.$route.params
-    this.fetchUser(userId); 
-    this.fetchCurrentUser();
-  },
-  methods: {
-    async fetchUser(userId) {
-      try {
-        const { data } = await userAPI.getUser({ userId });
-        const {
-          id,
-          account,
-          name,
-          email,
-          introduction,
-          avatar,
-          cover,
-          role,
-          tweetCount,
-          followingCount,
-          followerCount,
-          likeCount,
-          isFollowing
-        } = data;
-        this.user = {
-          ...this.user,
-          id,
-          account,
-          name,
-          email,
-          introduction,
-          avatar,
-          cover,
-          role,
-          tweetCount,
-          followingCount,
-          followerCount,
-          likeCount,
-          isFollowing
-        };
-        this.fetchCurrentUser()
-
-      } catch (error) {
-        // console.log(error.response);
-        Toast.fire({
-          icon: "error",
-          title: error.response.data.message,
-        });
+  export default {
+    components: {
+      ProfileEditModal,
+      NavTabs,
+      Menu,
+      PopularUser,
+    },
+    mixins: [emptyImageFilter],
+    data() {
+      return {
+        currentUser: {},
+        user: {
+          id: 0,
+          account: '',
+          name: '',
+          email: '',
+          introduction: '',
+          avatar: '',
+          cover: '',
+          role: '',
+          tweetCount: 0,
+          followingCount: 0,
+          followerCount: 0,
+          likeCount: 0,
+          isFollowing: false,
+        },
+        isNotified: false, //這個沒有設定，重新整理就會還原
       }
     },
-    async fetchCurrentUser() {
-      try {
-        const { data } = await userAPI.getCurrentUser()
-        if(data.status !== 'success') {
-          throw new Error(data.message)
+    // computed: {
+    //   ...mapState(["currentUser"]),
+    // },
+    created() {
+      const { userId } = this.$route.params
+      this.fetchUser(userId)
+      this.fetchCurrentUser()
+    },
+    methods: {
+      async fetchUser(userId) {
+        try {
+          const { data } = await userAPI.getUser({ userId })
+          const {
+            id,
+            account,
+            name,
+            email,
+            introduction,
+            avatar,
+            cover,
+            role,
+            tweetCount,
+            followingCount,
+            followerCount,
+            likeCount,
+            isFollowing,
+          } = data
+          this.user = {
+            ...this.user,
+            id,
+            account,
+            name,
+            email,
+            introduction,
+            avatar,
+            cover,
+            role,
+            tweetCount,
+            followingCount,
+            followerCount,
+            likeCount,
+            isFollowing,
+          }
+          this.fetchCurrentUser()
+        } catch (error) {
+          // console.log(error.response);
+          Toast.fire({
+            icon: 'error',
+            title: error.response.data.message,
+          })
         }
-        this.currentUser = data.data
-      } catch(error) {
-        Toast.fire({
-          icon: 'error',
-          title: error.message
-        })
-      }
-    },
-    async addFollow(id) {
-      try {
-        const {data} = await userAPI.addFollow({ id })
-        console.log(data.message)
-        this.user.isFollowing = true;
-      } catch (error) {
-        Toast.fire({
-          icon: 'error',
-          title: error.response.data.message
-        })
-      }
- 
-    },
-    async deleteFollow(followingId) {
-      try {
-        const {data} = await userAPI.deleteFollow({followingId})
-        console.log(data.message)
-        this.user.isFollowing = false
-      } catch (error) {
-        Toast.fire({
-          icon: 'error',
-          title: error.response.message
-        })
-      }
-    },
-    addNotify() {
-      this.isNotified = true;
-    },
-    deleteNotify() {
-      this.isNotified = false;
-    },
-    afterProfileSubmit(data) {
-      const {user: editedUser} = data
-      this.user = {
+      },
+      async fetchCurrentUser() {
+        try {
+          const { data } = await userAPI.getCurrentUser()
+          if (data.status !== 'success') {
+            throw new Error(data.message)
+          }
+          this.currentUser = data.data
+        } catch (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error.message,
+          })
+        }
+      },
+      async addFollow(id) {
+        try {
+          const { data } = await userAPI.addFollow({ id })
+          console.log(data.message)
+          this.user.isFollowing = true
+        } catch (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error.response.data.message,
+          })
+        }
+      },
+      async deleteFollow(followingId) {
+        try {
+          const { data } = await userAPI.deleteFollow({ followingId })
+          console.log(data.message)
+          this.user.isFollowing = false
+        } catch (error) {
+          Toast.fire({
+            icon: 'error',
+            title: error.response.message,
+          })
+        }
+      },
+      addNotify() {
+        this.isNotified = true
+      },
+      deleteNotify() {
+        this.isNotified = false
+      },
+      afterProfileSubmit(data) {
+        const { user: editedUser } = data
+        this.user = {
           ...this.user,
           id: editedUser.id,
           account: editedUser.account,
@@ -252,86 +261,92 @@ export default {
           introduction: editedUser.introduction,
           avatar: editedUser.avatar,
           cover: editedUser.cover,
-        };
-    }
-  },
+        }
+      },
+    },
 
-  beforeRouteUpdate(to, from, next) {
-    const { userId } = to.params;
-    this.fetchUser(userId);
-    next();
-  },
-};
+    beforeRouteUpdate(to, from, next) {
+      const { userId } = to.params
+      this.fetchUser(userId)
+      next()
+    },
+  }
 </script>
 
 <style scoped>
-a {
-  text-decoration: none;
-  color: black;
-}
-.user-profile {
-  border-left: 1px solid var(--border-line-color);
-  border-right: 1px solid var(--border-line-color);
-}
-.page-title {
-  padding: 5px 0 5px 26px;
-  border-bottom: 1px solid var(--border-line-color);
-}
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  #user-profile {
+    height: 100vh;
+    overflow: auto;
+    padding: 0;
+  }
+  .user-profile {
+    max-width: 600px;
+    border-left: 1px solid var(--border-line-color);
+    border-right: 1px solid var(--border-line-color);
+  }
+  .page-title {
+    padding: 5px 0 5px 26px;
+    border-bottom: 1px solid var(--border-line-color);
+  }
 
-.title-item {
-  margin-left: 64px;
-}
-.profile-data {
-  /* margin-top: 60px; */
-  padding: 10px 15px;
-  font-size: 14px;
-}
+  .title-item {
+    margin-left: 64px;
+  }
+  .profile-data {
+    /* margin-top: 60px; */
+    padding: 10px 15px;
+    font-size: 14px;
+  }
 
-.profile-cover img {
-  height: 200px;
-}
-.profile-avatar {
-  width: 140px;
-  height: 140px;
-  top: 124px;
-  left: 14px;
-  border: 4px solid white;
-}
-.btn-edit {
-  width: 120px;
-  height: 35px;
-  top: 210px;
-  right: 15px;
-  border: 1px solid var(--orange);
-  border-radius: 100px;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--orange);
-}
-.btn-edit:hover,
-.btn-edit:active {
-  background-color: var(--orange);
-  color: white;
-}
-.account,
-.following,
-.follower {
-  font-weight: 500;
-}
-.btn-area {
-  padding: 10px 15px;
-}
-.btn-follow,
-.btn-following {
-  padding: 5px 15px;
-  border-color: var(--orange);
-  border-radius: 100px;
-  color: var(--orange);
-  font-size: 15px;
-  font-weight: 700;
-}
-.btn-following {
-  background-color: var(--orange);
-  color: white;
-}
+  .profile-cover img {
+    height: 200px;
+  }
+  .profile-avatar {
+    width: 140px;
+    height: 140px;
+    top: 124px;
+    left: 14px;
+    border: 4px solid white;
+  }
+  .btn-edit {
+    width: 120px;
+    height: 35px;
+    top: 210px;
+    right: 15px;
+    border: 1px solid var(--orange);
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--orange);
+  }
+  .btn-edit:hover,
+  .btn-edit:active {
+    background-color: var(--orange);
+    color: white;
+  }
+  .account,
+  .following,
+  .follower {
+    font-weight: 500;
+  }
+  .btn-area {
+    padding: 10px 15px;
+  }
+  .btn-follow,
+  .btn-following {
+    padding: 5px 15px;
+    border-color: var(--orange);
+    border-radius: 100px;
+    color: var(--orange);
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .btn-following {
+    background-color: var(--orange);
+    color: white;
+  }
 </style>

@@ -13,10 +13,10 @@
     </div>
     <div class="tweet-section d-flex flex-column">
       <div class="user-info d-flex">
-        <div><img class="avatar" :src="tweet.user.avatar" alt="" /></div>
+        <div><img class="avatar" :src="tweet.User.avatar" alt="" /></div>
         <div class="d-flex flex-column">
-          <span class="text-name">{{ tweet.user.name }}</span>
-          <span class="text-account">@{{ tweet.user.account }}</span>
+          <span class="text-name">{{ tweet.User.name }}</span>
+          <span class="text-account">@{{ tweet.User.account }}</span>
         </div>
       </div>
       <div class="tweet d-flex flex-column w-100">
@@ -26,10 +26,10 @@
         <div class="tweet-time w-100">{{ tweet.createdAt | format }}</div>
         <div class="like-reply">
           <span class="text-reply"
-            ><strong>{{ tweet.replyCount }}</strong> 回覆</span
+            ><strong>{{ tweet.repliesCount }}</strong> 回覆</span
           >
           <span class="text-like"
-            ><strong>{{ tweet.likeCount }}</strong> 喜歡次數</span
+            ><strong>{{ tweet.likesCount }}</strong> 喜歡次數</span
           >
         </div>
         <div class="action">
@@ -43,7 +43,7 @@
           <button
             class="btn-like"
             @click.stop.prevent="deleteLike(tweet.id)"
-            v-if="isLike"
+            v-if="tweet.isLiked"
           >
             <img :src="require('./../assets/LikeActive.svg')" width="24px" />
           </button>
@@ -59,19 +59,19 @@
     </div>
     <div class="replies" id="reply-list">
       <div class="reply-card d-flex" v-for="reply in replies" :key="reply.id">
-        <div><img class="avatar" :src="reply.user.avatar" alt="" /></div>
+        <div><img class="avatar" :src="reply.User.avatar" alt="" /></div>
         <div
           class="tweet-info d-flex flex-column justify-content-evenly w-100 h-100"
         >
           <div class="">
-            <span class="text-name me-2">{{ reply.user.name }}</span>
+            <span class="text-name me-2">{{ reply.User.name }}</span>
             <span class="text-account"
-              >@{{ reply.user.account }}．{{ reply.created_at | fromNow }}</span
+              >@{{ reply.User.account }}．{{ reply.createdAt | fromNow }}</span
             >
           </div>
           <div>
             <span class="text-account">回覆</span>
-            <span class="text-tag ms-2">@{{ tweet.user.account }}</span>
+            <span class="text-tag ms-2">@{{ tweet.User.account }}</span>
           </div>
           <div>{{ reply.comment }}</div>
         </div>
@@ -82,54 +82,9 @@
 </template>
 
 <script>
-  // import tweetsAPI from './../apis/tweets'
+  import tweetsAPI from './../apis/tweets'
   import NewReplyModal from './../components/NewReplyModal.vue'
   import moment from 'moment'
-
-  const dummyReply = {
-    status: 'success',
-    data: [
-      {
-        id: 1,
-        comment: '留言',
-        user_id: 2,
-        user: {
-          avatar: 'https://i.ppfocus.com/2020/9/589cb193fa.jpg',
-          name: 'user2',
-          account: 'user2',
-        },
-        tweet_id: 5,
-        updated_at: '2022-02-01T07:23:18.000Z',
-        created_at: '2022-02-01T07:23:18.000Z',
-      },
-      {
-        id: 2,
-        comment: '哈哈哈你好',
-        user_id: 3,
-        user: {
-          avatar: 'https://cdn2.ettoday.net/images/3454/3454344.jpg',
-          name: 'user3',
-          account: 'user3',
-        },
-        tweet_id: 5,
-        updated_at: '2022-02-18T07:23:18.000Z',
-        created_at: '2022-02-18T07:23:18.000Z',
-      },
-      {
-        id: 3,
-        comment: '廢文？',
-        user_id: 5,
-        user: {
-          avatar: 'https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1605151814255.jpg',
-          name: 'user5',
-          account: 'user5',
-        },
-        tweet_id: 5,
-        updated_at: '2022-02-20T07:23:18.000Z',
-        created_at: '2022-02-20T07:23:18.000Z',
-      },
-    ],
-  }
 
   export default {
     name: 'SingleTweet',
@@ -138,9 +93,11 @@
     },
     data() {
       return {
-        isLike: false,
         tweet: [],
         replies: [],
+        alertMsg: '',
+        alertStatus: false,
+        isProcessing: false,
       }
     },
     filters: {
@@ -160,43 +117,87 @@
     },
     created() {
       this.fetchTweet()
-      this.fetchReply()
+      this.fetchReplies()
     },
     methods: {
-      fetchTweet() {
-        this.tweet = this.$route.params.tweet
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
       },
-      fetchReply() {
-        // TODO:串接API
-        // const { data } = await tweetsAPI.getTweetReplies({
-        //   tweetId: this.tweet.id,
-        // })
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-        this.replies = dummyReply.data
-        // catch error msg
-        // this.alertMsg = '載入留言失敗，請稍後再試'
-        // this.alertStatus = 'error'
-        // this.alertShow()
+      async fetchTweet() {
+        try {
+          const { data } = await tweetsAPI.getOneTweet({
+            tweetId: this.$route.params.tweetId,
+          })
+          this.tweet = data
+        } catch (error) {
+          this.alertMsg = '載入推文失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
-      addLike(tweetId) {
-        // TODO:串接API
-        // const {data} = await tweetsAPI.addLike({tweetId})
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-        console.log(tweetId)
-        this.isLike = true
+      async fetchReplies() {
+        try {
+          const { data } = await tweetsAPI.getTweetReplies({
+            tweetId: this.tweet.id || this.$route.params.tweetId,
+          })
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+          this.replies = data
+        } catch (error) {
+          this.alertMsg = '載入留言失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
-      deleteLike(tweetId) {
-        // TODO:串接API
-        console.log(tweetId)
-        this.isLike = false
+      async addLike(tweetId) {
+        try {
+          const { data } = await tweetsAPI.addLike({
+            tweetId,
+          })
+          this.isProcessing = true
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+
+          this.tweet.likesCount = this.tweet.likesCount + 1
+          this.tweet.isLiked = true
+
+          this.isProcessing = false
+        } catch (error) {
+          this.alertMsg = '按讚失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
+      },
+      async deleteLike(tweetId) {
+        try {
+          const { data } = await tweetsAPI.deleteLike({
+            tweetId,
+          })
+          this.isProcessing = true
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+
+          this.tweet.likesCount = this.tweet.likesCount - 1
+          this.tweet.isLiked = false
+
+          this.isProcessing = false
+        } catch (error) {
+          this.alertMsg = '按讚失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
       afterSingleReply(payload) {
         this.replies.unshift({ ...payload })
-        this.tweet.replyCount = this.tweet.replyCount + 1
+        this.tweet.repliesCount = this.tweet.repliesCount + 1
       },
     },
   }
@@ -258,7 +259,7 @@
   }
   #reply-list {
     border-top: 1px solid #e6ecf0;
-    height: 100vh;
+    /* height: 100vh; */
   }
   #tweet-list::-webkit-scrollbar {
     display: none;

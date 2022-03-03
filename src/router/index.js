@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Main from '../views/Main.vue'
+import store from './../store'
 import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
@@ -52,9 +52,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // console.log('to',to)
-  // console.log('from',from)
-  // store.dispatch('fetchTweets')
+  store.dispatch('fetchCurrentUser')
   next()
 })
 

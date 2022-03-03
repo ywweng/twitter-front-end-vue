@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-// TODO: API URL
 const baseURL = 'https://project-simple-twitter.herokuapp.com/api'
 
 const axiosInstance = axios.create({

@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column vh-100">
     <div class="title menu-text">首頁</div>
-    <NewTweet />
+    <NewTweet @after-new-tweet="afterNewTweet" />
     <div class="border"></div>
     <div id="tweet-list">
       <Spinner v-if="isLoading" />
@@ -31,31 +31,37 @@
               class="btn-reply"
               data-bs-toggle="modal"
               data-bs-target="#new-reply-modal"
+              @click.stop.prevent="handleReplyModal(tweet)"
             >
               <img :src="require('./../assets/Reply.svg')" width="12px" />
               <span class="text-like-reply"> {{ tweet.replyCount }} </span>
             </button>
             <button
               class="btn-like"
-              @click.stop.prevent="deleteLike(tweet.id)"
+              @click="deleteLike(tweet.id)"
               v-if="tweet.isLiked"
+              :disabled="isProcessing"
             >
               <img :src="require('./../assets/LikeActive.svg')" width="12px" />
-              <span class="text-like-reply">{{ tweet.likeCount }}</span>
+              <span class="text-like-reply">{{ tweet.likesCount }}</span>
             </button>
             <button
               class="btn-like"
-              @click.stop.prevent="addLike(tweet.id)"
+              @click="addLike(tweet.id)"
               v-else
+              :disabled="isProcessing"
             >
               <img :src="require('./../assets/Like.svg')" width="12px" />
-              <span class="text-like-reply">{{ tweet.likeCount }}</span>
+              <span class="text-like-reply">{{ tweet.likesCount }}</span>
             </button>
           </div>
         </div>
-        <NewReplyModal :tweet="tweet" @after-reply-submit="afterReplySubmit" />
       </div>
     </div>
+    <NewReplyModal
+      :tweet="tweetActive"
+      @after-reply-submit="afterReplySubmit"
+    />
     <!-- alert -->
     <div
       class="alert d-flex fixed-top"
@@ -82,7 +88,7 @@
   import NewTweet from './../components/NewTweet.vue'
   import Spinner from './../components/Spinner.vue'
   import NewReplyModal from './../components/NewReplyModal.vue'
-  import { mapState } from 'vuex'
+  // import { mapState } from 'vuex'
   import moment from 'moment'
   import tweetsAPI from './../apis/tweets'
 
@@ -99,11 +105,11 @@
         isLoading: true,
         alertMsg: '',
         alertStatus: false,
+        tweetActive: [],
+        isProcessing: false,
       }
     },
-    computed: {
-      ...mapState(['newTweets', 'currentUser']),
-    },
+    computed: {},
     filters: {
       fromNow(datetime) {
         if (!datetime) {
@@ -113,12 +119,7 @@
       },
     },
     created() {
-      // 模擬
       this.fetchTweets()
-      this.isLoading = false
-    },
-    updated() {
-      this.$store.commit('resetNewTweet')
     },
     methods: {
       alertShow() {
@@ -129,9 +130,17 @@
           this.alertStatus = false
         }, 2000)
       },
+      openModal() {
+        const bootstrap = require('bootstrap')
+        const tweetModal = document.querySelector('#new-reply-modal')
+        const modal = bootstrap.Modal.getInstance(tweetModal)
+        console.log(modal)
+      },
+      handleReplyModal(tweet) {
+        this.tweetActive = { ...tweet }
+      },
       async fetchTweets() {
         try {
-          this.isLoading = true
           const response = await tweetsAPI.getTweets()
           const { data } = response
           this.allTweets = data.map((tweet) => {
@@ -139,6 +148,7 @@
               ...tweet,
             }
           })
+          this.isLoading = false
         } catch (error) {
           this.isLoading = false
           this.alertMsg = '取得推文失敗，請稍後再試'
@@ -146,27 +156,29 @@
           this.alertShow()
         }
       },
-      setNewTweets() {
-        this.allTweets.unshift({ ...this.newTweets[0] })
-      },
       async addLike(tweetId) {
         try {
           const { data } = await tweetsAPI.addLike({
-            tweetId,
+            id: tweetId,
           })
+          this.isProcessing = true
           if (data.status === 'error') {
             throw new Error(data.message)
           }
+
           this.allTweets = this.allTweets.map((tweet) => {
             if (tweet.id !== tweetId) {
               return tweet
-            }
-            return {
-              ...tweet,
-              likeCount: tweet.likeCount + 1,
-              isLiked: true,
+            } else {
+              return {
+                ...tweet,
+                likesCount: tweet.likesCount + 1,
+                isLiked: true,
+              }
             }
           })
+
+          this.isProcessing = false
         } catch (error) {
           this.alertMsg = '按讚失敗，請稍後再試'
           this.alertStatus = 'error'
@@ -175,34 +187,39 @@
       },
       async deleteLike(tweetId) {
         try {
-          const { data } = await tweetsAPI.deleteLike({ tweetId })
+          const { data } = await tweetsAPI.deleteLike({ id: tweetId })
           if (data.status === 'error') {
             throw new Error(data.message)
           }
+          this.isProcessing = true
           this.allTweets = this.allTweets.map((tweet) => {
             if (tweet.id !== tweetId) {
               return tweet
-            }
-            return {
-              ...tweet,
-              likeCount: tweet.likeCount - 1,
-              isLiked: false,
+            } else {
+              return {
+                ...tweet,
+                likesCount: tweet.likesCount - 1,
+                isLiked: false,
+              }
             }
           })
+          this.isProcessing = false
         } catch (error) {
-          this.alertMsg = '按讚失敗，請稍後再試'
+          this.isProcessing = false
+          this.alertMsg = '取消讚失敗，請稍後再試'
           this.alertStatus = 'error'
           this.alertShow()
         }
       },
+      afterNewTweet() {
+        this.fetchTweets()
+      },
       afterReplySubmit(payload) {
         const { tweetId, replyCount } = payload
-        console.log(payload)
         this.allTweets = this.allTweets.map((tweet) => {
           if (tweet.id !== tweetId) {
             return tweet
           }
-          console.log(replyCount)
           return {
             ...tweet,
             replyCount,

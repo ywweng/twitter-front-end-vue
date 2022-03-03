@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import userAPI from './../apis/user'
-// import tweetsAPI from './../apis/tweets'
+import userAPI from './../apis/user'
 
 Vue.use(Vuex)
 
@@ -35,25 +34,25 @@ export default new Vuex.Store({
       state.token = ''
       localStorage.removeItem('token')
     },
-    setNewTweet(state,newTweet) {
+    setNewTweet(state, newTweet) {
       state.newTweets.push(newTweet)
     },
     resetNewTweet(state) {
-      // console.log('delete',newTweet)
       state.newTweets = []
-    }
+    },
   },
   actions: {
-    // async fetchTweets({ commit }) {
-    //   try {
-    //     const { data } = await tweetsAPI.getTweets()
-    //     commit('setTweets', data)
-    //     return true
-    //   } catch (error) {
-    //     console.log(error.message)
-    //     return false
-    //   }
-    // },
+    async fetchCurrentUser({ commit }) {
+      try {
+        const { data } = await userAPI.getCurrentUser()
+        commit('setCurrentUser', data.data)
+        return true
+      } catch (error) {
+        console.error(error.message)
+        commit('revokeAuthentication')
+        return false
+      }
+    },
   },
   modules: {},
 })

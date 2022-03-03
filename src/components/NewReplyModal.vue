@@ -59,11 +59,7 @@
         </div>
         <div class="modal-footer">
           <span class="text-danger" v-if="isError">{{ errorMsg }}</span>
-          <button
-            type="submit"
-            class="btn-active"
-            @click="handleSubmit(comment)"
-          >
+          <button type="submit" class="btn-active" @click="handleSubmit">
             回覆
           </button>
         </div>
@@ -94,14 +90,14 @@
 <script>
   import moment from 'moment'
   import { mapState } from 'vuex'
-  // import tweetsAPI from './../apis/tweets'
+  import tweetsAPI from './../apis/tweets'
 
   export default {
     name: 'NewReplyModal',
     props: {
       tweet: {
-        type: Object,
-        required: true,
+        type: [Array, Object],
+        // required: true,
       },
     },
     data() {
@@ -135,48 +131,49 @@
       },
       hideModal() {
         const bootstrap = require('bootstrap')
-        const tweetModal = document.querySelector('#new-reply-modal')
-        const modal = bootstrap.Modal.getInstance(tweetModal)
+        const replyModal = document.querySelector('#new-reply-modal')
+        const modal = bootstrap.Modal.getInstance(replyModal)
         setTimeout(() => {
           modal.hide()
         }, 1000)
       },
-      handleSubmit(comment) {
-        // TODO:串接API
-        if (!this.comment) {
-          this.isError = true
-          this.errorMsg = '內容不可空白'
-          return
+      async handleSubmit() {
+        try {
+          if (!this.comment) {
+            this.isError = true
+            this.errorMsg = '內容不可空白'
+            return
+          }
+
+          const { data } = await tweetsAPI.postTweetReply({
+            tweetId: this.tweet.id,
+            comment: this.comment,
+          })
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+          // tweet list
+          this.$emit('after-reply-submit', {
+            tweetId: this.tweet.id,
+            replyCount: this.tweet.replyCount + 1,
+          })
+          // single tweet
+          this.$emit('after-single-reply', {
+            User: this.currentUser,
+            comment: this.comment,
+            created_at: new Date().toISOString(),
+          })
+          this.alertMsg = '留言成功'
+          this.alertStatus = 'success'
+          this.alertShow()
+          this.comment = ''
+          this.hideModal()
+        } catch (error) {
+          this.comment = ''
+          this.alertMsg = error.response.data.message
+          this.alertStatus = 'error'
+          this.alertShow()
         }
-        console.log(comment)
-        // 修改
-        // const { data } = await tweetsAPI.postTweetReply({
-        //   tweetId: this.id,
-        //   comment: this.comment,
-        // })
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-        // tweet list
-        this.$emit('after-reply-submit', {
-          tweetId: this.tweet.id,
-          replyCount: this.tweet.replyCount + 1,
-        })
-        // single tweet
-        this.$emit('after-single-reply', {
-          user: this.currentUser,
-          comment: this.comment,
-          created_at: new Date().toISOString(),
-        })
-        this.alertMsg = '留言成功'
-        this.alertStatus = 'success'
-        this.alertShow()
-        this.comment = ''
-        this.hideModal()
-        // catch error msg
-        // this.alertMsg = '回覆失敗，請稍後再試'
-        // this.alertStatus = 'error'
-        // this.alertShow()
       },
     },
   }

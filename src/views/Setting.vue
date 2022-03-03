@@ -182,7 +182,6 @@
         this.email = email
       },
       async handleSubmit() {
-        // TODO:串接API
         try {
           if (
             !this.id ||

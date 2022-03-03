@@ -8,11 +8,11 @@
 <script>
   import 'bootstrap'
   import 'bootstrap/dist/css/bootstrap.min.css'
-  // import Main from './views/Main.vue'
+  import { mapState } from 'vuex'
   export default {
     name: 'App',
-    // components: {
-    //   Main,
-    // },
+    computed: {
+      ...mapState(['currentUser']),
+    },
   }
 </script>

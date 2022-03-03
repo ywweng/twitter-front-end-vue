@@ -117,21 +117,7 @@
           const { data } = await tweetsAPI.postTweet({
             description: this.description,
           })
-          console.log(data)
-          // 優化
-          const newTweet = {
-            UserId: this.currentUser.id,
-            description: this.description,
-            replyCount: 0,
-            likeCount: 0,
-            createdAt: new Date().toISOString(),
-            User: {
-              avatar: this.currentUser.avatar,
-              name: this.currentUser.name,
-              account: this.currentUser.account,
-            },
-          }
-          this.$store.commit('setNewTweet', newTweet)
+          this.$emit('after-new-tweet',data)
           this.alertMsg = '推文成功'
           this.alertStatus = 'success'
           this.alertShow()

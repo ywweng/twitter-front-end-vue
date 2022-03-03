@@ -7,7 +7,7 @@
       <div
         class="user-card d-flex position-relative"
         v-for="user in followings"
-        :key="user.id"
+        :key="user.followingId"
       >
         <img :src="user.avatar" class="avatar" alt="" />
         <div class="user-info d-flex flex-column">
@@ -21,7 +21,7 @@
           type="button"
           class="btn btn-follow position-absolute"
           v-if="!isFollowing"
-          @click.stop.prevent="addFollow(user.id)"
+          @click.stop.prevent="addFollowing(followingId)"
         >
           跟隨
         </button>
@@ -29,7 +29,7 @@
           type="button"
           class="btn btn-following position-absolute"
           v-else
-          @click.stop.prevent="deleteFollow(user.id)"
+          @click.stop.prevent="deleteFollowing(followingId)"
         >
           正在跟隨
         </button>
@@ -42,6 +42,7 @@
 import Spinner from "../components/Spinner.vue";
 import { Toast } from "../utils/helpers";
 import userAPI from "../apis/user";
+import { mapState } from "vuex";
 
 export default {
   name: "userFollowingList",
@@ -63,14 +64,18 @@ export default {
   },
   created() {
     // const { id } = this.$route.params
-    const id = this.userId
+    const id = this.userId;
     this.fetchFollowing(id);
   },
   watch: {
     userId(newValue) {
-      this.fetchFollowing(newValue)
-    }
+      this.fetchFollowing(newValue);
+    },
   },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
+
   methods: {
     async fetchFollowing(userId) {
       try {
@@ -88,29 +93,49 @@ export default {
         });
       }
     },
-    async addFollow(id) {
+    async addFollowing(id) {
       try {
-        const {data} = await userAPI.addFollow({ id })
-        console.log(data.message)
-        this.user.isFollowing = true;
-      } catch (error) {
+        const { data } = await userAPI.addFollowing({ id });
         Toast.fire({
-          icon: 'error',
-          title: error.response.data.message
-        })
+          icon: "error",
+          title: data.message,
+        });
+        this.followings = this.followings.map((user) => {
+          if (user.followingId !== id) {
+            return user;
+          } else {
+            return {
+              ...user,
+              isFollowed: true,
+            };
+          }
+        });
+      } catch (error) {
+        console.log(error.response.data.message);
       }
- 
     },
-    async deleteFollow(followingId) {
+    async deleteFollowing(followingId) {
       try {
-        const {data} = await userAPI.deleteFollow({followingId})
-        console.log(data.message)
-        this.user.isFollowing = false
+        const { data } = await userAPI.deleteFollowing({ followingId });
+        Toast.fire({
+          icon: "error",
+          title: data.message,
+        });
+        this.followings = this.followings.map((user) => {
+          if (user.followingId !== followingId) {
+            return user;
+          } else {
+            return {
+              ...user,
+              isFollowed: true,
+            };
+          }
+        });
       } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: error.response.message
-        })
+          icon: "error",
+          title: error.response.message,
+        });
       }
     },
   },

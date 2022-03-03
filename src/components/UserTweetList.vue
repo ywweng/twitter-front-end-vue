@@ -47,14 +47,17 @@
         </div>
       </div>
     </div>
-    <NewReplyModal />
+    <NewReplyModal
+      :tweet="tweetActive"
+      @after-reply-submit="afterReplySubmit"
+    />
   </div>
 </template>
 
 <script>
 import NewReplyModal from "./../components/NewReplyModal.vue";
 import userAPI from "./../apis/user";
-import tweetsAPI from "../apis/tweets"
+import tweetsAPI from "../apis/tweets";
 import Spinner from "./../components/Spinner.vue";
 import { fromNowFilter } from "../utils/mixins";
 import { Toast } from "../utils/helpers";
@@ -69,8 +72,8 @@ export default {
   props: {
     userId: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -78,42 +81,43 @@ export default {
       isLoading: true,
     };
   },
-  
+
   created() {
     const userId = this.userId;
     this.fetchTweets(userId);
   },
   watch: {
     userId(newValue) {
-      this.fetchTweets(newValue)
-    }
+      this.fetchTweets(newValue);
+    },
   },
   methods: {
     async fetchTweets(userId) {
       try {
-        const { data } = await userAPI.getUserTweets({userId});
-        if(!data.length) {
-          throw new Error('尚無任何推文！')
+        const { data } = await userAPI.getUserTweets({ userId });
+        if (!data) {
+          throw new Error("尚無任何推文！");
         }
-        this.userTweets = data
+        this.userTweets = data;
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
-        Toast.fire({
-          icon: "error",
-          title: '無法取得推文，請稍再試',
-        });
+        console.log(error.message);
+        // Toast.fire({
+        //   icon: "error",
+        //   title: '無法取得推文，請稍再試',
+        // });
       }
     },
-    async addLike(tweetId) {
+    async addLike(id) {
       try {
-        const response = await tweetsAPI.addLike({ tweetId });
+        const response = await tweetsAPI.addLike({ id });
         // const { data } = response
         if (response.data.status === "error") {
           throw new Error();
         }
         this.userTweets = this.userTweets.map((tweet) => {
-          if (+tweet.id === +tweetId) {
+          if (+tweet.id === +id) {
             return {
               ...tweet,
               isLiked: true,
@@ -129,15 +133,15 @@ export default {
         });
       }
     },
-    async deleteLike(tweetId) {
+    async deleteLike(id) {
       try {
-        const response = await tweetsAPI.deleteLike({ tweetId });
+        const response = await tweetsAPI.deleteLike({ id });
         if (response.data.status === "error") {
           throw new Error();
         }
-       
+
         this.userTweets = this.userTweets.map((tweet) => {
-          if (+tweet.id === +tweetId) {
+          if (+tweet.id === +id) {
             return {
               ...tweet,
               isLiked: false,
@@ -152,6 +156,18 @@ export default {
           title: error.response.data.message,
         });
       }
+    },
+    afterReplySubmit(payload) {
+      const { tweetId, replyCount } = payload;
+      this.allTweets = this.allTweets.map((tweet) => {
+        if (tweet.id !== tweetId) {
+          return tweet;
+        }
+        return {
+          ...tweet,
+          replyCount,
+        };
+      });
     },
   },
 };

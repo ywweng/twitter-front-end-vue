@@ -46,12 +46,12 @@ export default {
   updateUser({ userId, formData }) {
     return apiHelper.put(`/users/${userId}`, formData)
   },
-  addFollowing({ userId }) {
-    return apiHelper.post(`/followShips/${userId}`, null)
-  },
-  deleteFollowing({ userId }) {
-    return apiHelper.delete(`/followShips/${userId}`)
-  },
+  // addFollowing({ userId }) {
+  //   return apiHelper.post(`/followShips/${userId}`, null)
+  // },
+  // deleteFollowing({ userId }) {
+  //   return apiHelper.delete(`/followShips/${userId}`)
+  // },
   getCurrentUser() {
     return apiHelper.get('/users/current_user')
   },

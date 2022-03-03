@@ -264,41 +264,7 @@ export default {
         })
       },
     },
-    deleteLike(tweetId) {
-      // TODO:串接API
-      // const {data} = await tweetsAPI.deleteLike({tweetId})
-      // if (data.status === 'error') {
-      //   throw new Error(data.message)
-      // }
-      this.allTweets = this.allTweets.map((tweet) => {
-        if (tweet.id !== tweetId) {
-          return tweet;
-        }
-        return {
-          ...tweet,
-          likeCount: tweet.likeCount - 1,
-          isLike: false,
-        };
-      });
-      // catch error msg
-      // this.alertMsg = '按讚失敗，請稍後再試'
-      // this.alertStatus = 'error'
-      // this.alertShow()
-    },
-    afterReplySubmit(payload) {
-      const { tweetId, replyCount } = payload;
-      console.log(payload);
-      this.allTweets = this.allTweets.map((tweet) => {
-        if (tweet.id !== tweetId) {
-          return tweet;
-        }
-        console.log(replyCount);
-        return {
-          ...tweet,
-          replyCount,
-        };
-      });
-    },
+    
   },
   watch: {
     newTweets() {

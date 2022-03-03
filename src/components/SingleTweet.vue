@@ -1,5 +1,6 @@
 <template>
-  <div id="single-tweet">
+  <div id="single-tweet" class="w-100">
+    <Spinner v-if="isLoading" />
     <div class="title menu-text">
       <button type="button" class="d-flex" @click="$router.go(-1)">
         <img
@@ -13,73 +14,199 @@
     </div>
     <div class="tweet-section d-flex flex-column">
       <div class="user-info d-flex">
-        <div class="avatar"><img src="" alt="" /></div>
+        <div><img class="avatar" :src="tweet.User.avatar" alt="" /></div>
         <div class="d-flex flex-column">
-          <span class="text-name">Apple</span>
-          <span class="text-account">@apple</span>
+          <span class="text-name">{{ tweet.User.name }}</span>
+          <span class="text-account">@{{ tweet.User.account }}</span>
         </div>
       </div>
       <div class="tweet d-flex flex-column w-100">
         <div class="tweet-content">
-          Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-          cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-          reprehenderit elit laborum.
+          {{ tweet.description }}
         </div>
-        <div class="tweet-time w-100">上午．年月日</div>
+        <div class="tweet-time w-100">{{ tweet.createdAt | format }}</div>
         <div class="like-reply">
-          <span class="text-reply"><strong>34</strong> 回覆</span>
-          <span class="text-like"><strong>808</strong> 喜歡次數</span>
+          <span class="text-reply"
+            ><strong>{{ tweet.replyCount }}</strong> 回覆</span
+          >
+          <span class="text-like"
+            ><strong>{{ tweet.likeCount }}</strong> 喜歡次數</span
+          >
         </div>
         <div class="action">
-          <button class="btn-reply">
+          <button
+            class="btn-reply"
+            data-bs-toggle="modal"
+            data-bs-target="#new-reply-modal"
+          >
             <img :src="require('./../assets/Reply.svg')" />
           </button>
           <button
             class="btn-like"
-            @click.stop.prevent="deleteLike"
-            v-if="isLike"
+            @click.stop.prevent="deleteLike(tweet.id)"
+            v-if="tweet.isLiked"
           >
             <img :src="require('./../assets/LikeActive.svg')" width="24px" />
           </button>
-          <button class="btn-like" @click.stop.prevent="addLike" v-else>
+          <button
+            class="btn-like"
+            @click.stop.prevent="addLike(tweet.id)"
+            v-else
+          >
             <img :src="require('./../assets/Like.svg')" />
           </button>
         </div>
       </div>
     </div>
     <div class="replies" id="reply-list">
-      <div class="reply-card d-flex" v-for="index in 10" :key="index">
-        <div class="avatar"><img src="" alt="" /></div>
-        <div class="tweet-info d-flex flex-column justify-content-evenly w-100">
+      <div class="reply-card d-flex" v-for="reply in replies" :key="reply.id">
+        <div><img class="avatar" :src="reply.User.avatar" alt="" /></div>
+        <div
+          class="tweet-info d-flex flex-column justify-content-evenly w-100 h-100"
+        >
           <div class="">
-            <span class="text-name me-2">Apple</span>
-            <span class="text-account">@apple．3小時</span>
+            <span class="text-name me-2">{{ reply.User.name }}</span>
+            <span class="text-account"
+              >@{{ reply.User.account }}．{{ reply.createdAt | fromNow }}</span
+            >
           </div>
           <div>
             <span class="text-account">回覆</span>
-            <span class="text-tag ms-2">@apple</span>
+            <span class="text-tag ms-2">@{{ tweet.User.account }}</span>
           </div>
-          <div>Great~Great~Great~Great~Great~Great~</div>
+          <div>{{ reply.comment }}</div>
         </div>
       </div>
     </div>
+    <NewReplyModal :tweet="tweet" @after-single-reply="afterSingleReply" />
   </div>
 </template>
 
 <script>
+  import tweetsAPI from './../apis/tweets'
+  import NewReplyModal from './../components/NewReplyModal.vue'
+  import Spinner from './../components/Spinner.vue'
+  import { mapState } from 'vuex'
+  import moment from 'moment'
+
   export default {
     name: 'SingleTweet',
+    components: {
+      NewReplyModal,
+      Spinner,
+    },
     data() {
       return {
-        isLike: false,
+        tweet: [],
+        replies: [],
+        alertMsg: '',
+        alertStatus: false,
+        isProcessing: false,
+        isLoading: true,
       }
     },
-    methods: {
-      addLike() {
-        this.isLike = true
+    computed: {
+      ...mapState(['currentUser']),
+    },
+    filters: {
+      format(datetime) {
+        if (!datetime) {
+          return '-'
+        }
+        moment.locale('zh-tw')
+        return moment(datetime).format('A hh:mm．LL')
       },
-      deleteLike() {
-        this.isLike = false
+      fromNow(datetime) {
+        if (!datetime) {
+          return '-'
+        }
+        return moment(datetime).fromNow()
+      },
+    },
+    created() {
+      this.fetchTweet()
+      this.fetchReplies()
+    },
+    methods: {
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
+      },
+      async fetchTweet() {
+        try {
+          const { data } = await tweetsAPI.getOneTweet({
+            tweetId: this.$route.params.tweetId,
+          })
+          this.tweet = data
+          this.isLoading = false
+        } catch (error) {
+          this.alertMsg = '載入推文失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
+      },
+      async fetchReplies() {
+        try {
+          const { data } = await tweetsAPI.getTweetReplies({
+            tweetId: this.tweet.id || this.$route.params.tweetId,
+          })
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+          this.replies = data
+        } catch (error) {
+          this.alertMsg = '載入留言失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
+      },
+      async addLike(tweetId) {
+        try {
+          const { data } = await tweetsAPI.addLike({
+            tweetId,
+          })
+          this.isProcessing = true
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+
+          this.tweet.likeCount = this.tweet.likeCount + 1
+          this.tweet.isLiked = true
+
+          this.isProcessing = false
+        } catch (error) {
+          this.alertMsg = '按讚失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
+      },
+      async deleteLike(tweetId) {
+        try {
+          const { data } = await tweetsAPI.deleteLike({
+            tweetId,
+          })
+          this.isProcessing = true
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+
+          this.tweet.likeCount = this.tweet.likeCount - 1
+          this.tweet.isLiked = false
+
+          this.isProcessing = false
+        } catch (error) {
+          this.alertMsg = '按讚失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
+      },
+      afterSingleReply(payload) {
+        this.replies.unshift({ ...payload })
+        this.tweet.replyCount = this.tweet.replyCount + 1
       },
     },
   }
@@ -133,13 +260,15 @@
   }
   .reply-card {
     padding: 15px;
+    border-bottom: 1px solid #e6ecf0;
+    max-height: 105px;
   }
   .tweet-info {
     height: 105px;
   }
   #reply-list {
     border-top: 1px solid #e6ecf0;
-    height: 100vh;
+    /* height: 100vh; */
   }
   #tweet-list::-webkit-scrollbar {
     display: none;

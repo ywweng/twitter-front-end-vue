@@ -6,7 +6,10 @@
       </div>
       <div class="col" id="setting">
         <div class="title menu-text">帳戶設定</div>
-        <form class="setting-form d-flex flex-column">
+        <form
+          class="setting-form d-flex flex-column"
+          @submit.prevent="handleSubmit"
+        >
           <div
             class="form-input d-flex flex-column"
             :class="{
@@ -100,7 +103,13 @@
               </span>
             </div>
           </div>
-          <button type="submit" class="btn-active save ms-auto">儲存</button>
+          <button
+            type="submit"
+            class="btn-active save ms-auto"
+            :disabled="isProcessing"
+          >
+            儲存
+          </button>
         </form>
       </div>
     </div>
@@ -127,21 +136,17 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import Menu from './../components/Menu.vue'
 
-  // import userAPI from './../apis/user'
+import { mapState } from 'vuex'
+import Menu from './../components/Menu.vue'
+import userAPI from './../apis/user'
 
-  // const data = {
-  //   status: 'success',
-  //   message: '修改成功，請重新登入',
-  // }
-
-  export default {
-    name: 'Setting',
-    components: {
-      Menu,
-    },
+export default {
+  name: "Setting",
+  components: {
+    Menu,
+  },
+  
     data() {
       return {
         id: -1,
@@ -153,52 +158,96 @@
         isNull: false,
         alertMsg: '',
         alertStatus: false,
+        isProcessing: false,
       }
     },
     computed: {
-      ...mapState(['currentUser'])
+      ...mapState(['currentUser']),
     },
     created() {
       this.setUser()
     },
     methods: {
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
+      },
       setUser() {
         const { id, account, name, email } = this.currentUser
-
-        // if (id.toString() !== userId.toString()) {
-        //   this.$router.push({ name: 'not-found' })
-        // }
-
         this.id = id
         this.account = account
         this.name = name
         this.email = email
+      },
+      async handleSubmit() {
+        try {
+          if (
+            !this.id ||
+            !this.account ||
+            !this.name ||
+            !this.email ||
+            !this.password ||
+            !this.pwdChecked
+          ) {
+            this.isNull = true
+            return
+          }
+
+          this.isProcessing = true
+          const { data } = await userAPI.update({
+            userId: this.currentUser.id,
+            account: this.account,
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            checkPassword: this.pwdChecked,
+          })
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+          this.alertMsg = '修改成功，請重新登入'
+          this.alertStatus = 'success'
+          this.alertShow()
+          setTimeout(() => {
+            this.$store.commit('revokeAuthentication')
+            this.$router.push('/login')
+          }, 3000)
+        } catch (error) {
+          this.alertStatus = 'error'
+          this.alertMsg = error.response.data.message
+          this.alertShow()
+          this.isProcessing = false
+        }
       },
     },
   }
 </script>
 
 <style scoped>
-  #setting {
-    padding-left: 0;
-    border-left: 1px solid #e6ecf0;
-  }
-  .title {
-    padding-left: 20px;
-    height: 55px;
-    line-height: 55px;
-    border-bottom: 1px solid #e6ecf0;
-  }
-  .setting-form {
-    margin-left: 1rem;
-    margin-top: 30px;
-    max-width: 642px;
-  }
-  .length-input {
-    color: #657786;
-  }
-  .save {
-    margin-top: 1rem;
-    width: 116px;
-  }
+#setting {
+  padding-left: 0;
+  border-left: 1px solid #e6ecf0;
+}
+.title {
+  padding-left: 20px;
+  height: 55px;
+  line-height: 55px;
+  border-bottom: 1px solid #e6ecf0;
+}
+.setting-form {
+  margin-left: 1rem;
+  margin-top: 30px;
+  max-width: 642px;
+}
+.length-input {
+  color: #657786;
+}
+.save {
+  margin-top: 1rem;
+  width: 116px;
+}
 </style>

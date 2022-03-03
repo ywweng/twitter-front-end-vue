@@ -12,7 +12,7 @@
           class="form-control form-input"
           :class="{ 'form-input-warn': callAlert === 0 || callAlert === 1 }"
           required
-          v-model="user.account"
+          v-model="account"
         />
         <label for="account">帳號</label>
         <div class="alert-text" v-if="callAlert === 0 || callAlert === 1">{{alertMessage}}</div>
@@ -20,12 +20,12 @@
       </div>
       <div class="form-floating">
         <input
-          type="text"
+          type="password"
           id="password"
           class="form-control form-input"
           :class="{ 'form-input-warn': callAlert === 2 }"
           required
-          v-model="user.password"
+          v-model="password"
         />
         <label for="password">密碼</label>
         <div class="alert-text" v-if="callAlert === 2">{{alertMessage}}</div>
@@ -33,12 +33,13 @@
       <button
         type="submit"
         class="btn btn-login"
-        @click.stop.prevent="adminSignIn(user.account, user.password)"
+        @click.stop.prevent="adminSignIn(account, password)"
+        :disabled="isProcessing"
       >
         登入
       </button>
     </form>
-    <div class="front-link text-blue"><router-link to="/login">前台登入</router-link></div>
+    <div class="front-link text-blue"><router-link to="/login" class="fw-bold">前台登入</router-link></div>
 
     <!-- alert -->
     <div class="alert-setting">
@@ -142,62 +143,66 @@
 </style>
 
 <script>
-const dummyAdmin = {
-  account: "admin",
-  password: "12345678",
-  role: "Admin",
-};
-const messages = ["請填入帳號密碼！", "帳號不存在！", "密碼輸入錯誤！"]
+import authorizationAPI from "../apis/authorization"
+
+const messages = ["請輸入您的帳號和密碼！", "帳號不存在！", "密碼輸入錯誤！"]
 
 export default {
+  name: 'adminLogin',
   data() {
     return {
-      user: {
-        account: "",
-        password: "",
-        role: "",
-      },
-      // isAdmin: false,
+      account: "",
+      password: "",
       callAlert: -1,
-      alertMessage: ""
+      alertMessage: "",
+      isProcessing: false
     };
   },
   methods: {
-    adminSignIn(account, password) {
-      if(!account && !password) {
-        this.callAlert = 0;
-        this.alertMessage = messages[0]
-        setTimeout(() => {
-          this.callAlert = -1;
-        }, 2000);
-        return
-      }
-      if (account !== dummyAdmin.account) {
-        this.callAlert = 1;
-        this.alertMessage = messages[1]
-        this.user.account = "";
-        this.user.password = "";
-        setTimeout(() => {
-          this.callAlert = -1;
-        }, 2000);
-        return;
-      } else if (password !== dummyAdmin.password) {
-        this.callAlert = 2;
-        this.alertMessage = messages[2]
-        this.user.password = "";
-        setTimeout(() => {
-          this.callAlert = -1;
-        }, 2000);
-        return;
-      } else {
+    async adminSignIn(account, password) {
+      try {
+        if(!account || !password) {
+          this.callAlert = 0;
+          this.alertMessage = messages[0]
+          setTimeout(() => {
+            this.callAlert = -1;
+          }, 2000);
+          return
+        }
+        this.isProcessing = true
+        const { data } = await authorizationAPI.adminLogin({
+          account: this.account,
+          password: this.password,
+        })
+
+        if (data.status !== 'success') {
+          throw new Error()
+        }
+        this.isProcessing = false
+        localStorage.setItem("token", data.data.token);
+        //this.$store.commit('setCurrentUser', data.user)
         this.$router.push("/admin/tweets");
-      }
+
+      } catch (error) {
+        console.log(error.response)
+        const errorMessage = error.response.data.message
+        if (errorMessage === "帳號不存在") {
+          this.loginAlert(1)
+        } else if (errorMessage === "密碼錯誤") {
+          this.loginAlert(2)
+        }
+        this.isProcessing = false
+      }      
     },
+    loginAlert(num) {
+      this.callAlert = num;
+      this.alertMessage = messages[num]
+      setTimeout(() => {
+        this.callAlert = -1;
+      }, 2000);
+      return;
+    }
   },
-  // watch: {
-  //   callAlert(newValue) {
-  //     return newValue
-  //   }
-  // }
+  
 };
 </script>

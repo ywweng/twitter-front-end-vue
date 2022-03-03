@@ -121,12 +121,7 @@
 </template>
 
 <script>
-  // import authorizationAPI from './../apis/authorization'
-
-  const data = {
-    status: 'error',
-    message: 'account 已重複註冊！',
-  }
+  import authorizationAPI from './../apis/authorization'
 
   export default {
     name: 'Register',
@@ -151,55 +146,54 @@
           this.alertStatus = false
         }, 2000)
       },
-      handleSubmit() {
-        // TODO:改成async/await
-        if (
-          !this.name ||
-          !this.account ||
-          !this.email ||
-          !this.password ||
-          !this.pwdChecked
-        ) {
-          this.isNull = true
-          return
-        }
+      async handleSubmit() {
+        try {
+          if (
+            !this.name ||
+            !this.account ||
+            !this.email ||
+            !this.password ||
+            !this.pwdChecked
+          ) {
+            this.isNull = true
+            return
+          }
 
-        if (this.password !== this.pwdChecked) {
-          this.alertMsg = '密碼錯誤，請重新輸入'
-          this.alertStatus = 'error'
+          if (this.password !== this.pwdChecked) {
+            this.alertMsg = '密碼錯誤，請重新輸入'
+            this.alertStatus = 'error'
+            this.alertShow()
+            this.pwdChecked = ''
+            return
+          }
+
+          const { data } = await authorizationAPI.register({
+            account: this.account,
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            checkPassword: this.pwdChecked,
+          })
+
+          if (data.status === 'error') {
+            this.alertMsg = data.message
+            this.alertStatus = 'error'
+            this.alertShow()
+            return
+          }
+
+          this.alertMsg = '註冊成功'
+          this.alertStatus = 'success'
           this.alertShow()
-          this.pwdChecked = ''
-          return
-        }
-        // TODO:串接API
-        // const { data } = await authorizationAPI.register({
-        //   account: this.account,
-        //   name: this.name,
-        //   email: this.email,
-        //   password: this.password,
-        //   passwordCheck: this.pwdChecked,
-        // })
 
-
-        if (data.status === 'error') {
-          // throw new Error(data.message)
-          this.alertMsg = data.message
+          setTimeout(() => {
+            this.$router.push('/login')
+          }, 3000)
+        } catch (error) {
           this.alertStatus = 'error'
+          this.alertMsg = error.response.data.message
           this.alertShow()
-          return
         }
-
-        // this.alertMsg = data.message
-        // this.alertStatus = 'success'
-        // this.alertShow()
-        setTimeout(() => {
-          this.$router.push('/login')
-        }, 3000)
-
-        // catch
-        // this.alertStatus = 'error'
-        // this.alertMsg = error.message
-        // this.alertShow()
       },
     },
   }

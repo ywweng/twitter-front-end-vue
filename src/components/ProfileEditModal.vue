@@ -10,7 +10,7 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <form action="" @submit="handleSubmit">
+          <form action="" @submit.stop.prevent="handleSubmit" >
             <!-- modal-header -->
             <div class="modal-header">
               <div class="d-flex">
@@ -235,6 +235,9 @@
 </style>
 
 <script>
+import userAPI from "../apis/user"
+// import { Toast } from "../utils/helpers";
+
 export default {
   props: {
     currentUser: {
@@ -245,34 +248,25 @@ export default {
   data() {
     return {
       user: {
-        id: 0,
-        name: "",
-        account: "",
-        email: "",
-        avatar: "",
-        cover: "",
-        introduction: "",
+        id: this.currentUser.id,
+        name: this.currentUser.name,
+        account: this.currentUser.account,
+        avatar: this.currentUser.avatar,
+        cover: this.currentUser.cover,
+        introduction: this.currentUser.introduction
       },
     };
   },
-  created() {
-    this.setUser();
-  },
-  methods: {
-    setUser() {
-      const { id, name, account, email, avatar, cover, introduction } =
-        this.currentUser;
+  watch: {
+    currentUser(newValue) {
       this.user = {
         ...this.user,
-        id,
-        name,
-        account,
-        email,
-        avatar,
-        cover,
-        introduction,
-      };
-    },
+        ...newValue,
+      }
+
+    }
+  },
+  methods: {
     handleCoverChange(e) {
       const { files } = e.target;
       if (!files.length) {
@@ -294,14 +288,31 @@ export default {
         this.user.avatar = imageURL;
       }
     },
-    handleSubmit(e) {
-      if (this.namelength > 50 || this.introduction > 160) {
+    async handleSubmit() {
+      try{
+        if (this.namelength > 50 || this.introduction > 160) {
         this.saveInvalid = true;
         return;
       }
-      const formData = new FormData(e.target);
-      console.log(formData.get("name"));
-      // 把formData傳給user-profile.vue，回到user-profile
+      // const formData = new FormData(e.target)
+      const formData = {
+        name: this.user.name,
+        avatar: this.user.avatar,
+        cover: this.user.cover,
+        introduction: this.user.introduction
+      }
+      const { data } = await userAPI.updateUser({ 
+        userId: this.user.id,
+        formData
+      })
+
+      this.$emit("after-profile-submit", data);
+
+      } catch (error) {
+        console.log(error.response.data.message)
+      }
+      
+      
     },
   },
   computed: {

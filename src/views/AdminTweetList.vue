@@ -7,11 +7,12 @@
     <div class="tweet-list w-75">
       <div class="page-title">推文清單</div>
       <ul>
+        <Spinner v-if="isLoading" />
         <li class="d-flex position-relative" v-for="tweet in tweets" :key="tweet.id">
-          <img class="avatar" :src="tweet.user.avatar" alt="" />
+          <img class="avatar" :src="tweet.User.avatar" alt="" />
           <div class="content">
-            <span class="name">{{tweet.user.name}}</span>
-            <span class="account-time">@{{tweet.user.account}}．{{tweet.createdAt}}</span>
+            <span class="name">{{tweet.User.name}}</span>
+            <span class="account-time">@{{tweet.User.account}}．{{tweet.createdAt | fromNow}}</span>
             <div class="description ellipsis">
               {{tweet.description}}
             </div>
@@ -75,58 +76,57 @@ li {
 
 <script>
 import AdminMenu from "../components/AdminMenu.vue";
+import adminAPI from "../apis/admin"
+import { fromNowFilter } from "../utils/mixins"
+import Spinner from "../components/Spinner.vue"
 
-const dummyData = {
-  tweets: [
-    {
-      id: 1,
-      UserId: 1,
-      description:
-        "Ipsa quaerat modi alias vel eos odit qui ut et. Vel dolor doloribus iure deleniti veritatis ut. Aut quam odio reprehenderit. Et reprehenderit temporibus",
-      createdAt: "2022-02-24T16:45:10.000Z",
-      updatedAt: "2022-02-24T16:45:10.000Z",
-      user: {
-        avatar: "https://i.imgur.com/q6bwDGO.png",
-        name: "root",
-        account: "root",
-      },
-    },
-    {
-      id: 2,
-      UserId: 1,
-      description: "officiis et cum",
-      createdAt: "2021-02-24T16:45:10.000Z",
-      updatedAt: "2021-02-24T16:45:10.000Z",
-      user: {
-        avatar: "https://i.imgur.com/q6bwDGO.png",
-        name: "root",
-        account: "root",
-      },
-    },
-  ],
-};
 export default {
+  name: 'AdminTweetList',
+  mixins: [fromNowFilter],
   components: {
     AdminMenu,
+    Spinner
   },
   data() {
     return {
-      tweets:[]
+      tweets:[],
+      isLoading: true
     }
   },
   created() {
     this.fetchTweets()
   },
   methods: {
-    fetchTweets () {
-      this.tweets = dummyData.tweets
-    },
-    deleteTweet (tweetId) {
-      this.tweets = this.tweets.filter(tweet => {
-        if(tweet.id !== tweetId) {
-          return tweet
+    async fetchTweets () {
+      try {
+        const { data } = await adminAPI.tweets.get()
+        if (data.status !== 'success') {
+          throw new Error(data.message) 
         }
-      })
+        this.tweets = data.tweets
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        console.log(error.message)
+      }
+     
+    },
+    async deleteTweet (tweetId) {
+      try {
+        const { data } = await adminAPI.tweets.delete({tweetId})
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.tweets = this.tweets.filter(tweet => {
+          if(tweet.id !== tweetId) {
+            return tweet
+          }
+        })
+      } catch (error) {
+        console.log(error.response.data.message)
+        console.log('無法取得推文資料')
+      }
+      
     }
   },
 

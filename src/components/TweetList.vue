@@ -6,9 +6,11 @@
     <div id="tweet-list">
       <Spinner v-if="isLoading" />
       <div class="tweet-card d-flex" v-for="tweet in allTweets" :key="tweet.id">
-        <div>
+        <router-link
+          :to="{ name: 'user-profile', params: { userId: tweet.User.id } }"
+        >
           <img class="avatar" width="50px" :src="tweet.User.avatar" alt="" />
-        </div>
+        </router-link>
         <div class="tweet-info d-flex flex-column">
           <div class="">
             <span class="text-name me-2">{{ tweet.User.name }}</span>

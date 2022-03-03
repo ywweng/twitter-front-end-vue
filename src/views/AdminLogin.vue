@@ -16,6 +16,7 @@
         />
         <label for="account">帳號</label>
         <div class="alert-text" v-if="callAlert === 0 || callAlert === 1">{{alertMessage}}</div>
+
       </div>
       <div class="form-floating">
         <input

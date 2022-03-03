@@ -136,58 +136,95 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import Menu from "./../components/Menu.vue";
-// import userAPI from './../apis/user'
+
+import { mapState } from 'vuex'
+import Menu from './../components/Menu.vue'
+import userAPI from './../apis/user'
 
 export default {
   name: "Setting",
   components: {
     Menu,
   },
-  data() {
-    return {
-      id: -1,
-      account: "",
-      name: "",
-      email: "",
-      password: "",
-      pwdChecked: "",
-      isNull: false,
-      alertMsg: "",
-      alertStatus: false,
-      isProcessing: false,
-    };
-  },
-  computed: {
-    ...mapState(["currentUser"]),
-  },
-  created() {
-    this.setUser();
-  },
-  methods: {
-    alertShow() {
-      const bootstrap = require("bootstrap");
-      let alertNode = document.querySelector("#alert");
-      bootstrap.Alert.getInstance(alertNode);
-      setTimeout(() => {
-        this.alertStatus = false;
-      }, 2000);
+  
+    data() {
+      return {
+        id: -1,
+        account: '',
+        name: '',
+        email: '',
+        password: '',
+        pwdChecked: '',
+        isNull: false,
+        alertMsg: '',
+        alertStatus: false,
+        isProcessing: false,
+      }
     },
-    setUser() {
-      const { id, account, name, email } = this.currentUser;
-
-      // if (id.toString() !== userId.toString()) {
-      //   this.$router.push({ name: 'not-found' })
-      // }
-
-      this.id = id;
-      this.account = account;
-      this.name = name;
-      this.email = email;
+    computed: {
+      ...mapState(['currentUser']),
     },
-  },
-};
+    created() {
+      this.setUser()
+    },
+    methods: {
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
+      },
+      setUser() {
+        const { id, account, name, email } = this.currentUser
+        this.id = id
+        this.account = account
+        this.name = name
+        this.email = email
+      },
+      async handleSubmit() {
+        try {
+          if (
+            !this.id ||
+            !this.account ||
+            !this.name ||
+            !this.email ||
+            !this.password ||
+            !this.pwdChecked
+          ) {
+            this.isNull = true
+            return
+          }
+
+          this.isProcessing = true
+          const { data } = await userAPI.update({
+            userId: this.currentUser.id,
+            account: this.account,
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            checkPassword: this.pwdChecked,
+          })
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+          this.alertMsg = '修改成功，請重新登入'
+          this.alertStatus = 'success'
+          this.alertShow()
+          setTimeout(() => {
+            this.$store.commit('revokeAuthentication')
+            this.$router.push('/login')
+          }, 3000)
+        } catch (error) {
+          this.alertStatus = 'error'
+          this.alertMsg = error.response.data.message
+          this.alertShow()
+          this.isProcessing = false
+        }
+      },
+    },
+  }
 </script>
 
 <style scoped>

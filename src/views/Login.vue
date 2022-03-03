@@ -42,7 +42,6 @@
           >註冊 Alphitter</router-link
         >
         <span class="space">．</span>
-        <!-- TODO:router-link -->
         <router-link to="/admin/login" class="mx-auto text-blue"
           >後台登入</router-link
         >
@@ -85,56 +84,54 @@ export default {
       alertStatus: false,
     };
   },
-  methods: {
-    alertShow() {
-      const bootstrap = require("bootstrap");
-      let alertNode = document.querySelector("#alert");
-      bootstrap.Alert.getInstance(alertNode);
-      setTimeout(() => {
-        this.alertStatus = false;
-      }, 2000);
-    },
-    async handleSubmit() {
-      // TODO:改成async/await
-      try {
-        if (!this.account || !this.password) {
-          this.alertMsg = "請填入帳號和密碼";
-          this.alertStatus = "error";
-          this.alertShow();
-          return;
+    methods: {
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
+      },
+      async handleSubmit() {
+        try {
+          if (!this.account || !this.password) {
+            this.alertMsg = '請填入帳號和密碼'
+            this.alertStatus = 'error'
+            this.alertShow()
+            return
+          }
+
+          this.isProcessing = true
+
+          const response = await authorizationAPI.login({
+            account: this.account,
+            password: this.password,
+          })
+
+          const { data } = response
+
+          if (data.status !== 'success') {
+            this.alertMsg = '登入失敗'
+            this.alertStatus = 'error'
+            this.alertShow()
+          }
+
+          localStorage.setItem('token', data.token)
+
+          this.$store.commit('setCurrentUser', data.user)
+
+          this.$router.push('/main')
+        } catch (error) {
+          this.isProcessing = false
+          this.password = ''
+          this.alertMsg = error.response.data.message
+          this.alertStatus = 'error'
+          this.alertShow()
         }
-
-        this.isProcessing = true;
-
-        const response = await authorizationAPI.login({
-          account: this.account,
-          password: this.password,
-        });
-
-        const { data } = response;
-
-        if (data.status !== "success") {
-          // throw new Error(data.message)
-          this.alertMsg = "登入失敗";
-          this.alertStatus = "error";
-          this.alertShow();
-        }
-
-        localStorage.setItem("token", data.token);
-        this.$store.commit("setCurrentUser", data.user);
-
-        this.$router.push("/main");
-      } catch (error) {
-        // catch
-        this.isProcessing = false;
-        this.password = "";
-        this.alertMsg = error.response.data.message;
-        this.alertStatus = "error";
-        this.alertShow();
-      }
+      },
     },
-  },
-};
+  }
 </script>
 
 <style scoped>

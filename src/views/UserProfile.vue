@@ -1,6 +1,5 @@
 <template>
   <div class="row">
-    <!-- Menu -->
     <div class="menu col-3">
       <Menu />
     </div>

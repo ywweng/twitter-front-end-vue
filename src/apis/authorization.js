@@ -1,4 +1,4 @@
-import {apiHelper} from './../utils/helpers'
+import { apiHelper } from './../utils/helpers'
 
 export default {
   login({ account, password }) {
@@ -8,7 +8,9 @@ export default {
     })
   },
   register({ account, name, email, password, checkPassword }) {
-    return apiHelper.post('/signup', {
+
+    return apiHelper.post('/users', {
+
       account,
       name,
       email,
@@ -23,3 +25,4 @@ export default {
     })
   },
 }
+

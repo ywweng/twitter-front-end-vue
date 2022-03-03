@@ -195,6 +195,7 @@ button {
   min-width: 50px;
   border-radius: 100%;
   background: #c4c4c4;
+  object-fit: fill;
 }
 
 .alert {

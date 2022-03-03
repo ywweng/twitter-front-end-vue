@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from './../store'
 import Login from '../views/Login.vue'
+import NotFound from '../views/NotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -38,11 +39,15 @@ const routes = [
       },
     ],
   },
-
   {
     path: '/setting',
     name: 'setting',
     component: () => import('../views/Setting.vue'),
+  },
+  {
+    path: '*',
+    name: 'not-found',
+    component: NotFound,
   },
 ]
 
@@ -51,7 +56,7 @@ const router = new VueRouter({
   routes,
 })
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // store.dispatch('fetchCurrentUser')
   // 從 localStorage 取出 token
   const token = localStorage.getItem('token')

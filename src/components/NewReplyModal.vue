@@ -47,7 +47,14 @@
             </div>
           </div>
           <div class="reply-content d-flex">
-            <div><img class="avatar" :src="currentUser.avatar" alt="" /></div>
+            <div>
+              <img
+                class="avatar"
+                width="50px"
+                :src="currentUser.avatar"
+                alt=""
+              />
+            </div>
             <textarea
               class="input-new-tweet mt-2"
               rows="5"
@@ -146,7 +153,7 @@
           }
 
           const { data } = await tweetsAPI.postTweetReply({
-            tweetId: this.tweet.id,
+            id: this.tweet.id,
             comment: this.comment,
           })
           if (data.status === 'error') {

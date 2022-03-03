@@ -4,17 +4,17 @@ export default {
   getTweets() {
     return apiHelper.get(`/tweets`)
   },
-  getOneTweet({tweetId}) {
-    return apiHelper.get(`/tweets/${tweetId}`)
+  getOneTweet({id}) {
+    return apiHelper.get(`/tweets/${id}`)
   },
   postTweet({ description }) {
     return apiHelper.post(`/tweets`, { description })
   },
-  getTweetReplies({ tweetId }) {
-    return apiHelper.get(`/tweets/${tweetId}/replies`)
+  getTweetReplies({ id }) {
+    return apiHelper.get(`/tweets/${id}/replies`)
   },
-  postTweetReply({ tweetId, comment }) {
-    return apiHelper.post(`/tweets/${tweetId}/replies`, { comment })
+  postTweetReply({ id, comment }) {
+    return apiHelper.post(`/tweets/${id}/replies`, { comment })
   },
   addLike({ id }) {
     return apiHelper.post(`/tweets/${id}/like`)

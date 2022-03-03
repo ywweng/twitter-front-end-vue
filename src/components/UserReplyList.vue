@@ -2,7 +2,9 @@
   <div class="reply-list">
     <Spinner v-if="isLoading" />
     <div class="reply-card d-flex" v-for="reply in userReplies" :key="reply.id">
+      <router-link :to="{ name: 'user-profile' ,params:{userId: reply.Tweet.User.id}}">
       <img :src="userAvatar" class="avatar" alt="" />
+      </router-link>
       <div class="reply-info d-flex flex-column">
         <div class="first-line">
           <span class="text-name">{{userName}}</span>
@@ -95,6 +97,10 @@ export default {
   padding: 10px 15px;
   /* height: 121px; */
   border-bottom: 1px solid #e6ecf0;
+}
+.reply-card:hover {
+  /* cursor: pointer; */
+  box-shadow: 0 0 1px 0 var(--orange);
 }
 .original-tweet {
   font-size: 15px;

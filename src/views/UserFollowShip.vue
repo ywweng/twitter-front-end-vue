@@ -59,12 +59,12 @@ export default {
     PopularUser,
   },
   created() {
-    const { id } = this.$route.params;
-    this.fetchUser(id);
+    const { userId } = this.$route.params;
+    this.fetchUser(userId);
   },
   data() {
     return {
-      userId: 0,
+      // userId: 0,
       user: {},
     };
   },

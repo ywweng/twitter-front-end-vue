@@ -2,7 +2,9 @@
   <div class="like-list">
     <Spinner v-if="isLoading" />
     <div class="tweet-card d-flex" v-for="tweet in userLikes" :key="tweet.id">
+      <router-link :to="{ name: 'user-profile' ,params:{userId: tweet.Tweet.User.id}}">
       <img :src="tweet.Tweet.User.avatar" class="avatar" alt="" />
+      </router-link>
       <div class="tweet-info d-flex flex-column">
         <div class="first-line">
           <span class="text-name">{{ tweet.Tweet.User.name }}</span>
@@ -27,10 +29,11 @@
               class="btn-reply"
               data-bs-toggle="modal"
               data-bs-target="#new-reply-modal"
+              @click="handleReplyModal(tweet)"
             >
-              <a href="#"
-                ><img src="../assets/icon_reply.png" alt="" class="reply"
-              /></a>
+              
+                <img src="../assets/icon_reply.png" alt="" class="reply"
+              />
             </button>
             <!-- 之後改router-link :to="{ name: 'single-tweet' }" -->
             <span class="text-like-reply">{{ tweet.Tweet.replyCount }}</span>
@@ -55,7 +58,10 @@
         </div>
       </div>
     </div>
-    <NewReplyModal />
+    <NewReplyModal
+      :tweet="tweetActive"
+      @after-reply-submit="afterReplySubmit"
+    />
   </div>
 </template>
 
@@ -85,6 +91,7 @@ export default {
       userLikes: [],
       isLoading: true,
       isLiked: true,
+      tweetActive: [],
     };
   },
   created() {
@@ -110,11 +117,27 @@ export default {
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
-        Toast.fire({
-          icon: "info",
-          title: error.response.data.message,
-        });
+        // Toast.fire({
+        //   icon: "info",
+        //   title: error.response.data.message,
+        // });
       }
+    },
+    handleReplyModal(tweet) {
+      const {Tweet} = tweet
+      this.tweetActive = { ...Tweet };
+    },
+    afterReplySubmit(payload) {
+      const { tweetId, replyCount } = payload;
+      this.allTweets = this.allTweets.map((tweet) => {
+        if (tweet.id !== tweetId) {
+          return tweet;
+        }
+        return {
+          ...tweet,
+          replyCount,
+        };
+      });
     },
     // async addLike(tweetId) {
     //   try {
@@ -173,6 +196,11 @@ export default {
   /* height: 145px; */
   border-bottom: 1px solid #e6ecf0;
 }
+.tweet-card:hover {
+  /* cursor: pointer; */
+  box-shadow: 0 0 1px 0 var(--orange);
+}
+
 .tweet-content {
   margin-top: 6px;
   max-width: 510px;

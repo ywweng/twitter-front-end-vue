@@ -17,15 +17,18 @@
       </div>
       <div class="profile-wrap position-relative">
         <div class="profile-cover">
-          <img :src="user.cover | emptyImage" class="w-100 " alt="" />
+          <img :src="user.cover | emptyImage" class="w-100" alt="" />
         </div>
         <img
           :src="user.avatar | emptyImage"
-          class="profile-avatar rounded-circle position-absolute "
+          class="profile-avatar rounded-circle position-absolute"
           alt=""
         />
         <!-- currentUser btn-edit-->
-        <div class="btn-area d-flex justify-content-end" v-if="user.id === currentUser.id">
+        <div
+          class="btn-area d-flex justify-content-end"
+          v-if="user.id === currentUser.id"
+        >
           <button
             type="button"
             class="btn btn-edit"
@@ -55,7 +58,7 @@
           <button
             type="button"
             class="btn btn-follow ms-2"
-            v-if="!user.isFollowing"
+            v-if="!user.isFollowed"
             @click.stop.prevent="addFollow(user.id)"
           >
             跟隨
@@ -79,24 +82,32 @@
           <div class="followship">
             <span class="following fw-bold">
               <router-link :to="`/user-profile/${user.id}/follow`">
-                {{ user.followingCount }}個<span class="sub-text"
+                {{ user.followerCount }}個<span class="sub-text"
                   >跟隨中</span
                 ></router-link
               >
             </span>
             <span class="follower ms-4 fw-bold">
               <router-link :to="`/user-profile/${user.id}/follow`">
-                {{ user.followerCount }}位<span class="sub-text">跟隨者</span>
+                {{ user.followingCount }}位<span class="sub-text">跟隨者</span>
               </router-link>
             </span>
           </div>
         </div>
       </div>
-      <ProfileEditModal :current-user="user" @after-profile-submit="afterProfileSubmit"/>
-      
+      <ProfileEditModal
+        :current-user="user"
+        @after-profile-submit="afterProfileSubmit"
+      />
+
       <NavTabs :user-id="user.id" />
       <!-- router-view -->
-      <router-view :user-id="user.id" :user-name="user.name" :user-account="user.account" :user-avatar="user.avatar"></router-view>
+      <router-view
+        :user-id="user.id"
+        :user-name="user.name"
+        :user-account="user.account"
+        :user-avatar="user.avatar"
+      ></router-view>
     </div>
     <!-- Popular User -->
     <div class="col-3 popular-user mh-100">
@@ -112,7 +123,7 @@ import Menu from "../components/Menu.vue";
 import PopularUser from "../components/PopularUser.vue";
 import userAPI from "../apis/user";
 // import { mapState } from "vuex";
-import { emptyImageFilter } from "../utils/mixins"
+import { emptyImageFilter } from "../utils/mixins";
 import { Toast } from "../utils/helpers";
 
 export default {
@@ -125,7 +136,7 @@ export default {
   mixins: [emptyImageFilter],
   data() {
     return {
-      currentUser:{},
+      currentUser: {},
       user: {
         id: 0,
         account: "",
@@ -139,7 +150,7 @@ export default {
         followingCount: 0,
         followerCount: 0,
         likeCount: 0,
-        isFollowing: false,
+        isFollowed: false,
       },
       isNotified: false, //這個沒有設定，重新整理就會還原
     };
@@ -148,8 +159,8 @@ export default {
   //   ...mapState(["currentUser"]),
   // },
   created() {
-    const { userId } = this.$route.params
-    this.fetchUser(userId); 
+    const { userId } = this.$route.params;
+    this.fetchUser(userId);
     this.fetchCurrentUser();
   },
   methods: {
@@ -169,7 +180,7 @@ export default {
           followingCount,
           followerCount,
           likeCount,
-          isFollowing
+          isFollowed,
         } = data;
         this.user = {
           ...this.user,
@@ -185,10 +196,9 @@ export default {
           followingCount,
           followerCount,
           likeCount,
-          isFollowing
+          isFollowed,
         };
-        this.fetchCurrentUser()
-
+        this.fetchCurrentUser();
       } catch (error) {
         // console.log(error.response);
         Toast.fire({
@@ -199,41 +209,42 @@ export default {
     },
     async fetchCurrentUser() {
       try {
-        const { data } = await userAPI.getCurrentUser()
-        if(data.status !== 'success') {
-          throw new Error(data.message)
+        const { data } = await userAPI.getCurrentUser();
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
-        this.currentUser = data.data
-      } catch(error) {
+        this.currentUser = data.data;
+      } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: error.message
-        })
+          icon: "error",
+          title: error.message,
+        });
       }
     },
     async addFollow(id) {
       try {
-        const {data} = await userAPI.addFollow({ id })
-        console.log(data.message)
-        this.user.isFollowing = true;
+        const { data } = await userAPI.addFollow({ id });
+        console.log(data.message);
+        this.user.isFollowed = true;
+        this.user.followingCount += 1;
       } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: error.response.data.message
-        })
+          icon: "error",
+          title: error.response.data.message,
+        });
       }
- 
     },
     async deleteFollow(followingId) {
       try {
-        const {data} = await userAPI.deleteFollow({followingId})
-        console.log(data.message)
-        this.user.isFollowing = false
+        const { data } = await userAPI.deleteFollow({ followingId });
+        console.log(data.message);
+        this.user.isFollowed = false;
+        this.user.followingCount -= 1;
       } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: error.response.message
-        })
+          icon: "error",
+          title: error.response.message,
+        });
       }
     },
     addNotify() {
@@ -243,17 +254,17 @@ export default {
       this.isNotified = false;
     },
     afterProfileSubmit(data) {
-      const {user: editedUser} = data
+      const { user: editedUser } = data;
       this.user = {
-          ...this.user,
-          id: editedUser.id,
-          account: editedUser.account,
-          name: editedUser.name,
-          introduction: editedUser.introduction,
-          avatar: editedUser.avatar,
-          cover: editedUser.cover,
-        };
-    }
+        ...this.user,
+        // id: editedUser.id,
+        // account: editedUser.account,
+        name: editedUser.name,
+        introduction: editedUser.introduction,
+        avatar: editedUser.avatar,
+        cover: editedUser.cover,
+      };
+    },
   },
 
   beforeRouteUpdate(to, from, next) {

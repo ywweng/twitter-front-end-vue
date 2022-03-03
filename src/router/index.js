@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import store from './../store'
 
 import Login from '../views/Login.vue'
+// import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    redirect: '/admin/login',
   },
   {
     path: '/register',
@@ -92,7 +98,7 @@ const routes = [
     path: '/user-profile/:userId/follow',
     name: 'followship',
     component: () => import("../views/UserFollowShip.vue"),
-    edirect: '/user-profile/:userId/followers',
+    redirect: '/user-profile/:userId/followers',
     children: [
       {
         path: '/user-profile/:userId/followings',
@@ -114,7 +120,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async(to, from, next) => {
-  // store.dispatch('fetchCurrentUser')
   // 從 localStorage 取出 token
   const token = localStorage.getItem('token')
   const tokenInStore = store.state.token

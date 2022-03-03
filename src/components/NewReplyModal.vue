@@ -180,63 +180,63 @@
 </script>
 
 <style scoped>
-  .modal.show .modal-dialog {
-    margin-top: 54px;
+.modal.show .modal-dialog {
+  margin-top: 54px;
+}
+.modal-header .btn-close {
+  margin: 0.5rem auto 0.5rem 0.5rem;
+  color: #ff6600;
+}
+.modal-header {
+  border-bottom: 1px solid #e6ecf0;
+  padding: 0;
+}
+.btn-close {
+  background: url("./../assets/btn-close.svg") center 0.5em no-repeat;
+}
+.btn-close:hover {
+  opacity: 1;
+}
+.btn-active {
+  margin-left: 20px;
+}
+.modal-content {
+  height: 100%;
+  border: 0;
+  border-radius: 14px;
+}
+.modal-footer {
+  border-top: 0;
+}
+.input-new-tweet {
+  border: none;
+  width: 100%;
+  resize: none;
+  outline: none;
+}
+.tweet-content {
+  margin: 5px 0 5px 0;
+}
+.text-account {
+  font-size: 13px;
+}
+.text-tag {
+  color: #ff6600;
+  font-size: 13px;
+}
+.border {
+  margin-top: 5px;
+  width: 2px;
+  height: 60%;
+  background: #ccd6dd;
+}
+.reply-content {
+  margin-top: 10px;
+}
+@media screen and (min-width: 576px) {
+  .modal-dialog {
+    max-width: 600px;
+    height: 450px;
   }
-  .modal-header .btn-close {
-    margin: 0.5rem auto 0.5rem 0.5rem;
-    color: #ff6600;
-  }
-  .modal-header {
-    border-bottom: 1px solid #e6ecf0;
-    padding: 0;
-  }
-  .btn-close {
-    background: url('./../assets/btn-close.svg') center 0.5em no-repeat;
-  }
-  .btn-close:hover {
-    opacity: 1;
-  }
-  .btn-active {
-    margin-left: 20px;
-  }
-  .modal-content {
-    height: 100%;
-    border: 0;
-    border-radius: 14px;
-  }
-  .modal-footer {
-    border-top: 0;
-  }
-  .input-new-tweet {
-    border: none;
-    width: 100%;
-    resize: none;
-    outline: none;
-  }
-  .tweet-content {
-    margin: 5px 0 5px 0;
-  }
-  .text-account {
-    font-size: 13px;
-  }
-  .text-tag {
-    color: #ff6600;
-    font-size: 13px;
-  }
-  .border {
-    margin-top: 5px;
-    width: 2px;
-    height: 60%;
-    background: #ccd6dd;
-  }
-  .reply-content {
-    margin-top: 10px;
-  }
-  @media screen and (min-width: 576px) {
-    .modal-dialog {
-      max-width: 600px;
-      height: 450px;
-    }
-  }
+}
 </style>

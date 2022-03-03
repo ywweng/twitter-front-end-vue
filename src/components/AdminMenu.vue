@@ -16,12 +16,13 @@
         </router-link> </li>
     </ul>
     <div class="logout position-absolute">
-        <router-link to="/admin/login">
-        <div class="d-flex align-items-center">
+        <button type="button" @click="logout">
+          <div class="d-flex align-items-center" >
           <img class="menu-icon me-2" src="../assets/VectorLogout.png" />
           <span>登出</span>
-        </div> 
-        </router-link>
+        </div>
+        </button>
+        <!-- </router-link> -->
     </div>
   </div>
 </template>
@@ -46,7 +47,8 @@ li {
   height: 24px;
   margin-left: 10px;
 }
-a span {
+a span,
+button span {
   text-decoration: none;
   color: var(--main-text);
   font-size: 18px;
@@ -55,9 +57,12 @@ a span {
 .active span {
   color: var(--orange);
 }
-.logout{
+.logout {
   left: 20%;
   bottom: 44px;
+}
+.logout button span:hover {
+  color: var(--orange);
 }
 </style>
 
@@ -67,6 +72,12 @@ export default {
     return {
       inTweetList: this.$route.name === "admin-tweets",
       inUserList: this.$route.name === "admin-users"
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.commit('revokeAuthentication')
+      this.$router.push('/admin/login')
     }
   }
 }

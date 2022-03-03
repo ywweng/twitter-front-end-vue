@@ -23,3 +23,4 @@ export default {
     return apiHelper.post(`/tweets/${id}/unlike`)
   },
 }
+

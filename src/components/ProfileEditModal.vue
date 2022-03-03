@@ -300,12 +300,12 @@ export default {
           cover: this.user.cover,
           introduction: this.user.introduction,
         };
-        // console.log(formData)
+        
         const { data } = await userAPI.updateUser({
           userId: this.user.id,
           formData,
         });
-
+        // console.log(data)
         this.$emit("after-profile-submit", data);
       } catch (error) {
         console.log(error.response.data.message);

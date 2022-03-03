@@ -6,7 +6,7 @@
       <div class="reply-info d-flex flex-column">
         <div class="first-line">
           <span class="text-name">{{userName}}</span>
-          <span class="text-account">@{{userAccount}}．{{reply.createdAt}}</span>
+          <span class="text-account">@{{userAccount}}．{{reply.createdAt | fromNow}}</span>
         </div>
         <div class="second-line">
           <span class="text-account ms-0">回覆</span>
@@ -25,6 +25,7 @@
 import userAPI from "../apis/user"
 import Spinner from "./../components/Spinner.vue";
 import { Toast } from "../utils/helpers";
+import { fromNowFilter } from "../utils/mixins";
 export default {
   name: 'userReplyList',
   components: {
@@ -48,6 +49,7 @@ export default {
       required: true,
     }
   },
+  mixins: [fromNowFilter],
   data() {
     return {
       userReplies: [],
@@ -85,6 +87,10 @@ export default {
 </script>
 
 <style scoped>
+.avatar {
+  width: 50px;
+  height: 50px;
+}
 .reply-card {
   padding: 10px 15px;
   /* height: 121px; */

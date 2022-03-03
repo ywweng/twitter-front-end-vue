@@ -89,10 +89,10 @@
 
 <style scoped>
 .logo img {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   margin-top: 65px;
-  margin-left: calc(50% - 20px);
+  margin-left: calc(50% - 25px);
 }
 .title {
   margin-top: 25px;

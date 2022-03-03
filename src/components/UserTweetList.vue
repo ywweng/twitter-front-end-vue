@@ -13,9 +13,16 @@
             >@{{ tweet.User.account }}．{{ tweet.createdAt | fromNow }}</span
           >
         </div>
-        <div class="tweet-content">
-          {{ tweet.description }}
-        </div>
+        <router-link
+          :to="{
+            name: 'single-tweet',
+            params: { tweetId: tweet.id, tweet },
+          }"
+        >
+          <div class="tweet-content">
+            {{ tweet.description }}
+          </div></router-link
+        >
         <div class="action my-1">
           <span class="icon-wrap">
             <button
@@ -95,9 +102,9 @@ export default {
     async fetchTweets(userId) {
       try {
         const { data } = await userAPI.getUserTweets({ userId });
-        if (!data) {
-          throw new Error("尚無任何推文！");
-        }
+        // if (!data) {
+        //   throw new Error("尚無任何推文！");
+        // }
         this.userTweets = data;
         this.isLoading = false;
       } catch (error) {
@@ -117,13 +124,14 @@ export default {
           throw new Error();
         }
         this.userTweets = this.userTweets.map((tweet) => {
-          if (+tweet.id === +id) {
+          if (tweet.id === id) {
             return {
               ...tweet,
               isLiked: true,
               likeCount: tweet.likeCount + 1,
             };
           }
+          console.log(tweet)
           return tweet;
         });
       } catch (error) {
@@ -174,13 +182,17 @@ export default {
 </script>
 
 <style scoped>
+.avatar {
+  width: 50px;
+  height: 50px;
+}
 .tweet-card {
   padding: 10px 15px;
   /* height: 145px; */
   border-bottom: 1px solid #e6ecf0;
 }
 .tweet-card:hover {
-  cursor: pointer;
+  /* cursor: pointer; */
   box-shadow: 0 0 1px 0 var(--orange);
 }
 .tweet-content {

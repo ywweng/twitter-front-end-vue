@@ -10,7 +10,7 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <form action="" @submit.stop.prevent="handleSubmit" >
+          <form action="" @submit.stop.prevent="handleSubmit">
             <!-- modal-header -->
             <div class="modal-header">
               <div class="d-flex">
@@ -235,7 +235,7 @@
 </style>
 
 <script>
-import userAPI from "../apis/user"
+import userAPI from "../apis/user";
 // import { Toast } from "../utils/helpers";
 
 export default {
@@ -253,7 +253,7 @@ export default {
         account: this.currentUser.account,
         avatar: this.currentUser.avatar,
         cover: this.currentUser.cover,
-        introduction: this.currentUser.introduction
+        introduction: this.currentUser.introduction,
       },
     };
   },
@@ -262,9 +262,8 @@ export default {
       this.user = {
         ...this.user,
         ...newValue,
-      }
-
-    }
+      };
+    },
   },
   methods: {
     handleCoverChange(e) {
@@ -289,30 +288,28 @@ export default {
       }
     },
     async handleSubmit() {
-      try{
+      try {
         if (this.namelength > 50 || this.introduction > 160) {
-        this.saveInvalid = true;
-        return;
-      }
-      // const formData = new FormData(e.target)
-      const formData = {
-        name: this.user.name,
-        avatar: this.user.avatar,
-        cover: this.user.cover,
-        introduction: this.user.introduction
-      }
-      const { data } = await userAPI.updateUser({ 
-        userId: this.user.id,
-        formData
-      })
-
-      this.$emit("after-profile-submit", data);
-
+          this.saveInvalid = true;
+          return;
+        }
+        // const formData = new FormData(e.target)
+        const formData = {
+          name: this.user.name,
+          avatar: this.user.avatar,
+          cover: this.user.cover,
+          introduction: this.user.introduction,
+        };
+        
+        const { data } = await userAPI.updateUser({
+          userId: this.user.id,
+          formData,
+        });
+        // console.log(data)
+        this.$emit("after-profile-submit", data);
       } catch (error) {
-        console.log(error.response.data.message)
+        console.log(error.response.data.message);
       }
-      
-      
     },
   },
   computed: {

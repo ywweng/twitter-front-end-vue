@@ -166,25 +166,26 @@
             this.pwdChecked = ''
             return
           }
+
           const { data } = await authorizationAPI.register({
             account: this.account,
             name: this.name,
             email: this.email,
             password: this.password,
-            passwordCheck: this.pwdChecked,
+            checkPassword: this.pwdChecked,
           })
 
           if (data.status === 'error') {
-            // throw new Error(data.message)
             this.alertMsg = data.message
             this.alertStatus = 'error'
             this.alertShow()
-            console.log('1')
             return
           }
-          this.alertMsg = data.message
+
+          this.alertMsg = '註冊成功'
           this.alertStatus = 'success'
           this.alertShow()
+
           setTimeout(() => {
             this.$router.push('/login')
           }, 3000)

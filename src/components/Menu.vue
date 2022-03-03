@@ -15,7 +15,10 @@
           </li>
           <li class="menu-icon mb-4">
             <!-- TODO:router-link 設params-->
-            <router-link :to="{ name: 'user-profile' ,params:{userId}}" class="menu-text">
+            <router-link
+              :to="{ name: 'user-profile', params: { userId } }"
+              class="menu-text"
+            >
               <img class="profile-icon" :src="userProfileUrl" />
               個人資料
             </router-link>
@@ -95,7 +98,7 @@
       }
     },
     computed: {
-      ...mapState(['currentUser', 'isAuthoenticated']),
+      ...mapState(['currentUser', 'isAuthoenticated', 'newTweets']),
     },
     methods: {
       alertShow() {
@@ -118,7 +121,7 @@
         this.alertShow()
         setTimeout(() => {
           this.$router.push('/login')
-        }, 5000);
+        }, 5000)
       }
     },
     created() {

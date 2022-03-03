@@ -15,12 +15,16 @@
       <div class="follow">
         <button
           class="btn-following"
-          @click="deleteFollowing(user.id)"
-          v-if="user.isFollowing"
+          @click.stop.prevent="deleteFollowing(user.id)"
+          v-if="user.isFollowed"
         >
           正在跟隨
         </button>
-        <button class="btn-follow" @click="addFollowing(user.id)" v-else>
+        <button
+          class="btn-follow"
+          @click.stop.prevent="addFollowing(user.id)"
+          v-else
+        >
           跟隨
         </button>
       </div>
@@ -30,131 +34,7 @@
 
 <script>
   import Spinner from './../components/Spinner.vue'
-
-  const dummyData = {
-    users: [
-      {
-        id: 1,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 2,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 3,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 4,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 5,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 6,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 7,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 8,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 9,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-      {
-        id: 10,
-        account: 'user1',
-        name: '使用者1',
-        email: 'user1@example.com',
-        avatar:
-          'https://i.pinimg.com/474x/1d/84/5c/1d845c1b3d11ce372ed0f5c5a80ec562.jpg',
-        role: 'user',
-        isFollowing: false,
-        created_at: '2022-01-18T07:23:18.000Z',
-        updated_at: '2022-01-18T07:23:18.000Z',
-      },
-    ],
-  }
+  import userAPI from './../apis/user'
 
   export default {
     components: { Spinner },
@@ -162,66 +42,79 @@
       return {
         users: [],
         isLoading: true,
+        alertMsg: '',
+        alertStatus: false,
       }
     },
     created() {
-      // 模擬
-      setTimeout(() => {
-        this.isLoading = false
-      }, 3000)
       this.fetchTopUsers()
     },
     methods: {
-      fetchTopUsers() {
-        // TODO:串接API
-        this.isLoading = true
-        // const {data} = await usersAPI.getTopUsers()
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-
-        this.users = dummyData.users
-        this.isLoading = false
-
-        // catch
-        // console.log(error.message)
-        // alert訊息
+      alertShow() {
+        const bootstrap = require('bootstrap')
+        let alertNode = document.querySelector('#alert')
+        bootstrap.Alert.getInstance(alertNode)
+        setTimeout(() => {
+          this.alertStatus = false
+        }, 2000)
       },
-      addFollowing(userId) {
-        // TODO:串接API
-        // const { data } = await userAPI.addFollowing({ userId })
-        // if (data.status !== 'success') {
-        //   throw new Error(data.message)
-        // }
-        this.users = this.users.map((user) => {
-          if (user.id !== userId) {
-            return user
-          } else {
-            return {
-              ...user,
-              isFollowing: true,
-            }
+      async fetchTopUsers() {
+        try {
+          const { data } = await userAPI.getTopUsers()
+
+          if (data.status === 'error') {
+            throw new Error(data.message)
           }
-        })
-        // catch error alert
+
+          this.users = data.data
+          this.isLoading = false
+        } catch (error) {
+          this.alertMsg = error.response.data.message
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
-      deleteFollowing(userId) {
-        // TODO:串接API
-        // const { data } = await userAPI.deleteFollowing({ userId })
-        // if (data.status !== 'success') {
-        //   throw new Error(data.message)
-        // }
-        this.users = this.users.map((user) => {
-          if (user.id !== userId) {
-            return user
-          } else {
-            return {
-              ...user,
-              isFollowing: false,
-            }
+      async addFollowing(userId) {
+        try {
+          const { data } = await userAPI.addFollowing({ id: userId })
+          if (data.status !== 'success') {
+            throw new Error(data.message)
           }
-        })
-        // catch error alert
+          this.users = this.users.map((user) => {
+            if (user.id !== userId) {
+              return user
+            } else {
+              return {
+                ...user,
+                isFollowed: true,
+              }
+            }
+          })
+        } catch (error) {
+          console.log(error.response.data.message)
+        }
+      },
+      async deleteFollowing(userId) {
+        try {
+          const { data } = await userAPI.deleteFollowing({
+            followingId: userId,
+          })
+          if (data.status !== 'success') {
+            throw new Error(data.message)
+          }
+          this.users = this.users.map((user) => {
+            if (user.id !== userId) {
+              return user
+            } else {
+              return {
+                ...user,
+                isFollowed: false,
+              }
+            }
+          })
+        } catch (error) {
+          console.log(error.response.data.message)
+        }
       },
     },
   }

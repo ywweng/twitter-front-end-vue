@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column vh-100">
     <div class="title menu-text">首頁</div>
-    <NewTweet />
+    <NewTweet @after-new-tweet="afterNewTweet" />
     <div class="border"></div>
     <div id="tweet-list">
       <Spinner v-if="isLoading" />
@@ -31,31 +31,37 @@
               class="btn-reply"
               data-bs-toggle="modal"
               data-bs-target="#new-reply-modal"
+              @click="handleReplyModal(tweet)"
             >
               <img :src="require('./../assets/Reply.svg')" width="12px" />
               <span class="text-like-reply"> {{ tweet.replyCount }} </span>
             </button>
             <button
               class="btn-like"
-              @click.stop.prevent="deleteLike(tweet.id)"
-              v-if="tweet.isLike"
+              @click="deleteLike(tweet.id)"
+              v-if="tweet.isLiked"
+              :disabled="isProcessing"
             >
               <img :src="require('./../assets/LikeActive.svg')" width="12px" />
               <span class="text-like-reply">{{ tweet.likeCount }}</span>
             </button>
             <button
               class="btn-like"
-              @click.stop.prevent="addLike(tweet.id)"
+              @click="addLike(tweet.id)"
               v-else
+              :disabled="isProcessing"
             >
               <img :src="require('./../assets/Like.svg')" width="12px" />
               <span class="text-like-reply">{{ tweet.likeCount }}</span>
             </button>
           </div>
         </div>
-        <NewReplyModal :tweet="tweet" @after-reply-submit="afterReplySubmit" />
       </div>
     </div>
+    <NewReplyModal
+      :tweet="tweetActive"
+      @after-reply-submit="afterReplySubmit"
+    />
     <!-- alert -->
     <div
       class="alert d-flex fixed-top"
@@ -86,24 +92,6 @@
   import moment from 'moment'
   import tweetsAPI from './../apis/tweets'
 
-  // const dummyData = [
-  //   {
-  //     id: 1,
-  //     description: '推文',
-  //     UserId: 1,
-  //     createdAt: '2022-01-26T16:45:10.000Z',
-  //     updatedAt: '2022-01-26T16:45:10.000Z',
-  //     replyCount: 3,
-  //     likeCount: 1,
-  //     user: {
-  //       avatar:
-  //         'https://p3-tt-ipv6.byteimg.com/origin/pgc-image/2ab5266b1e27469d879288d6e1d225a7.png',
-  //       name: 'root',
-  //       account: 'root',
-  //     },
-  //   },
-  // ]
-
   export default {
     name: 'TweetList',
     components: {
@@ -117,10 +105,12 @@
         isLoading: true,
         alertMsg: '',
         alertStatus: false,
+        tweetActive: [],
+        isProcessing: false,
       }
     },
     computed: {
-      ...mapState(['newTweets', 'currentUser']),
+      ...mapState(['newTweets']),
     },
     filters: {
       fromNow(datetime) {
@@ -131,12 +121,7 @@
       },
     },
     created() {
-      // 模擬
       this.fetchTweets()
-      this.isLoading = false
-    },
-    updated() {
-      this.$store.commit('resetNewTweet')
     },
     methods: {
       alertShow() {
@@ -147,10 +132,14 @@
           this.alertStatus = false
         }, 2000)
       },
+      setNewTweets() {
+        this.allTweets.unshift({ ...this.newTweets[0] })
+      },
+      handleReplyModal(tweet) {
+        this.tweetActive = { ...tweet }
+      },
       async fetchTweets() {
-        // TODO:串接API
         try {
-          this.isLoading = true
           const response = await tweetsAPI.getTweets()
           const { data } = response
           this.allTweets = data.map((tweet) => {
@@ -158,67 +147,78 @@
               ...tweet,
             }
           })
+          this.isLoading = false
         } catch (error) {
-          // catch error msg
           this.isLoading = false
           this.alertMsg = '取得推文失敗，請稍後再試'
           this.alertStatus = 'error'
           this.alertShow()
         }
       },
-      setNewTweets() {
-        this.allTweets.unshift({ ...this.newTweets[0] })
+      async addLike(tweetId) {
+        try {
+          const { data } = await tweetsAPI.addLike({
+            id: tweetId,
+          })
+          this.isProcessing = true
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+
+          this.allTweets = this.allTweets.map((tweet) => {
+            if (tweet.id !== tweetId) {
+              return tweet
+            } else {
+              return {
+                ...tweet,
+                likeCount: tweet.likeCount + 1,
+                isLiked: true,
+              }
+            }
+          })
+
+          this.isProcessing = false
+        } catch (error) {
+          this.alertMsg = '按讚失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
-      addLike(tweetId) {
-        // TODO:串接API
-        // const {data} = await tweetsAPI.addLike({tweetId})
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-        this.allTweets = this.allTweets.map((tweet) => {
-          if (tweet.id !== tweetId) {
-            return tweet
+      async deleteLike(tweetId) {
+        try {
+          const { data } = await tweetsAPI.deleteLike({ id: tweetId })
+          if (data.status === 'error') {
+            throw new Error(data.message)
           }
-          return {
-            ...tweet,
-            likeCount: tweet.likeCount + 1,
-            isLike: true,
-          }
-        })
-        // catch error msg
-        // this.alertMsg = '按讚失敗，請稍後再試'
-        // this.alertStatus = 'error'
-        // this.alertShow()
+          this.isProcessing = true
+          this.allTweets = this.allTweets.map((tweet) => {
+            if (tweet.id !== tweetId) {
+              return tweet
+            } else {
+              return {
+                ...tweet,
+                likeCount: tweet.likeCount - 1,
+                isLiked: false,
+              }
+            }
+          })
+          this.isProcessing = false
+        } catch (error) {
+          this.isProcessing = false
+          this.alertMsg = '取消讚失敗，請稍後再試'
+          this.alertStatus = 'error'
+          this.alertShow()
+        }
       },
-      deleteLike(tweetId) {
-        // TODO:串接API
-        // const {data} = await tweetsAPI.deleteLike({tweetId})
-        // if (data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-        this.allTweets = this.allTweets.map((tweet) => {
-          if (tweet.id !== tweetId) {
-            return tweet
-          }
-          return {
-            ...tweet,
-            likeCount: tweet.likeCount - 1,
-            isLike: false,
-          }
-        })
-        // catch error msg
-        // this.alertMsg = '按讚失敗，請稍後再試'
-        // this.alertStatus = 'error'
-        // this.alertShow()
+      afterNewTweet() {
+        this.fetchTweets()
       },
       afterReplySubmit(payload) {
         const { tweetId, replyCount } = payload
-        console.log(payload)
         this.allTweets = this.allTweets.map((tweet) => {
           if (tweet.id !== tweetId) {
             return tweet
           }
-          console.log(replyCount)
           return {
             ...tweet,
             replyCount,
@@ -229,8 +229,10 @@
     watch: {
       newTweets() {
         if (this.newTweets.length > 0) {
-          this.setNewTweets()
+          this.$store.commit('resetNewTweet')
         }
+
+        this.setNewTweets()
       },
     },
   }

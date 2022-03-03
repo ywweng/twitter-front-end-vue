@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import userAPI from './../apis/user'
-// import tweetsAPI from './../apis/tweets'
+import userAPI from './../apis/user'
+// import tweetAPI from './../apis/tweet'
 
 Vue.use(Vuex)
 
@@ -35,25 +35,42 @@ export default new Vuex.Store({
       state.token = ''
       localStorage.removeItem('token')
     },
-    setNewTweet(state,newTweet) {
+    setNewTweet(state, newTweet) {
       state.newTweets.push(newTweet)
     },
     resetNewTweet(state) {
-      // console.log('delete',newTweet)
       state.newTweets = []
-    }
+    },
   },
   actions: {
-    // async fetchTweets({ commit }) {
-    //   try {
-    //     const { data } = await tweetsAPI.getTweets()
-    //     commit('setTweets', data)
-    //     return true
-    //   } catch (error) {
-    //     console.log(error.message)
-    //     return false
-    //   }
-    // },
+    async fetchCurrentUser({ commit }) {
+      try {
+        const { data } = await userAPI.getCurrentUser()
+        commit('setCurrentUser', data.data)
+        return true
+      } catch (error) {
+        console.error(error.message)
+        commit('revokeAuthentication')
+        return false
+      }
+    },
+    // async fetchTweets({commit}) {
+    //    try {
+    //      const response = await tweetsAPI.getTweets()
+    //      const { data } = response
+    //      this.allTweets = data.map((tweet) => {
+    //        return {
+    //          ...tweet,
+    //        }
+    //      })
+    //      this.isLoading = false
+    //    } catch (error) {
+    //      this.isLoading = false
+    //      this.alertMsg = '取得推文失敗，請稍後再試'
+    //      this.alertStatus = 'error'
+    //      this.alertShow()
+    //    }
+    // }
   },
   modules: {},
 })

@@ -65,6 +65,7 @@
 
 <script>
   import { mapState } from 'vuex'
+  import tweetsAPI from './../apis/tweets'
 
   export default {
     name: 'NewTweetModal',
@@ -98,51 +99,50 @@
           modal.hide()
         }, 1000)
       },
-      handleSubmit() {
-        // TODO:串接API
-        if (!this.description) {
-          this.isError = true
-          this.errorMsg = '內容不可空白'
-          return
-        } else if (this.description.length > 140) {
-          this.isError = true
-          this.errorMsg = '字數不可超過 140 字'
-          return
-        } else {
-          this.isError = false
+      async handleSubmit() {
+        try {
+          if (!this.description) {
+            this.isError = true
+            this.errorMsg = '內容不可空白'
+            return
+          } else if (this.description.length > 140) {
+            this.isError = true
+            this.errorMsg = '字數不可超過 140 字'
+            return
+          } else {
+            this.isError = false
+          }
+
+          this.isProcessing = true
+          const { data } = await tweetsAPI.postTweet({
+            description: this.description,
+          })
+          console.log(data)
+          const dummyTweet = {
+            UserId: this.currentUser.id,
+            description: this.description,
+            replyCount: 0,
+            likeCount: 0,
+            createdAt: new Date().toISOString(),
+            User: {
+              avatar: this.currentUser.avatar,
+              name: this.currentUser.name,
+              account: this.currentUser.account,
+            },
+          }
+          this.$store.commit('setNewTweet', dummyTweet)
+          // this.$emit('after-new-tweet',data)
+          this.alertMsg = '推文成功'
+          this.alertStatus = 'success'
+          this.alertShow()
+          this.isProcessing = false
+          this.description = ''
+          this.hideModal()
+        } catch (error) {
+          this.alertMsg = error.response.data.message
+          this.alertStatus = 'error'
+          this.alertShow()
         }
-
-        this.isProcessing = true
-        // const {data} = await TweetsAPI.postTweet({
-        //   description: this.description
-        // })
-        const dummyTweet = {
-          UserId: this.currentUser.id,
-          description: this.description,
-          replyCount: 0,
-          likeCount: 0,
-          createdAt: new Date().toISOString() ,
-          user: {
-            avatar: this.currentUser.avatar,
-            name: this.currentUser.name,
-            account: this.currentUser.account,
-          },
-        }
-        this.$store.commit('setNewTweet', dummyTweet)
-        this.alertMsg = '推文成功'
-        this.alertStatus = 'success'
-        this.alertShow()
-        this.hideModal()
-
-        // this.closeModal()
-        // if(data.status === 'error') {
-        //   throw new Error(data.message)
-        // }
-
-        this.isProcessing = false
-        this.description = ''
-
-        // catch error msg
       },
     },
   }

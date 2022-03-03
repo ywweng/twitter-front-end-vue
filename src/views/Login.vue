@@ -70,20 +70,20 @@
 </template>
 
 <script>
-  import authorizationAPI from './../apis/authorization'
+import authorizationAPI from "./../apis/authorization";
 
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        account: '',
-        password: '',
-        isProcessing: false,
-        checkAccount: false,
-        alertMsg: '',
-        alertStatus: false,
-      }
-    },
+export default {
+  name: "Login",
+  data() {
+    return {
+      account: "",
+      password: "",
+      isProcessing: false,
+      checkAccount: false,
+      alertMsg: "",
+      alertStatus: false,
+    };
+  },
     methods: {
       alertShow() {
         const bootstrap = require('bootstrap')
@@ -135,51 +135,51 @@
 </script>
 
 <style scoped>
-  #login {
-    width: 540px;
-    padding-top: 60px;
-  }
-  .menu-text {
-    font-size: 1.5rem;
-  }
-  .space {
-    font-size: 18px;
-    font-weight: 700;
-    color: #0099ff;
-  }
-  .form-input {
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    height: 54px;
-    background: #f5f8fa;
-  }
-  .form-input input {
-    padding-left: 10px;
-    border-top: inherit;
-    border-left: inherit;
-    border-right: inherit;
-    border-bottom-color: #657786;
-    background: inherit;
-  }
+#login {
+  width: 540px;
+  padding-top: 60px;
+}
+.menu-text {
+  font-size: 1.5rem;
+}
+.space {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0099ff;
+}
+.form-input {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 54px;
+  background: #f5f8fa;
+}
+.form-input input {
+  padding-left: 10px;
+  border-top: inherit;
+  border-left: inherit;
+  border-right: inherit;
+  border-bottom-color: #657786;
+  background: inherit;
+}
 
-  .form-input input:hover {
-    border-bottom: 2px solid #50b5ff;
-  }
+.form-input input:hover {
+  border-bottom: 2px solid #50b5ff;
+}
 
-  .form-input input:focus {
-    outline: none;
-    border-bottom: 2px solid #50b5ff;
-  }
+.form-input input:focus {
+  outline: none;
+  border-bottom: 2px solid #50b5ff;
+}
 
-  .form-input-error input {
-    outline: none;
-    border-bottom: 2px solid #fc5a5a;
-  }
+.form-input-error input {
+  outline: none;
+  border-bottom: 2px solid #fc5a5a;
+}
 
-  .form-input-text {
-    margin-top: 5px;
-    margin-left: 10px;
-    color: #657786;
-  }
+.form-input-text {
+  margin-top: 5px;
+  margin-left: 10px;
+  color: #657786;
+}
 </style>

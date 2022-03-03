@@ -1,6 +1,6 @@
 <template>
   <div id="new-tweet" class="d-flex">
-    <div><img class="avatar" :src="currentUser.avatar" alt="" /></div>
+    <div><img class="avatar" width="50px" :src="currentUser.avatar" alt="" /></div>
     <div class="d-flex flex-column">
       <textarea
         class="input-new-tweet mt-2"
@@ -104,6 +104,7 @@
             },
           }
           this.$store.commit('setNewTweet', newTweet)
+          this.$emit('after-new-tweet')
           this.alertMsg = '推文成功'
           this.alertStatus = 'success'
           this.alertShow()

@@ -10,9 +10,17 @@
             >@{{ tweet.Tweet.User.account }}．{{ tweet.createdAt | fromNow }}</span
           >
         </div>
-        <div class="tweet-content">
-          {{ tweet.Tweet.description }}
-        </div>
+        <router-link
+          :to="{
+            name: 'single-tweet',
+            params: { tweetId: tweet.id, tweet },
+          }"
+        >
+          <div class="tweet-content">
+            {{ tweet.Tweet.description }}
+          </div>
+          </router-link>
+ 
         <div class="action my-1">
           <span class="icon-wrap">
             <button
@@ -156,6 +164,10 @@ export default {
 </script>
 
 <style scoped>
+.avatar {
+  width: 50px;
+  height: 50px;
+}
 .tweet-card {
   padding: 10px 15px;
   /* height: 145px; */

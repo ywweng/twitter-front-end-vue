@@ -125,45 +125,27 @@ export default {
     return {
       allTweets: [],
       isLoading: true,
-      alertMsg: "",
-      alertStatus: false,
-    };
+      alertMsg: '',
+       alertStatus: false,
+      tweetActive: [],
+      isProcessing: false,
+    }
   },
   computed: {
-    ...mapState(["newTweets", "currentUser"]),
+    ...mapState(['newTweets']),
   },
   filters: {
     fromNow(datetime) {
       if (!datetime) {
-        return "-";
+        return '-'
       }
-      return moment(datetime).fromNow();
-    },
-    data() {
-      return {
-        allTweets: [],
-        isLoading: true,
-        alertMsg: '',
-        alertStatus: false,
-        tweetActive: [],
-        isProcessing: false,
-      }
-    },
-    computed: {
-      ...mapState(['newTweets']),
-    },
-    filters: {
-      fromNow(datetime) {
-        if (!datetime) {
-          return '-'
-        }
         return moment(datetime).fromNow()
-      },
     },
-    created() {
-      this.fetchTweets()
-    },
-    methods: {
+  },
+  created() {
+    this.fetchTweets()
+  },
+  methods: {
       alertShow() {
         const bootstrap = require('bootstrap')
         let alertNode = document.querySelector('#alert')
@@ -265,8 +247,6 @@ export default {
           }
         })
       },
-    },
-    
   },
   watch: {
     newTweets() {
@@ -279,48 +259,48 @@ export default {
 </script>
 
 <style scoped>
-  #tweet-list {
-    overflow-y: auto;
-    max-height: 100vh;
-  }
-  #tweet-list::-webkit-scrollbar {
-    display: none;
-  }
-  .title {
-    padding-left: 20px;
-    height: 55px;
-    line-height: 55px;
-    border-bottom: 1px solid #e6ecf0;
-  }
-  .border {
-    height: 10px;
-    background: #e6ecf0;
-  }
-  .tweet-card {
-    padding: 10px 15px;
-    /* max-height: 145px; */
-    border-bottom: 1px solid #e6ecf0;
-  }
-  .tweet-card:hover {
-    cursor: pointer;
-    background: rgb(250, 250, 250);
-    max-width: 598px;
-    /* max-height: 145px; */
-  }
-  .tweet-content {
-    margin-top: 6px;
-    max-width: 510px;
-    font-size: 15px;
-    text-overflow: ellipsis;
-  }
-  .btn-reply {
-    padding: 0;
-    margin-right: 50px;
-  }
-  .text-like-reply {
-    color: #657786;
-  }
-  .router-link-active {
-    color: inherit;
-  }
+#tweet-list {
+  overflow-y: auto;
+  max-height: 100vh;
+}
+#tweet-list::-webkit-scrollbar {
+  display: none;
+}
+.title {
+  padding-left: 20px;
+  height: 55px;
+  line-height: 55px;
+  border-bottom: 1px solid #e6ecf0;
+}
+.border {
+  height: 10px;
+  background: #e6ecf0;
+}
+.tweet-card {
+  padding: 10px 15px;
+  /* max-height: 145px; */
+  border-bottom: 1px solid #e6ecf0;
+}
+.tweet-card:hover {
+  cursor: pointer;
+  background: rgb(250, 250, 250);
+  max-width: 598px;
+  /* max-height: 145px; */
+}
+.tweet-content {
+  margin-top: 6px;
+  max-width: 510px;
+  font-size: 15px;
+  text-overflow: ellipsis;
+}
+.btn-reply {
+  padding: 0;
+  margin-right: 50px;
+}
+.text-like-reply {
+  color: #657786;
+}
+.router-link-active {
+  color: inherit;
+}
 </style>

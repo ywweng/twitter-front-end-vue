@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import userAPI from './../apis/user'
+// import tweetAPI from './../apis/tweet'
 
 Vue.use(Vuex)
 
@@ -53,6 +54,23 @@ export default new Vuex.Store({
         return false
       }
     },
+    // async fetchTweets({commit}) {
+    //    try {
+    //      const response = await tweetsAPI.getTweets()
+    //      const { data } = response
+    //      this.allTweets = data.map((tweet) => {
+    //        return {
+    //          ...tweet,
+    //        }
+    //      })
+    //      this.isLoading = false
+    //    } catch (error) {
+    //      this.isLoading = false
+    //      this.alertMsg = '取得推文失敗，請稍後再試'
+    //      this.alertStatus = 'error'
+    //      this.alertShow()
+    //    }
+    // }
   },
   modules: {},
 })

@@ -1,5 +1,6 @@
 <template>
   <div id="single-tweet" class="w-100">
+    <Spinner v-if="isLoading" />
     <div class="title menu-text">
       <button type="button" class="d-flex" @click="$router.go(-1)">
         <img
@@ -84,12 +85,15 @@
 <script>
   import tweetsAPI from './../apis/tweets'
   import NewReplyModal from './../components/NewReplyModal.vue'
+  import Spinner from './../components/Spinner.vue'
+  import { mapState } from 'vuex'
   import moment from 'moment'
 
   export default {
     name: 'SingleTweet',
     components: {
       NewReplyModal,
+      Spinner,
     },
     data() {
       return {
@@ -98,7 +102,11 @@
         alertMsg: '',
         alertStatus: false,
         isProcessing: false,
+        isLoading: true,
       }
+    },
+    computed: {
+      ...mapState(['currentUser']),
     },
     filters: {
       format(datetime) {
@@ -134,6 +142,7 @@
             tweetId: this.$route.params.tweetId,
           })
           this.tweet = data
+          this.isLoading = false
         } catch (error) {
           this.alertMsg = '載入推文失敗，請稍後再試'
           this.alertStatus = 'error'

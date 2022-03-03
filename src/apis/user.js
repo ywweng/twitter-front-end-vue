@@ -2,7 +2,7 @@ import { apiHelper } from './../utils/helpers'
 const getToken = () => localStorage.getItem('token')
 
 export default {
-  update({ userId, account, name, email, password, passwordCheck }) {
+  update({ userId, account, name, email, password, checkPassword }) {
     return apiHelper.put(
       `/users/${userId}`,
       {
@@ -10,7 +10,7 @@ export default {
         name,
         email,
         password,
-        passwordCheck,
+        checkPassword,
       },
       {
         headers: { Authorization: `Bearer ${getToken()}` },

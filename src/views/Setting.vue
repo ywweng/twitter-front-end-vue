@@ -202,7 +202,7 @@
             name: this.name,
             email: this.email,
             password: this.password,
-            passwordCheck: this.pwdChecked,
+            checkPassword: this.pwdChecked,
           })
           if (data.status === 'error') {
             throw new Error(data.message)

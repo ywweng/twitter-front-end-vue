@@ -31,7 +31,7 @@
               class="btn-reply"
               data-bs-toggle="modal"
               data-bs-target="#new-reply-modal"
-              @click.stop.prevent="handleReplyModal(tweet)"
+              @click="handleReplyModal(tweet)"
             >
               <img :src="require('./../assets/Reply.svg')" width="12px" />
               <span class="text-like-reply"> {{ tweet.replyCount }} </span>
@@ -88,7 +88,7 @@
   import NewTweet from './../components/NewTweet.vue'
   import Spinner from './../components/Spinner.vue'
   import NewReplyModal from './../components/NewReplyModal.vue'
-  // import { mapState } from 'vuex'
+  import { mapState } from 'vuex'
   import moment from 'moment'
   import tweetsAPI from './../apis/tweets'
 
@@ -109,7 +109,9 @@
         isProcessing: false,
       }
     },
-    computed: {},
+    computed: {
+      ...mapState(['newTweets']),
+    },
     filters: {
       fromNow(datetime) {
         if (!datetime) {
@@ -130,11 +132,15 @@
           this.alertStatus = false
         }, 2000)
       },
-      openModal() {
-        const bootstrap = require('bootstrap')
-        const tweetModal = document.querySelector('#new-reply-modal')
-        const modal = bootstrap.Modal.getInstance(tweetModal)
-        console.log(modal)
+      // openModal() {
+      //   const bootstrap = require('bootstrap')
+      //   const tweetModal = document.querySelector('#new-reply-modal')
+      //   const modal = bootstrap.Modal.getInstance(tweetModal)
+      //   // console.log(modal)
+      //   modal.show()
+      // },
+      setNewTweets() {
+        this.allTweets.unshift({ ...this.newTweets[0] })
       },
       handleReplyModal(tweet) {
         this.tweetActive = { ...tweet }
@@ -230,8 +236,12 @@
     watch: {
       newTweets() {
         if (this.newTweets.length > 0) {
+          console.log('1')
           this.setNewTweets()
         }
+      },
+      allTweets() {
+        this.fetchTweets()
       },
     },
   }

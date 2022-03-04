@@ -39,18 +39,18 @@
           </span>
           <span class="icon-wrap ms-4">
             <img
-              src="../assets/icon_like.png"
-              class="like"
-              alt=""
-              v-if="!isLike"
-              @click.stop.prevent="addLike(tweet.TweetId)"
-            />
-            <img
               src="../assets/icon_like_fill.png"
               class="like"
               alt=""
-              v-else
+              v-if="tweet.isLike"
               @click.stop.prevent="deleteLike(tweet.TweetId)"
+            />
+            <img
+              src="../assets/icon_like.png"
+              class="like"
+              alt=""
+              v-else
+              @click.stop.prevent="addLike(tweet.TweetId)"
             />
             <span class="text-like-reply">{{ tweet.Tweet.likeCount }}</span>
           </span>

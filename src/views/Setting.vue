@@ -106,7 +106,7 @@
           <button
             type="submit"
             class="btn-active save ms-auto"
-            :disabled="isProcessing"
+            :disabled="isProcessing || name.length > 50"
           >
             儲存
           </button>
@@ -136,17 +136,16 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+  import Menu from './../components/Menu.vue'
+  import userAPI from './../apis/user'
 
-import { mapState } from 'vuex'
-import Menu from './../components/Menu.vue'
-import userAPI from './../apis/user'
+  export default {
+    name: 'Setting',
+    components: {
+      Menu,
+    },
 
-export default {
-  name: "Setting",
-  components: {
-    Menu,
-  },
-  
     data() {
       return {
         id: -1,
@@ -228,26 +227,26 @@ export default {
 </script>
 
 <style scoped>
-#setting {
-  padding-left: 0;
-  border-left: 1px solid #e6ecf0;
-}
-.title {
-  padding-left: 20px;
-  height: 55px;
-  line-height: 55px;
-  border-bottom: 1px solid #e6ecf0;
-}
-.setting-form {
-  margin-left: 1rem;
-  margin-top: 30px;
-  max-width: 642px;
-}
-.length-input {
-  color: #657786;
-}
-.save {
-  margin-top: 1rem;
-  width: 116px;
-}
+  #setting {
+    padding-left: 0;
+    border-left: 1px solid #e6ecf0;
+  }
+  .title {
+    padding-left: 20px;
+    height: 55px;
+    line-height: 55px;
+    border-bottom: 1px solid #e6ecf0;
+  }
+  .setting-form {
+    margin-left: 1rem;
+    margin-top: 30px;
+    max-width: 642px;
+  }
+  .length-input {
+    color: #657786;
+  }
+  .save {
+    margin-top: 1rem;
+    width: 116px;
+  }
 </style>

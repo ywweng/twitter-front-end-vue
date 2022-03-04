@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from './../store'
+// import store from './../store'
 import Login from '../views/Login.vue'
 import NotFound from '../views/NotFound.vue'
 

@@ -142,19 +142,8 @@
       });
     },
     
-    async deleteLike(tweetId) {
-      try {
-        const response = await tweetsAPI.deleteLike({ tweetId });
-        
-        if (response.data.status !== "success") {
-          throw new Error();
-
-   
-  
  
-    
-  
-      async deleteLike(tweetId) {
+        async deleteLike(tweetId) {
         try {
           const response = await tweetsAPI.deleteLike({ tweetId })
 
@@ -174,9 +163,7 @@
       },
     },
   }
-    }
-    }
-}
+    
 </script>
 
 <style scoped>

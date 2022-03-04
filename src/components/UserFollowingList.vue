@@ -87,10 +87,10 @@ export default {
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
-        Toast.fire({
-          icon: "error",
-          title: "無法取得正在追隨名單，請稍後再試",
-        });
+        // Toast.fire({
+        //   icon: "error",
+        //   title: "無法取得正在追隨名單，請稍後再試",
+        // });
       }
     },
     async addFollowing(id) {

@@ -2,7 +2,11 @@
   <div class="like-list">
     <Spinner v-if="isLoading" />
     <div class="tweet-card d-flex" v-for="tweet in userLikes" :key="tweet.id">
-      <img :src="tweet.Tweet.User.avatar" class="avatar" alt="" />
+      <router-link
+        :to="{ name: 'user-profile', params: { userId: tweet.Tweet.User.id } }"
+      >
+        <img :src="tweet.Tweet.User.avatar" class="avatar" alt="" />
+      </router-link>
       <div class="tweet-info d-flex flex-column">
         <div class="first-line">
           <span class="text-name">{{ tweet.Tweet.User.name }}</span>
@@ -29,10 +33,9 @@
               class="btn-reply"
               data-bs-toggle="modal"
               data-bs-target="#new-reply-modal"
+              @click="handleReplyModal(tweet)"
             >
-              <a href="#"
-                ><img src="../assets/icon_reply.png" alt="" class="reply"
-              /></a>
+              <img src="../assets/icon_reply.png" alt="" class="reply" />
             </button>
             <!-- 之後改router-link :to="{ name: 'single-tweet' }" -->
             <span class="text-like-reply">{{ tweet.Tweet.replyCount }}</span>
@@ -57,7 +60,10 @@
         </div>
       </div>
     </div>
-    <NewReplyModal />
+    <NewReplyModal
+      :tweet="tweetActive"
+      @after-reply-submit="afterReplySubmit"
+    />
   </div>
 </template>
 
@@ -83,65 +89,71 @@
     },
     mixins: [fromNowFilter],
     data() {
-      return {
-        userLikes: [],
-        isLoading: true,
-        isLiked: true,
-      }
+    return {
+      userLikes: [],
+      isLoading: true,
+      isLiked: true,
+      tweetActive: [],
+    };
     },
     created() {
-      const userId = this.userId
-      this.fetchLikes(userId)
+    const userId = this.userId;
+    this.fetchLikes(userId);
     },
     watch: {
-      userId(newValue) {
-        this.fetchLikes(newValue)
-      },
+    userId(newValue) {
+      this.fetchLikes(newValue);
+    },
     },
     methods: {
-      async fetchLikes(userId) {
-        try {
-          const { data } = await userAPI.getUserLikes({ userId })
-          // if (!data.length) {
-          //   Toast.fire({
-          //   icon: "info",
-          //   title: "尚無喜歡的推文!",
-          // });
-          // }
-          this.userLikes = data
-          this.isLoading = false
-        } catch (error) {
-          this.isLoading = false
-          Toast.fire({
-            icon: 'info',
-            title: error.response.data.message,
-          })
+    async fetchLikes(userId) {
+      try {
+        const { data } = await userAPI.getUserLikes({ userId });
+        // if (!data.length) {
+        //   Toast.fire({
+        //   icon: "info",
+        //   title: "尚無喜歡的推文!",
+        // });
+        // }
+        this.userLikes = data;
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+        // Toast.fire({
+        //   icon: "info",
+        //   title: error.response.data.message,
+        // });
+      }
+    },
+    handleReplyModal(tweet) {
+      const {Tweet} = tweet
+      this.tweetActive = { ...Tweet };
+    },
+    afterReplySubmit(payload) {
+      const { tweetId, replyCount } = payload;
+      this.allTweets = this.allTweets.map((tweet) => {
+        if (tweet.id !== tweetId) {
+          return tweet;
         }
-      },
-      // async addLike(tweetId) {
-      //   try {
-      //     const response = await tweetsAPI.addLike({ tweetId });
-      //     // const { data } = response
-      //     if (response.data.status === "error") {
-      //       throw new Error();
-      //     }
-      //     this.userLikes = this.userLikes.map((tweet) => {
-      //       if (+tweet.id === +tweetId) {
-      //         return {
-      //           ...tweet,
-      //           isLiked: true,
-      //           likeCount: tweet.likeCount + 1,
-      //         };
-      //       }
-      //       return tweet;
-      //     });
-      //   } catch (error) {
-      //     Toast.fire({
-      //       icon: "error",
-      //       title: error.response.data.message,
-      //     });
-      //   }
-      // },
+        return {
+          ...tweet,
+          replyCount,
+        };
+      });
+    },
+    
+    async deleteLike(tweetId) {
+      try {
+        const response = await tweetsAPI.deleteLike({ tweetId });
+        
+        if (response.data.status !== "success") {
+          throw new Error();
+
+   
+  
+ 
+    
+  
       async deleteLike(tweetId) {
         try {
           const response = await tweetsAPI.deleteLike({ tweetId })
@@ -162,30 +174,38 @@
       },
     },
   }
+    }
+    }
+}
 </script>
 
 <style scoped>
-  .avatar {
-    width: 50px;
-    height: 50px;
-  }
-  .tweet-card {
-    padding: 10px 15px;
-    /* height: 145px; */
-    border-bottom: 1px solid #e6ecf0;
-  }
-  .tweet-content {
-    margin-top: 6px;
-    max-width: 510px;
-    font-size: 15px;
-    text-overflow: ellipsis;
-  }
-  .reply,
-  .like {
-    width: 15px;
-    height: 15px;
-  }
-  .like {
-    cursor: pointer;
-  }
+.avatar {
+  width: 50px;
+  height: 50px;
+}
+.tweet-card {
+  padding: 10px 15px;
+  /* height: 145px; */
+  border-bottom: 1px solid #e6ecf0;
+}
+.tweet-card:hover {
+  /* cursor: pointer; */
+  box-shadow: 0 0 1px 0 var(--orange);
+}
+
+.tweet-content {
+  margin-top: 6px;
+  max-width: 510px;
+  font-size: 15px;
+  text-overflow: ellipsis;
+}
+.reply,
+.like {
+  width: 15px;
+  height: 15px;
+}
+.like {
+  cursor: pointer;
+}
 </style>

@@ -58,7 +58,7 @@
           <button
             type="button"
             class="btn btn-follow ms-2"
-            v-if="!user.isFollowing"
+            v-if="!user.isFollowed"
             @click.stop.prevent="addFollow(user.id)"
           >
             跟隨
@@ -82,14 +82,14 @@
           <div class="followship">
             <span class="following fw-bold">
               <router-link :to="`/user-profile/${user.id}/follow`">
-                {{ user.followingCount }}個<span class="sub-text"
+                {{ user.followerCount }}個<span class="sub-text"
                   >跟隨中</span
                 ></router-link
               >
             </span>
             <span class="follower ms-4 fw-bold">
               <router-link :to="`/user-profile/${user.id}/follow`">
-                {{ user.followerCount }}位<span class="sub-text">跟隨者</span>
+                {{ user.followingCount }}位<span class="sub-text">跟隨者</span>
               </router-link>
             </span>
           </div>
@@ -117,153 +117,155 @@
 </template>
 
 <script>
-  import ProfileEditModal from '../components/ProfileEditModal.vue'
-  import NavTabs from '../components/NavTabs.vue'
-  import Menu from '../components/Menu.vue'
-  import PopularUser from '../components/PopularUser.vue'
-  import userAPI from '../apis/user'
-  // import { mapState } from "vuex";
-  import { emptyImageFilter } from '../utils/mixins'
-  import { Toast } from '../utils/helpers'
+import ProfileEditModal from "../components/ProfileEditModal.vue";
+import NavTabs from "../components/NavTabs.vue";
+import Menu from "../components/Menu.vue";
+import PopularUser from "../components/PopularUser.vue";
+import userAPI from "../apis/user";
+// import { mapState } from "vuex";
+import { emptyImageFilter } from "../utils/mixins";
+import { Toast } from "../utils/helpers";
 
-  export default {
-    components: {
-      ProfileEditModal,
-      NavTabs,
-      Menu,
-      PopularUser,
-    },
-    mixins: [emptyImageFilter],
-    data() {
-      return {
-        currentUser: {},
-        user: {
-          id: 0,
-          account: '',
-          name: '',
-          email: '',
-          introduction: '',
-          avatar: '',
-          cover: '',
-          role: '',
-          tweetCount: 0,
-          followingCount: 0,
-          followerCount: 0,
-          likeCount: 0,
-          isFollowing: false,
-        },
-        isNotified: false, //這個沒有設定，重新整理就會還原
-      }
-    },
-    // computed: {
-    //   ...mapState(["currentUser"]),
-    // },
-    created() {
-      const { userId } = this.$route.params
-      this.fetchUser(userId)
-      this.fetchCurrentUser()
-    },
-    methods: {
-      async fetchUser(userId) {
-        try {
-          const { data } = await userAPI.getUser({ userId })
-          const {
-            id,
-            account,
-            name,
-            email,
-            introduction,
-            avatar,
-            cover,
-            role,
-            tweetCount,
-            followingCount,
-            followerCount,
-            likeCount,
-            isFollowing,
-          } = data
-          this.user = {
-            ...this.user,
-            id,
-            account,
-            name,
-            email,
-            introduction,
-            avatar,
-            cover,
-            role,
-            tweetCount,
-            followingCount,
-            followerCount,
-            likeCount,
-            isFollowing,
-          }
-          this.fetchCurrentUser()
-        } catch (error) {
-          // console.log(error.response);
-          Toast.fire({
-            icon: 'error',
-            title: error.response.data.message,
-          })
-        }
+export default {
+  components: {
+    ProfileEditModal,
+    NavTabs,
+    Menu,
+    PopularUser,
+  },
+  mixins: [emptyImageFilter],
+  data() {
+    return {
+      currentUser: {},
+      user: {
+        id: 0,
+        account: "",
+        name: "",
+        email: "",
+        introduction: "",
+        avatar: "",
+        cover: "",
+        role: "",
+        tweetCount: 0,
+        followingCount: 0,
+        followerCount: 0,
+        likeCount: 0,
+        isFollowed: false,
       },
-      async fetchCurrentUser() {
-        try {
-          const { data } = await userAPI.getCurrentUser()
-          if (data.status !== 'success') {
-            throw new Error(data.message)
-          }
-          this.currentUser = data.data
-        } catch (error) {
-          Toast.fire({
-            icon: 'error',
-            title: error.message,
-          })
-        }
-      },
-      async addFollow(id) {
-        try {
-          const { data } = await userAPI.addFollow({ id })
-          console.log(data.message)
-          this.user.isFollowing = true
-        } catch (error) {
-          Toast.fire({
-            icon: 'error',
-            title: error.response.data.message,
-          })
-        }
-      },
-      async deleteFollow(followingId) {
-        try {
-          const { data } = await userAPI.deleteFollow({ followingId })
-          console.log(data.message)
-          this.user.isFollowing = false
-        } catch (error) {
-          Toast.fire({
-            icon: 'error',
-            title: error.response.message,
-          })
-        }
-      },
-      addNotify() {
-        this.isNotified = true
-      },
-      deleteNotify() {
-        this.isNotified = false
-      },
-      afterProfileSubmit(data) {
-        const { user: editedUser } = data
+      isNotified: false, //這個沒有設定，重新整理就會還原
+    };
+  },
+  // computed: {
+  //   ...mapState(["currentUser"]),
+  // },
+  created() {
+    const { userId } = this.$route.params;
+    this.fetchUser(userId);
+    this.fetchCurrentUser();
+  },
+  methods: {
+    async fetchUser(userId) {
+      try {
+        const { data } = await userAPI.getUser({ userId });
+        const {
+          id,
+          account,
+          name,
+          email,
+          introduction,
+          avatar,
+          cover,
+          role,
+          tweetCount,
+          followingCount,
+          followerCount,
+          likeCount,
+          isFollowed,
+        } = data;
         this.user = {
           ...this.user,
-          id: editedUser.id,
-          account: editedUser.account,
-          name: editedUser.name,
-          introduction: editedUser.introduction,
-          avatar: editedUser.avatar,
-          cover: editedUser.cover,
-        }
-      },
+          id,
+          account,
+          name,
+          email,
+          introduction,
+          avatar,
+          cover,
+          role,
+          tweetCount,
+          followingCount,
+          followerCount,
+          likeCount,
+          isFollowed,
+        };
+        this.fetchCurrentUser();
+      } catch (error) {
+        // console.log(error.response);
+        Toast.fire({
+          icon: "error",
+          title: error.response.data.message,
+        });
+      }
     },
+    async fetchCurrentUser() {
+      try {
+        const { data } = await userAPI.getCurrentUser();
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.currentUser = data.data;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: error.message,
+        });
+      }
+    },
+    async addFollow(id) {
+      try {
+        const { data } = await userAPI.addFollow({ id });
+        console.log(data.message);
+        this.user.isFollowed = true;
+        this.user.followingCount += 1;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: error.response.data.message,
+        });
+      }
+    },
+    async deleteFollow(followingId) {
+      try {
+        const { data } = await userAPI.deleteFollow({ followingId });
+        console.log(data.message);
+        this.user.isFollowed = false;
+        this.user.followingCount -= 1;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: error.response.message,
+        });
+      }
+    },
+    addNotify() {
+      this.isNotified = true;
+    },
+    deleteNotify() {
+      this.isNotified = false;
+    },
+    afterProfileSubmit(data) {
+      const { user: editedUser } = data;
+      this.user = {
+        ...this.user,
+        // id: editedUser.id,
+        // account: editedUser.account,
+        name: editedUser.name,
+        introduction: editedUser.introduction,
+        avatar: editedUser.avatar,
+        cover: editedUser.cover,
+      };
+    },
+  },
 
     beforeRouteUpdate(to, from, next) {
       const { userId } = to.params

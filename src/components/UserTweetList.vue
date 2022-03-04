@@ -1,11 +1,12 @@
 <template>
   <div class="tweet-list">
-    <!-- <router-link to="{ name: 'single-tweet' , params: {tweetId: tweet.id}}">
-
+    <!-- <router-link to="{ name: 'single-tweet' , params: {tweetId: tweet.id}}"
     </router-link> -->
     <Spinner v-if="isLoading" />
     <div class="tweet-card d-flex" v-for="tweet in userTweets" :key="tweet.id">
+      <router-link :to="{ name: 'user-profile' ,params:{userId: tweet.User.id}}">
       <img :src="tweet.User.avatar" class="avatar" alt="" />
+      </router-link>
       <div class="tweet-info d-flex flex-column">
         <div class="first-line">
           <span class="text-name">{{ tweet.User.name }}</span>
@@ -29,6 +30,7 @@
               class="btn-reply"
               data-bs-toggle="modal"
               data-bs-target="#new-reply-modal"
+              @click="handleReplyModal(tweet)"
             >
               <img src="./../assets/icon_reply.png" alt="" class="reply" />
             </button>
@@ -86,6 +88,7 @@ export default {
     return {
       userTweets: [],
       isLoading: true,
+      tweetActive: [],
     };
   },
 
@@ -131,7 +134,7 @@ export default {
               likeCount: tweet.likeCount + 1,
             };
           }
-          console.log(tweet)
+          console.log(tweet);
           return tweet;
         });
       } catch (error) {
@@ -176,6 +179,9 @@ export default {
           replyCount,
         };
       });
+    },
+    handleReplyModal(tweet) {
+      this.tweetActive = { ...tweet };
     },
   },
 };

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import store from './../store'
-
+import store from './../store'
 import Login from '../views/Login.vue'
+import NotFound from '../views/NotFound.vue'
 
 
 Vue.use(VueRouter)
@@ -45,6 +45,7 @@ const routes = [
       },
     ],
   },
+
   {
     path: '/admin/login',
     name: 'admin-login',
@@ -60,6 +61,7 @@ const routes = [
     name: 'admin-users',
     component: () => import("../views/AdminUserList.vue")
   },
+
   {
     path: '/setting',
     name: 'setting',
@@ -69,7 +71,6 @@ const routes = [
     path: '/user-profile',
     name: 'user-page',
     redirect: '/user-profile/:userId/tweets',
-
   },
   {
     path: '/user-profile/:userId',
@@ -112,6 +113,11 @@ const routes = [
       },
     ]
   },
+  {
+    path: '*',
+    name: 'not-found',
+    component: NotFound,
+  }
 ]
 
 const router = new VueRouter({
@@ -119,7 +125,10 @@ const router = new VueRouter({
   routes,
 })
 
-router.beforeEach(async(to, from, next) => {
+
+router.beforeEach(async (to, from, next) => {
+  // store.dispatch('fetchCurrentUser')
+
   // 從 localStorage 取出 token
   // const token = localStorage.getItem('token')
   // const tokenInStore = store.state.token

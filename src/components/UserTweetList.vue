@@ -130,7 +130,7 @@ export default {
           if (tweet.id === id) {
             return {
               ...tweet,
-              isLiked: true,
+              isLike: true,
               likeCount: tweet.likeCount + 1,
             };
           }
@@ -155,7 +155,7 @@ export default {
           if (+tweet.id === +id) {
             return {
               ...tweet,
-              isLiked: false,
+              isLike: false,
               likeCount: tweet.likeCount - 1,
             };
           }

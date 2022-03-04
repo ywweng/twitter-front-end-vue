@@ -1,10 +1,10 @@
 <template>
-  <div class="row">
-    <div class="menu col-3">
+  <div class="row h-100">
+    <div class="menu col-3 mh-100">
       <Menu />
     </div>
     <!-- User-profile -->
-    <div class="user-profile col-6">
+    <div class="user-profile col-6 me-3" id="user-profile">
       <div class="page-title position-relative">
         <img
           src="../assets/arrow.png"
@@ -267,82 +267,88 @@ export default {
     },
   },
 
-  beforeRouteUpdate(to, from, next) {
-    const { userId } = to.params;
-    this.fetchUser(userId);
-    next();
-  },
-};
+    beforeRouteUpdate(to, from, next) {
+      const { userId } = to.params
+      this.fetchUser(userId)
+      next()
+    },
+  }
 </script>
 
 <style scoped>
-a {
-  text-decoration: none;
-  color: black;
-}
-.user-profile {
-  border-left: 1px solid var(--border-line-color);
-  border-right: 1px solid var(--border-line-color);
-}
-.page-title {
-  padding: 5px 0 5px 26px;
-  border-bottom: 1px solid var(--border-line-color);
-}
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  #user-profile {
+    height: 100vh;
+    overflow: auto;
+    padding: 0;
+  }
+  .user-profile {
+    max-width: 600px;
+    border-left: 1px solid var(--border-line-color);
+    border-right: 1px solid var(--border-line-color);
+  }
+  .page-title {
+    padding: 5px 0 5px 26px;
+    border-bottom: 1px solid var(--border-line-color);
+  }
 
-.title-item {
-  margin-left: 64px;
-}
-.profile-data {
-  /* margin-top: 60px; */
-  padding: 10px 15px;
-  font-size: 14px;
-}
+  .title-item {
+    margin-left: 64px;
+  }
+  .profile-data {
+    /* margin-top: 60px; */
+    padding: 10px 15px;
+    font-size: 14px;
+  }
 
-.profile-cover img {
-  height: 200px;
-}
-.profile-avatar {
-  width: 140px;
-  height: 140px;
-  top: 124px;
-  left: 14px;
-  border: 4px solid white;
-}
-.btn-edit {
-  width: 120px;
-  height: 35px;
-  top: 210px;
-  right: 15px;
-  border: 1px solid var(--orange);
-  border-radius: 100px;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--orange);
-}
-.btn-edit:hover,
-.btn-edit:active {
-  background-color: var(--orange);
-  color: white;
-}
-.account,
-.following,
-.follower {
-  font-weight: 500;
-}
-.btn-area {
-  padding: 10px 15px;
-}
-.btn-follow,
-.btn-following {
-  padding: 5px 15px;
-  border-color: var(--orange);
-  border-radius: 100px;
-  color: var(--orange);
-  font-size: 15px;
-  font-weight: 700;
-}
-.btn-following {
-  background-color: var(--orange);
-  color: white;
-}
+  .profile-cover img {
+    height: 200px;
+  }
+  .profile-avatar {
+    width: 140px;
+    height: 140px;
+    top: 124px;
+    left: 14px;
+    border: 4px solid white;
+  }
+  .btn-edit {
+    width: 120px;
+    height: 35px;
+    top: 210px;
+    right: 15px;
+    border: 1px solid var(--orange);
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--orange);
+  }
+  .btn-edit:hover,
+  .btn-edit:active {
+    background-color: var(--orange);
+    color: white;
+  }
+  .account,
+  .following,
+  .follower {
+    font-weight: 500;
+  }
+  .btn-area {
+    padding: 10px 15px;
+  }
+  .btn-follow,
+  .btn-following {
+    padding: 5px 15px;
+    border-color: var(--orange);
+    border-radius: 100px;
+    color: var(--orange);
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .btn-following {
+    background-color: var(--orange);
+    color: white;
+  }
 </style>

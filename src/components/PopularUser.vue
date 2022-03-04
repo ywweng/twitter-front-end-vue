@@ -8,8 +8,9 @@
       :key="user.id"
     >
       <div class=""><router-link :to="{ name: 'user-profile' ,params:{userId: user.id}}">
-        <img class="avatar" :src="user.avatar" alt="" />
+        <img class="avatar" :src="user.avatar" alt="" width="50px" />
         </router-link></div>
+
       <div class="account d-flex flex-column me-auto">
         <span class="text-name">{{ user.name }}</span>
         <span class="text-account">@{{ user.account }}</span>

@@ -139,7 +139,7 @@
       async fetchTweet() {
         try {
           const { data } = await tweetsAPI.getOneTweet({
-            tweetId: this.$route.params.tweetId,
+            id: this.$route.params.tweetId,
           })
           this.tweet = data
           this.isLoading = false
@@ -152,7 +152,7 @@
       async fetchReplies() {
         try {
           const { data } = await tweetsAPI.getTweetReplies({
-            tweetId: this.tweet.id || this.$route.params.tweetId,
+            id: this.tweet.id || this.$route.params.tweetId,
           })
           if (data.status === 'error') {
             throw new Error(data.message)
@@ -167,7 +167,7 @@
       async addLike(tweetId) {
         try {
           const { data } = await tweetsAPI.addLike({
-            tweetId,
+            id: tweetId,
           })
           this.isProcessing = true
           if (data.status === 'error') {
@@ -187,7 +187,7 @@
       async deleteLike(tweetId) {
         try {
           const { data } = await tweetsAPI.deleteLike({
-            tweetId,
+            id: tweetId,
           })
           this.isProcessing = true
           if (data.status === 'error') {

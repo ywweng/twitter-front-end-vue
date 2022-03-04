@@ -104,6 +104,7 @@
             },
           }
           this.$store.commit('setNewTweet', newTweet)
+          this.$emit('after-new-tweet')
           this.alertMsg = '推文成功'
           this.alertStatus = 'success'
           this.alertShow()

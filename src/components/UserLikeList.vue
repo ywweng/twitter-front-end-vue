@@ -68,44 +68,44 @@
 </template>
 
 <script>
-  import NewReplyModal from './../components/NewReplyModal.vue'
-  import userAPI from './../apis/user'
-  import tweetsAPI from './../apis/tweets'
-  import { Toast } from '../utils/helpers'
-  import { fromNowFilter } from '../utils/mixins'
-  import Spinner from './../components/Spinner.vue'
+import NewReplyModal from "./../components/NewReplyModal.vue";
+import userAPI from "./../apis/user";
+import tweetsAPI from "./../apis/tweets";
+import { Toast } from "../utils/helpers";
+import { fromNowFilter } from "../utils/mixins";
+import Spinner from "./../components/Spinner.vue";
 
-  export default {
-    name: 'userLikeList',
-    components: {
-      NewReplyModal,
-      Spinner,
+export default {
+  name: "userLikeList",
+  components: {
+    NewReplyModal,
+    Spinner,
+  },
+  props: {
+    userId: {
+      type: Number,
+      required: true,
     },
-    props: {
-      userId: {
-        type: Number,
-        required: true,
-      },
-    },
-    mixins: [fromNowFilter],
-    data() {
+  },
+  mixins: [fromNowFilter],
+  data() {
     return {
       userLikes: [],
       isLoading: true,
       isLiked: true,
       tweetActive: [],
     };
-    },
-    created() {
+  },
+  created() {
     const userId = this.userId;
     this.fetchLikes(userId);
-    },
-    watch: {
+  },
+  watch: {
     userId(newValue) {
       this.fetchLikes(newValue);
     },
-    },
-    methods: {
+  },
+  methods: {
     async fetchLikes(userId) {
       try {
         const { data } = await userAPI.getUserLikes({ userId });
@@ -126,7 +126,7 @@
       }
     },
     handleReplyModal(tweet) {
-      const {Tweet} = tweet
+      const { Tweet } = tweet;
       this.tweetActive = { ...Tweet };
     },
     afterReplySubmit(payload) {
@@ -141,29 +141,31 @@
         };
       });
     },
-    
- 
-      async deleteLike(tweetId) {
-        try {
-          const response = await tweetsAPI.deleteLike({ tweetId })
 
-          if (response.data.status !== 'success') {
-            throw new Error()
-          }
-
-          this.userTweets = this.userTweets.filter((tweet) => {
-            return tweet.TweetId !== tweetId
-          })
-        } catch (error) {
+    async deleteLike(id) {
+      try {
+        const response = await tweetsAPI.deleteLike({ id });
+        if (response.status === "success") {
           Toast.fire({
-            icon: 'error',
-            title: '無法刪除喜歡的推文，請稍後再試',
-          })
+            icon: "success",
+            title: response.message,
+          });
         }
-      },
+
+        this.userLikes = this.userLikes.filter((tweet) => {
+          return tweet.TweetId !== id;
+        });
+        
+      } catch (error) {
+        // Toast.fire({
+        //   icon: "error",
+        //   title: "無法刪除喜歡的推文，請稍後再試",
+        // });
+        console.log(error);
+      }
     },
-  }
-    
+  },
+};
 </script>
 
 <style scoped>

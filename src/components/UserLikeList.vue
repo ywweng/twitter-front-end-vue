@@ -143,7 +143,7 @@
     },
     
  
-        async deleteLike(tweetId) {
+      async deleteLike(tweetId) {
         try {
           const response = await tweetsAPI.deleteLike({ tweetId })
 

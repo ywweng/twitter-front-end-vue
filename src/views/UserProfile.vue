@@ -254,16 +254,14 @@ export default {
       this.isNotified = false;
     },
     afterProfileSubmit(data) {
-      const { user: editedUser } = data;
       this.user = {
         ...this.user,
-        // id: editedUser.id,
-        // account: editedUser.account,
-        name: editedUser.name,
-        introduction: editedUser.introduction,
-        avatar: editedUser.avatar,
-        cover: editedUser.cover,
+        name: data.name,
+        introduction: data.introduction,
+        avatar: data.avatar,
+        cover: data.cover,
       };
+      // console.log(this.user.avatar)
     },
   },
 

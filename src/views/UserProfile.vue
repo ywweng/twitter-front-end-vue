@@ -261,7 +261,6 @@ export default {
         avatar: data.avatar,
         cover: data.cover,
       };
-      // console.log(this.user.avatar)
     },
   },
 

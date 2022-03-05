@@ -294,21 +294,19 @@ export default {
           return;
         }
         const formData = new FormData(e.target);
-        
+        // console.log([...formData.entries()])
+
         const { data } = await userAPI.updateUser({
           userId: this.user.id,
-          name: this.user.name,
-          avatar: formData.get('avatar') ? formData.get('avatar') : "" ,
-          cover: formData.get('cover') ? formData.get('cover') : "",
-          introduction: this.user.introduction,
+          formData,
         });
-        console.log(formData.get('avatar'))
+        // console.log(data);
         const formDataTrans = {
-          name: this.user.name,
+          name: data.data.name,
           avatar: data.data.avatar,
           cover: data.data.cover,
-          introduction: this.user.introduction,
-        }
+          introduction: data.data.introduction,
+        };
         this.$emit("after-profile-submit", formDataTrans);
       } catch (error) {
         console.log(error.response);

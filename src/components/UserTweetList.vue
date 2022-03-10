@@ -1,13 +1,7 @@
 <template>
   <div class="tweet-list">
     <Spinner v-if="isLoading" />
-    <div v-if="!userLikes.length" class="ms-4">尚無任何推文</div>
-    <div
-      v-else
-      class="tweet-card d-flex"
-      v-for="tweet in userTweets"
-      :key="tweet.id"
-    >
+    <div class="tweet-card d-flex" v-for="tweet in userTweets" :key="tweet.id">
       <router-link
         :to="{ name: 'user-profile', params: { userId: tweet.User.id } }"
       >

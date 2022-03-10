@@ -1,8 +1,7 @@
 <template>
   <div class="like-list">
     <Spinner v-if="isLoading" />
-    <div v-if="!userLikes.length" class="ms-4">尚無任何喜歡的內容</div>
-    <div v-else class="tweet-card d-flex" v-for="tweet in userLikes" :key="tweet.id">
+    <div class="tweet-card d-flex" v-for="tweet in userLikes" :key="tweet.id">
       <router-link
         :to="{ name: 'user-profile', params: { userId: tweet.Tweet.User.id } }"
       >
@@ -156,7 +155,6 @@ export default {
         this.userLikes = this.userLikes.filter((tweet) => {
           return tweet.TweetId !== id;
         });
-        
       } catch (error) {
         // Toast.fire({
         //   icon: "error",

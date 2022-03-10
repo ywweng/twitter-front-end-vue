@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import store from './../store'
+import store from './../store'
 import Login from '../views/Login.vue'
 import NotFound from '../views/NotFound.vue'
 
@@ -127,7 +127,7 @@ const router = new VueRouter({
 
 
 router.beforeEach(async (to, from, next) => {
-  // store.dispatch('fetchCurrentUser')
+  store.dispatch('fetchCurrentUser')
 
   // 從 localStorage 取出 token
   // const token = localStorage.getItem('token')

@@ -82,14 +82,14 @@
           <div class="followship">
             <span class="following fw-bold">
               <router-link :to="`/user-profile/${user.id}/follow`">
-                {{ user.followerCount }}個<span class="sub-text"
+                {{ user.followingCount }}個<span class="sub-text"
                   >跟隨中</span
                 ></router-link
               >
             </span>
             <span class="follower ms-4 fw-bold">
               <router-link :to="`/user-profile/${user.id}/follow`">
-                {{ user.followingCount }}位<span class="sub-text">跟隨者</span>
+                {{ user.followerCount }}位<span class="sub-text">跟隨者</span>
               </router-link>
             </span>
           </div>
@@ -254,15 +254,12 @@ export default {
       this.isNotified = false;
     },
     afterProfileSubmit(data) {
-      const { user: editedUser } = data;
       this.user = {
         ...this.user,
-        // id: editedUser.id,
-        // account: editedUser.account,
-        name: editedUser.name,
-        introduction: editedUser.introduction,
-        avatar: editedUser.avatar,
-        cover: editedUser.cover,
+        name: data.name,
+        introduction: data.introduction,
+        avatar: data.avatar,
+        cover: data.cover,
       };
     },
   },

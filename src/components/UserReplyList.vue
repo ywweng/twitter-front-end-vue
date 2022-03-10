@@ -1,8 +1,9 @@
 <template>
   <div class="reply-list">
     <Spinner v-if="isLoading" />
-    <div class="reply-card d-flex" v-for="reply in userReplies" :key="reply.id">
-      <router-link :to="{ name: 'user-profile' ,params:{userId: reply.Tweet.User.id}}">
+    <div v-if="!userLikes.length" class="ms-4">尚無任何推文與回覆</div>
+    <div v-else class="reply-card d-flex" v-for="reply in userReplies" :key="reply.id">
+      <router-link :to="{ name: 'user-profile' ,params:{userId: userId}}">
       <img :src="userAvatar" class="avatar" alt="" />
       </router-link>
       <div class="reply-info d-flex flex-column">
@@ -12,11 +13,14 @@
         </div>
         <div class="second-line">
           <span class="text-account ms-0">回覆</span>
+          <router-link :to="{ name: 'user-profile' ,params:{userId: reply.Tweet.User.id}}">
           <span class="original-tweet ms-1">@{{reply.Tweet.User.account}}</span>
-          <!-- 這邊要不要加連結? -->
+          </router-link>
         </div>
         <div class="tweet-content">
+          <router-link :to="{ name: 'single-tweet', params: { tweetId: reply.tweetId }}">
          {{reply.comment}}
+          </router-link>
         </div>
       </div>
     </div>

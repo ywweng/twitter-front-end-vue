@@ -1,11 +1,17 @@
 <template>
   <div class="tweet-list">
-    <!-- <router-link to="{ name: 'single-tweet' , params: {tweetId: tweet.id}}"
-    </router-link> -->
     <Spinner v-if="isLoading" />
-    <div class="tweet-card d-flex" v-for="tweet in userTweets" :key="tweet.id">
-      <router-link :to="{ name: 'user-profile' ,params:{userId: tweet.User.id}}">
-      <img :src="tweet.User.avatar" class="avatar" alt="" />
+    <div v-if="!userLikes.length" class="ms-4">尚無任何推文</div>
+    <div
+      v-else
+      class="tweet-card d-flex"
+      v-for="tweet in userTweets"
+      :key="tweet.id"
+    >
+      <router-link
+        :to="{ name: 'user-profile', params: { userId: tweet.User.id } }"
+      >
+        <img :src="tweet.User.avatar" class="avatar" alt="" />
       </router-link>
       <div class="tweet-info d-flex flex-column">
         <div class="first-line">

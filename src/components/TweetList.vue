@@ -107,12 +107,12 @@
 </template>
 
 <script>
-  import NewTweet from './../components/NewTweet.vue'
-  import Spinner from './../components/Spinner.vue'
-  import NewReplyModal from './../components/NewReplyModal.vue'
-  import { mapState } from 'vuex'
-  import moment from 'moment'
-  import tweetsAPI from './../apis/tweets'
+import NewTweet from "./../components/NewTweet.vue";
+import Spinner from "./../components/Spinner.vue";
+import NewReplyModal from "./../components/NewReplyModal.vue";
+import { mapState } from "vuex";
+import moment from "moment";
+import tweetsAPI from "./../apis/tweets";
 
 export default {
   name: "TweetList",
@@ -125,128 +125,128 @@ export default {
     return {
       allTweets: [],
       isLoading: true,
-      alertMsg: '',
-       alertStatus: false,
+      alertMsg: "",
+      alertStatus: false,
       tweetActive: [],
       isProcessing: false,
-    }
+    };
   },
   computed: {
-    ...mapState(['newTweets']),
+    ...mapState(["newTweets"]),
   },
   filters: {
     fromNow(datetime) {
       if (!datetime) {
-        return '-'
+        return "-";
       }
-        return moment(datetime).fromNow()
+      return moment(datetime).fromNow();
     },
   },
   created() {
-    this.fetchTweets()
+    this.fetchTweets();
   },
   methods: {
-      alertShow() {
-        const bootstrap = require('bootstrap')
-        let alertNode = document.querySelector('#alert')
-        bootstrap.Alert.getInstance(alertNode)
-        setTimeout(() => {
-          this.alertStatus = false
-        }, 2000)
-      },
-      setNewTweets() {
-        this.allTweets.unshift({ ...this.newTweets[0] })
-      },
-      handleReplyModal(tweet) {
-        this.tweetActive = { ...tweet }
-      },
-      async fetchTweets() {
-        try {
-          const response = await tweetsAPI.getTweets()
-          const { data } = response
-          this.allTweets = data.map((tweet) => {
-            return {
-              ...tweet,
-            }
-          })
-          this.isLoading = false
-        } catch (error) {
-          this.isLoading = false
-          this.alertMsg = '取得推文失敗，請稍後再試'
-          this.alertStatus = 'error'
-          this.alertShow()
-        }
-      },
-      async addLike(tweetId) {
-        try {
-          const { data } = await tweetsAPI.addLike({
-            id: tweetId,
-          })
-          this.isProcessing = true
-          if (data.status === 'error') {
-            throw new Error(data.message)
-          }
-
-          this.allTweets = this.allTweets.map((tweet) => {
-            if (tweet.id !== tweetId) {
-              return tweet
-            } else {
-              return {
-                ...tweet,
-                likeCount: tweet.likeCount + 1,
-                isLike: true,
-              }
-            }
-          })
-
-          this.isProcessing = false
-        } catch (error) {
-          this.alertMsg = '按讚失敗，請稍後再試'
-          this.alertStatus = 'error'
-          this.alertShow()
-        }
-      },
-      async deleteLike(tweetId) {
-        try {
-          const { data } = await tweetsAPI.deleteLike({ id: tweetId })
-          if (data.status === 'error') {
-            throw new Error(data.message)
-          }
-          this.isProcessing = true
-          this.allTweets = this.allTweets.map((tweet) => {
-            if (tweet.id !== tweetId) {
-              return tweet
-            } else {
-              return {
-                ...tweet,
-                likeCount: tweet.likeCount - 1,
-                isLike: false,
-              }
-            }
-          })
-          this.isProcessing = false
-        } catch (error) {
-          this.isProcessing = false
-          this.alertMsg = '取消讚失敗，請稍後再試'
-          this.alertStatus = 'error'
-          this.alertShow()
-        }
-      },
-      afterNewTweet() {
-        this.fetchTweets()
-      },
-      afterReplySubmit(payload) {
-        const { tweetId, replyCount } = payload
-        this.allTweets = this.allTweets.map((tweet) => {
-          if (tweet.id !== tweetId) {
-            return tweet
-          }
+    alertShow() {
+      const bootstrap = require("bootstrap");
+      let alertNode = document.querySelector("#alert");
+      bootstrap.Alert.getInstance(alertNode);
+      setTimeout(() => {
+        this.alertStatus = false;
+      }, 2000);
+    },
+    setNewTweets() {
+      this.allTweets.unshift({ ...this.newTweets[0] });
+    },
+    handleReplyModal(tweet) {
+      this.tweetActive = { ...tweet };
+    },
+    async fetchTweets() {
+      try {
+        const response = await tweetsAPI.getTweets();
+        const { data } = response;
+        this.allTweets = data.map((tweet) => {
           return {
             ...tweet,
-            replyCount,
+          };
+        });
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+        this.alertMsg = "取得推文失敗，請稍後再試";
+        this.alertStatus = "error";
+        this.alertShow();
+      }
+    },
+    async addLike(tweetId) {
+      try {
+        const { data } = await tweetsAPI.addLike({
+          id: tweetId,
+        });
+        this.isProcessing = true;
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+
+        this.allTweets = this.allTweets.map((tweet) => {
+          if (tweet.id !== tweetId) {
+            return tweet;
+          } else {
+            return {
+              ...tweet,
+              likeCount: tweet.likeCount + 1,
+              isLike: true,
+            };
           }
-        })
-      },
+        });
+
+        this.isProcessing = false;
+      } catch (error) {
+        this.alertMsg = "按讚失敗，請稍後再試";
+        this.alertStatus = "error";
+        this.alertShow();
+      }
+    },
+    async deleteLike(tweetId) {
+      try {
+        const { data } = await tweetsAPI.deleteLike({ id: tweetId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.isProcessing = true;
+        this.allTweets = this.allTweets.map((tweet) => {
+          if (tweet.id !== tweetId) {
+            return tweet;
+          } else {
+            return {
+              ...tweet,
+              likeCount: tweet.likeCount - 1,
+              isLike: false,
+            };
+          }
+        });
+        this.isProcessing = false;
+      } catch (error) {
+        this.isProcessing = false;
+        this.alertMsg = "取消讚失敗，請稍後再試";
+        this.alertStatus = "error";
+        this.alertShow();
+      }
+    },
+    afterNewTweet() {
+      this.fetchTweets();
+    },
+    afterReplySubmit(payload) {
+      const { tweetId, replyCount } = payload;
+      this.allTweets = this.allTweets.map((tweet) => {
+        if (tweet.id !== tweetId) {
+          return tweet;
+        }
+        return {
+          ...tweet,
+          replyCount,
+        };
+      });
+    },
   },
   watch: {
     newTweets() {
